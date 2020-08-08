@@ -25,7 +25,7 @@ type pricingStream struct {
 	Instrument string     `json:"instrument"`
 }
 
-func listenStream(accountID string, instruments []string, channel chan pricingStream) {
+func getPriceStream(accountID string, instruments []string, channel chan pricingStream) {
 	req := buildRequest(accountID, instruments)
 
 	client := http.Client{}

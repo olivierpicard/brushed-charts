@@ -19,7 +19,7 @@ func main() {
 
 	id := getAccountID()
 	stream := make(chan pricingStream)
-	go listenStream(id, []string{"EUR_USD", "EUR_CAD"}, stream)
+	go getPriceStream(id, []string{"EUR_USD", "EUR_CAD"}, stream)
 	for s := range stream {
 		fmt.Printf("%#v\n", s)
 	}
