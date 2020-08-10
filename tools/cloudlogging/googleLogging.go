@@ -10,7 +10,7 @@ import (
 
 // Send data to Google Cloud Logging
 func googleLogging(entry LogEntry) error {
-	if entry.Severity == Critical || entry.Severity == Emergency {
+	if entry.Severity == Critical {
 		return nil
 	}
 	ctx := context.Background()

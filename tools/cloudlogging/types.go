@@ -1,7 +1,7 @@
 package cloudlogging
 
 import (
-	"log"
+	"fmt"
 
 	"cloud.google.com/go/logging"
 )
@@ -57,8 +57,15 @@ func (logType *Severity) toGoogleSeverity() logging.Severity {
 	case Critical:
 		severity = logging.Critical
 		break
+	case Emergency:
+		severity = logging.Emergency
+		break
+	case Debug:
+		severity = logging.Emergency
+		break
 	default:
-		log.Println("")
+		err := fmt.Errorf("no severity equavalent for google logging : (%d)", logType)
+		display(err, false)
 	}
 
 	return severity
