@@ -3,10 +3,11 @@ package main
 import (
 	"bufio"
 	"encoding/json"
-	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
 type streamType string
@@ -26,18 +27,25 @@ type pricingStream struct {
 }
 
 func getPriceStream(accountID string, instruments []string, channel chan pricingStream) {
-	req := buildRequest(accountID, instruments)
+	cloudlogging.Init(projectID, serviceName)
+	req, err := buildRequest(accountID, instruments)
+	if err != nil {
+		return
+	}
 
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		reportError(err)
-		log.Fatalln(err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return
 	}
 
 	reader := bufio.NewReader(resp.Body)
 	for {
-		price := readStream(resp, reader)
+		price, err := readStream(resp, reader)
+		if err != nil {
+			return
+		}
 		if price.Type == heartBeat {
 			continue
 		}
@@ -45,7 +53,7 @@ func getPriceStream(accountID string, instruments []string, channel chan pricing
 	}
 }
 
-func buildRequest(accountID string, instruments []string) *http.Request {
+func buildRequest(accountID string, instruments []string) (*http.Request, error) {
 	token := os.Getenv("OANDA_API_TOKEN")
 	urlPricingStream := streamURL + "/v3/accounts/" + accountID +
 		"/pricing/stream" + "?instruments="
@@ -60,21 +68,21 @@ func buildRequest(accountID string, instruments []string) *http.Request {
 	// Build the request and add authorization in the header
 	req, err := http.NewRequest("GET", urlPricingStream, nil)
 	if err != nil {
-		reportError(err)
-		log.Fatalln(err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return nil, err
 	}
 	req.Header.Add("Authorization", "Bearer "+token)
-	return req
+	return req, nil
 }
 
-func readStream(resp *http.Response, reader *bufio.Reader) pricingStream {
+func readStream(resp *http.Response, reader *bufio.Reader) (pricingStream, error) {
 	var price pricingStream
 
 	// Read the incomming line until '\n'
 	line, err := reader.ReadString('\n')
 	if err != nil {
-		reportError(err)
-		log.Fatalln(err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return pricingStream{}, err
 	}
 
 	// Convert string to reader to be read by json decoder
@@ -83,9 +91,9 @@ func readStream(resp *http.Response, reader *bufio.Reader) pricingStream {
 	// decode string reader into pricingStream
 	err = json.NewDecoder(r).Decode(&price)
 	if err != nil {
-		reportError(err)
-		log.Fatalln(err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return pricingStream{}, err
 	}
 
-	return price
+	return price, nil
 }

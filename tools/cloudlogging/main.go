@@ -1,12 +1,14 @@
-package main
+package cloudlogging
 
 // This tool transmit error with an universal single struct to
 // - Google Logging
 // - Google ErrorReporting (if severity is critical or emergency)
 // Hence all error follow the same format accross all services
 import (
+	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 )
 
 // Variables set accross the package to avoid duplicate inforamtion
@@ -22,6 +24,13 @@ var (
 func Init(_projectID, _serviceName string) {
 	projectID = _projectID
 	serviceName = _serviceName
+}
+
+// EntryFromError create a LogEntry from an given error
+func EntryFromError(err error) LogEntry {
+	return LogEntry{
+		Error: err,
+	}
 }
 
 // ReportCritical send a log (report) to Google Logging
@@ -64,17 +73,24 @@ func display(err error, isQuiet bool) {
 	if isQuiet {
 		return
 	}
-	log.Printf("%v", err)
+	log.Printf("%v\n", err)
+	log.Println(string(debug.Stack()))
 }
 
 // report : dispatch the entry between google logging and
 // google errorReporting. Only Critical and Emergency messages
-// will be transmitted to Google ErrorReporting.
+// will be transmitted to Google ErrorReporting. And only non Critical and
+// Emergency message will be sent to Google Logging
 func report(entry LogEntry) error {
 	env := os.Getenv("BRUSHED-CHARTS-ENVIRONMENT")
-
 	if env == "test" || env == "dev" {
 		return nil
+	}
+
+	if serviceName == "" || projectID == "" {
+		err := fmt.Errorf("cloudlogging has not been initialized")
+		println(err)
+		return err
 	}
 
 	err := googleErrorReporting(entry)

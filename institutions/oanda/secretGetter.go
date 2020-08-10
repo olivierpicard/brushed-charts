@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	"github.com/brushed-charts/backend/tools/cloudlogging"
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
@@ -17,16 +17,14 @@ func getToken() string {
 }
 
 func accessSecretVersion(name string) string {
-	// name := "projects/my-project/secrets/my-secret/versions/5"
-	// name := "projects/my-project/secrets/my-secret/versions/latest"
+	cloudlogging.Init(projectID, serviceName)
 
 	// Create the client.
 	ctx := context.Background()
 
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		reportError(err)
-		log.Fatalf("failed to create secretmanager client: %v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 	}
 
 	// Build the request.
@@ -37,8 +35,7 @@ func accessSecretVersion(name string) string {
 	// Call the API.
 	result, err := client.AccessSecretVersion(ctx, req)
 	if err != nil {
-		reportError(err)
-		log.Fatalf("failed to access secret version: %v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 	}
 
 	return string(result.Payload.Data)

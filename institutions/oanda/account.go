@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
+
+	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
-func getAccountID() string {
+func getAccountID() (string, error) {
 	type Account struct {
 		ID string `json:"id"`
 	}
@@ -17,6 +18,7 @@ func getAccountID() string {
 		Accounts []Account `json:"accounts"`
 	}
 
+	cloudlogging.Init(projectID, serviceName)
 	token := os.Getenv("OANDA_API_TOKEN")
 	client := http.Client{}
 
@@ -26,30 +28,31 @@ func getAccountID() string {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		reportError(err)
-		log.Fatalf("Can't get the account ID \n%v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return "", err
 	}
 	if resp.StatusCode != 200 {
 		bytes, err := ioutil.ReadAll(resp.Body)
 		body := string(bytes)
 
 		if err != nil {
-			reportError(err)
-			log.Fatalf("Can't read the body of http response %v", err)
+			m := fmt.Errorf("Can't read the body of http bad response %v", err)
+			cloudlogging.ReportCritical(cloudlogging.EntryFromError(m))
+			return "", err
 		}
 		err = fmt.Errorf(body)
-		reportError(err)
-		log.Fatalln(err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 	}
 	defer resp.Body.Close()
 
 	var acclist AccountList
 	err = json.NewDecoder(resp.Body).Decode(&acclist)
 	if err != nil {
-		reportError(err)
-		log.Fatalf("Error when decoding json \n%v", err)
+		m := fmt.Errorf("Error when decoding json \n%v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(m))
+		return "", err
 	}
 
 	id := acclist.Accounts[0].ID
-	return id
+	return id, nil
 }

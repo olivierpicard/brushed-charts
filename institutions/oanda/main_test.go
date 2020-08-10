@@ -19,7 +19,11 @@ func TestGetToken(t *testing.T) {
 }
 
 func TestGetAccountID(t *testing.T) {
-	id = getAccountID()
+	var err error
+	id, err = getAccountID()
+	if err != nil {
+		t.FailNow()
+	}
 }
 
 func validatePricingStreamData(s *pricingStream, t *testing.T) {

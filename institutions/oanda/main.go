@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const serviceName = "Institution Oanda"
+const serviceName = "institution/oanda"
 const projectID = "brushed-charts"
 const url = "https://api-fxpractice.oanda.com/v3/accounts"
 const streamURL = "https://stream-fxpractice.oanda.com"
@@ -17,7 +17,11 @@ func main() {
 		os.Setenv(envTokenName, getToken())
 	}
 
-	id := getAccountID()
+	id, err := getAccountID()
+	if err != nil {
+		return
+	}
+
 	stream := make(chan pricingStream)
 	go getPriceStream(id, []string{"EUR_USD", "EUR_CAD"}, stream)
 	for s := range stream {
