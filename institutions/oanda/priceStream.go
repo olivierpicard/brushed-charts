@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -17,19 +18,29 @@ const (
 	price     streamType = "PRICE"
 )
 
-type pricingStream struct {
-	Type       streamType `json:"type"`
-	Time       string     `json:"time"`
-	Bid        string     `json:"closeoutBid"`
-	Ask        string     `json:"closeoutAsk"`
-	Tradeable  bool       `json:"tradeable"`
-	Instrument string     `json:"instrument"`
+type priceBucket struct {
+	Price     string `json:"price"`
+	Liquidity int    `json:"liquidity"`
 }
 
-func getPriceStream(accountID string, instruments []string, channel chan pricingStream) {
+type pricingStream struct {
+	Type       streamType    `json:"type"`
+	Time       string        `json:"time"`
+	Bids       []priceBucket `json:"bids"`
+	Asks       []priceBucket `json:"asks"`
+	Bid        string        `json:"closeoutBid"`
+	Ask        string        `json:"closeoutAsk"`
+	Tradeable  bool          `json:"tradeable"`
+	Instrument string        `json:"instrument"`
+}
+
+func getPriceStream(accountID string, instruments []string, channel chan pricingStream, errChan chan error) {
 	cloudlogging.Init(projectID, serviceName)
 	req, err := buildRequest(accountID, instruments)
 	if err != nil {
+		err = fmt.Errorf("Error when building OANDA API request : %v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		errChan <- err
 		return
 	}
 
@@ -37,6 +48,7 @@ func getPriceStream(accountID string, instruments []string, channel chan pricing
 	resp, err := client.Do(req)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		errChan <- err
 		return
 	}
 
@@ -44,6 +56,8 @@ func getPriceStream(accountID string, instruments []string, channel chan pricing
 	for {
 		price, err := readStream(resp, reader)
 		if err != nil {
+			err = fmt.Errorf("Error when reading stream : %v", err)
+			errChan <- err
 			return
 		}
 		if price.Type == heartBeat {

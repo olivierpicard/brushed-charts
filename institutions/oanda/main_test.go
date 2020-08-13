@@ -43,8 +43,9 @@ func validatePricingStreamData(s *pricingStream, t *testing.T) {
 
 func TestPriceStream(t *testing.T) {
 	stream := make(chan pricingStream)
+	errChan := make(chan error)
 	instruments := []string{"EUR_USD", "EUR_CAD"}
-	go getPriceStream(id, instruments, stream)
+	go getPriceStream(id, instruments, stream, errChan)
 
 	res := make(map[string]pricingStream)
 

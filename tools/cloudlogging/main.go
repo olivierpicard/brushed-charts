@@ -93,6 +93,8 @@ func report(entry LogEntry) error {
 		return err
 	}
 
+	display(entry.Error, entry.IsQuiet)
+
 	err := googleErrorReporting(entry)
 	if err != nil {
 		display(err, entry.IsQuiet)
