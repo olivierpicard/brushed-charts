@@ -53,7 +53,8 @@ func (ps *pricingStream) toBigQueryRow() (bigQueryRow, error) {
 
 func insertStreamingBigQueryRow(streamPrice chan pricingStream, errorStreamPrice chan error) {
 	const waitingSeconds = 10
-	const tableID = "bid_ask_seconds"
+	const streamArchiveID = "pricing_stream_archive"
+	const streamshorttermID = "pricing_stream_shortterm"
 	ctx := context.Background()
 
 	client, err := bigquery.NewClient(ctx, projectID)
@@ -63,7 +64,8 @@ func insertStreamingBigQueryRow(streamPrice chan pricingStream, errorStreamPrice
 		return
 	}
 	defer client.Close()
-	inserter := client.Dataset(bigQueryDataset).Table(tableID).Inserter()
+	insertArchive := client.Dataset(bigQueryDataset).Table(streamArchiveID).Inserter()
+	insertShort := client.Dataset(bigQueryDataset).Table(streamshorttermID).Inserter()
 	tick := time.Tick(time.Second * waitingSeconds)
 	var listPrices []pricingStream
 
@@ -77,7 +79,7 @@ func insertStreamingBigQueryRow(streamPrice chan pricingStream, errorStreamPrice
 			errorStreamPrice <- err
 			return
 		case <-tick:
-			err := onPrice(ctx, listPrices, inserter)
+			err := onPrice(ctx, listPrices, insertArchive, insertShort)
 			listPrices = []pricingStream{}
 			if err != nil {
 				errorStreamPrice <- err
@@ -87,14 +89,18 @@ func insertStreamingBigQueryRow(streamPrice chan pricingStream, errorStreamPrice
 	}
 }
 
-func onPrice(ctx context.Context, prices []pricingStream, inserter *bigquery.Inserter) error {
+func onPrice(ctx context.Context, prices []pricingStream, insertArchive, insertShort *bigquery.Inserter) error {
 	rows, err := buildBigQueryPrice(prices)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		return err
 	}
 
-	if err := inserter.Put(ctx, rows); err != nil {
+	if err := insertArchive.Put(ctx, rows); err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return err
+	}
+	if err := insertShort.Put(ctx, rows); err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		return err
 	}
