@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	clog "github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
 func getAccountID() (string, error) {
@@ -18,8 +18,9 @@ func getAccountID() (string, error) {
 		Accounts []Account `json:"accounts"`
 	}
 
-	cloudlogging.Init(projectID, serviceName)
+	clog.Init(projectID, serviceName)
 	token := os.Getenv("OANDA_API_TOKEN")
+	url := os.Getenv("OANDA_API_URL") + "/v3/accounts"
 	client := http.Client{}
 
 	req, _ := http.NewRequest("GET", url, nil)
@@ -28,20 +29,21 @@ func getAccountID() (string, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		clog.ReportCritical(clog.EntryFromError(err))
 		return "", err
 	}
 	if resp.StatusCode != 200 {
 		bytes, err := ioutil.ReadAll(resp.Body)
-		body := string(bytes)
-
 		if err != nil {
 			m := fmt.Errorf("Can't read the body of http bad response %v", err)
-			cloudlogging.ReportCritical(cloudlogging.EntryFromError(m))
+			clog.ReportCritical(clog.EntryFromError(m))
 			return "", err
 		}
+
+		body := string(bytes)
 		err = fmt.Errorf(body)
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		clog.ReportCritical(clog.EntryFromError(err))
+		return "", err
 	}
 	defer resp.Body.Close()
 
@@ -49,7 +51,7 @@ func getAccountID() (string, error) {
 	err = json.NewDecoder(resp.Body).Decode(&acclist)
 	if err != nil {
 		m := fmt.Errorf("Error when decoding json \n%v", err)
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(m))
+		clog.ReportCritical(clog.EntryFromError(m))
 		return "", err
 	}
 

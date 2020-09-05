@@ -8,15 +8,15 @@ import (
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
-// getToken retrieve Oanda api token from Google Secret Manager
+// getToken retrieve Oanda api token from Google Secret Manager.
 // Env variable GOOGLE_APPLICATION_CREDENTIALS should be accessible
-func getToken() string {
+func getToken() (string, error) {
 	const secretName = "oanda-api-token"
 	const secretURL = "projects/" + projectID + "/secrets/" + secretName + "/versions/latest"
 	return accessSecretVersion(secretURL)
 }
 
-func accessSecretVersion(name string) string {
+func accessSecretVersion(name string) (string, error) {
 	cloudlogging.Init(projectID, serviceName)
 
 	// Create the client.
@@ -25,6 +25,7 @@ func accessSecretVersion(name string) string {
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return "", err
 	}
 
 	// Build the request.
@@ -36,7 +37,8 @@ func accessSecretVersion(name string) string {
 	result, err := client.AccessSecretVersion(ctx, req)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return "", err
 	}
 
-	return string(result.Payload.Data)
+	return string(result.Payload.Data), nil
 }

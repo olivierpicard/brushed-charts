@@ -1,36 +1,49 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 )
 
 const serviceName = "institution/oanda"
 const projectID = "brushed-charts"
-const url = "https://api-fxpractice.oanda.com/v3/accounts"
-const streamURL = "https://stream-fxpractice.oanda.com"
 const envTokenName = "OANDA_API_TOKEN"
 const bigQueryDataset = "oanda"
 
-func main() {
-	// Check if env variable is present
+var apiURL string
+
+func setAPIKeyEnvVariable() {
+	// Check for OANDA API KEY
 	if _, b := os.LookupEnv(envTokenName); !b {
-		os.Setenv(envTokenName, getToken())
+		token, err := getToken()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Set OANDA API KEY in env variable
+		os.Setenv(envTokenName, token)
 	}
+}
+
+func main() {
+	apiURL = os.Getenv("OANDA_API_URL")
+	setAPIKeyEnvVariable()
 
 	id, err := getAccountID()
 	if err != nil {
-		return
+		log.Fatal("Can't retrieve the accound ID")
 	}
 
-	stream := make(chan pricingStream)
-	errChan := make(chan error)
+	instruments := []string{"EUR_USD", "EUR_CAD"}
 
-	go getPriceStream(id, []string{"EUR_USD", "EUR_CAD"}, stream, errChan)
-	go insertStreamingBigQueryRow(stream, errChan)
+	_, err = fetchlatestCandles(id, instruments)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	var counter int
+	// go insertStreamingBigQueryRow(stream, errChan)
+
+	/* var counter int
 	for {
 		select {
 		case <-stream:
@@ -41,5 +54,5 @@ func main() {
 			log.Fatalf("%v\n", e)
 		}
 		fmt.Println(counter)
-	}
+	} */
 }

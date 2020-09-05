@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,103 +10,107 @@ import (
 	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
-type streamType string
-
-const (
-	heartBeat streamType = "HEARTBEAT"
-	price     streamType = "PRICE"
-)
-
-type priceBucket struct {
-	Price     string `json:"price"`
-	Liquidity int    `json:"liquidity"`
+type candlestickData struct {
+	Open  string `json:"o"`
+	High  string `json:"h"`
+	Low   string `json:"l"`
+	Close string `json:"c"`
 }
 
-type pricingStream struct {
-	Type       streamType    `json:"type"`
-	Time       string        `json:"time"`
-	Bids       []priceBucket `json:"bids"`
-	Asks       []priceBucket `json:"asks"`
-	Bid        string        `json:"closeoutBid"`
-	Ask        string        `json:"closeoutAsk"`
-	Tradeable  bool          `json:"tradeable"`
-	Instrument string        `json:"instrument"`
+type candlestick struct {
+	Time     string          `json:"time"`
+	Complete bool            `json:"complete"`
+	Bid      candlestickData `json:"bid"`
+	Ask      candlestickData `json:"ask"`
+	Volume   int             `json:"volume"`
 }
 
-func getPriceStream(accountID string, instruments []string, channel chan pricingStream, errChan chan error) {
+type candlestickResponse struct {
+	Instrument  string        `json:"instrument"`
+	Granularity string        `json:"granularity"`
+	Candles     []candlestick `json:"candles"`
+}
+
+type latestCandlesArray struct {
+	LatestCandles []candlestickResponse `json:"latestCandles"`
+}
+
+type candlesStream struct {
+	candles chan []candlestickResponse
+	err     chan error
+}
+
+func _initCandleStream() candlesStream {
+	return candlesStream{
+		candles: make(chan []candlestickResponse),
+		err:     make(chan error),
+	}
+}
+
+func fetchlatestCandles(accountID string, instruments []string) (candlesStream, error) {
 	cloudlogging.Init(projectID, serviceName)
-	req, err := buildRequest(accountID, instruments)
+	var candles latestCandlesArray
+
+	url := buildURL(accountID, instruments)
+	stream := _initCandleStream()
+
+	req, err := buildRequest(url)
 	if err != nil {
-		err = fmt.Errorf("Error when building OANDA API request : %v", err)
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		errChan <- err
-		return
+		return candlesStream{}, err
 	}
 
+	resp, err := sendRequest(req)
+	if err != nil {
+		stream.err <- err
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&candles)
+	if err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return candlesStream{}, err
+	}
+
+	fmt.Printf("%+v", candles)
+	return stream, nil
+}
+
+func buildURL(accountID string, instruments []string) string {
+	url := apiURL + "/v3/accounts/" + accountID +
+		"/candles/latest" + "?candleSpecifications="
+
+	// The format for OANDA is INSTRUMENT:GRANULARITY:BID_ASK_MEDIAN(BAM)
+	var candlesSpecification string
+
+	// Add instrument before the candleSpecification and a ',' after
+	for _, c := range instruments {
+		candlesSpecification += c + ":S5:BA" + ","
+	}
+
+	candlesSpecification = strings.TrimSuffix(candlesSpecification, ",")
+	url += candlesSpecification
+	return url
+}
+
+func buildRequest(reqURL string) (*http.Request, error) {
+	token := os.Getenv("OANDA_API_TOKEN")
+
+	// Build the request and add authorization in the header
+	req, err := http.NewRequest("GET", reqURL, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Connection", "keep-alive")
+	return req, nil
+}
+
+func sendRequest(req *http.Request) (*http.Response, error) {
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		errChan <- err
-		return
-	}
-
-	reader := bufio.NewReader(resp.Body)
-	for {
-		price, err := readStream(resp, reader)
-		if err != nil {
-			err = fmt.Errorf("Error when reading stream : %v", err)
-			errChan <- err
-			return
-		}
-		if price.Type == heartBeat {
-			continue
-		}
-		channel <- price
-	}
-}
-
-func buildRequest(accountID string, instruments []string) (*http.Request, error) {
-	token := os.Getenv("OANDA_API_TOKEN")
-	urlPricingStream := streamURL + "/v3/accounts/" + accountID +
-		"/pricing/stream" + "?instruments="
-
-	// Add Instrument to URL
-	for _, s := range instruments {
-		urlPricingStream += s + ","
-	}
-	// Remove the last ',' in the URL
-	urlPricingStream = strings.TrimSuffix(urlPricingStream, ",")
-
-	// Build the request and add authorization in the header
-	req, err := http.NewRequest("GET", urlPricingStream, nil)
-	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		return nil, err
 	}
-	req.Header.Add("Authorization", "Bearer "+token)
-	return req, nil
-}
-
-func readStream(resp *http.Response, reader *bufio.Reader) (pricingStream, error) {
-	var price pricingStream
-
-	// Read the incomming line until '\n'
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return pricingStream{}, err
-	}
-
-	// Convert string to reader to be read by json decoder
-	r := strings.NewReader(line)
-
-	// decode string reader into pricingStream
-	err = json.NewDecoder(r).Decode(&price)
-	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return pricingStream{}, err
-	}
-
-	return price, nil
+	return resp, nil
 }
