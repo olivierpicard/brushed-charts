@@ -73,6 +73,7 @@ func fetchlatestCandles(accountID string, instruments []string, granularity stri
 			}
 			time.Sleep(duration)
 		}
+
 	}()
 
 	return stream, nil

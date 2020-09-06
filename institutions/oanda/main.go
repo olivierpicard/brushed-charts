@@ -19,8 +19,8 @@ var bqTableNameArchive string
 
 func main() {
 	apiURL = os.Getenv("OANDA_API_URL")
-	bqTableNameShortterm = os.Getenv("BIGQUERY_PRICE_SHORTTERM")
-	bqTableNameArchive = os.Getenv("BIGQUERY_PRICE_SHORTTERM")
+	bqTableNameShortterm = os.Getenv("BIGQUERY_SHORTTERM_TABLENAME")
+	bqTableNameArchive = os.Getenv("BIGQUERY_ARCHIVE_TABLENAME")
 
 	setAPIKeyEnvVariable()
 
@@ -42,8 +42,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for {
-		readResult(stream)
+	go streamToBigQuery(stream.candles)
+	for err := range stream.err {
+		log.Fatalf("%v", err)
 	}
 }
 
@@ -85,14 +86,4 @@ func checkEnvVariable() error {
 	}
 
 	return nil
-}
-
-func readResult(stream candlesStream) {
-	select {
-	case cand := <-stream.candles:
-		bq := cand.parseForBigQuery()
-		fmt.Printf("%+v\n\n", bq)
-	case err := <-stream.err:
-		log.Fatalln(err)
-	}
 }

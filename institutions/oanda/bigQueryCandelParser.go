@@ -15,19 +15,19 @@ type bigQueryCandleData struct {
 }
 
 type bigQueryCandleRow struct {
-	Instrument  string
-	Date        string
-	Granularity string
-	Bid         bigQueryCandleData
-	Ask         bigQueryCandleData
-	Volume      int
+	Instrument string
+	Date       string
+	Interval   string
+	Bid        bigQueryCandleData
+	Ask        bigQueryCandleData
+	Volume     int
 }
 
 func (candArr *latestCandlesArray) parseForBigQuery() []bigQueryCandleRow {
 	rows := make([]bigQueryCandleRow, 0)
 	for _, meta := range candArr.LatestCandles {
 		bqRow := bigQueryCandleRow{}
-		bqRow.Granularity = meta.Granularity
+		bqRow.Interval = meta.Granularity
 		bqRow.Instrument = meta.Instrument
 
 		for _, cand := range meta.Candles {
