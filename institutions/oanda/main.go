@@ -10,7 +10,6 @@ const serviceName = "institution/oanda"
 const projectID = "brushed-charts"
 const envTokenName = "OANDA_API_TOKEN"
 const bigQueryDataset = "oanda"
-const latestCandleRefreshRate = 5 // In Seconds
 
 var apiURL string
 
@@ -25,7 +24,7 @@ func main() {
 
 	instruments := []string{"EUR_USD", "EUR_CAD"}
 
-	stream, err := fetchlatestCandles(id, instruments)
+	stream, err := fetchlatestCandles(id, instruments, "1s")
 	if err != nil {
 		log.Fatal(err)
 	}

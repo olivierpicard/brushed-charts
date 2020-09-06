@@ -49,8 +49,13 @@ func _initCandleStream() candlesStream {
 	}
 }
 
-func fetchlatestCandles(accountID string, instruments []string) (candlesStream, error) {
+func fetchlatestCandles(accountID string, instruments []string, granularity string) (candlesStream, error) {
 	cloudlogging.Init(projectID, serviceName)
+
+	duration, err := time.ParseDuration(granularity)
+	if err != nil {
+		return candlesStream{}, err
+	}
 
 	url := buildURL(accountID, instruments)
 	stream := _initCandleStream()
@@ -66,7 +71,7 @@ func fetchlatestCandles(accountID string, instruments []string) (candlesStream, 
 			if err != nil {
 				break
 			}
-			time.Sleep(time.Second * latestCandleRefreshRate)
+			time.Sleep(duration)
 		}
 	}()
 
