@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
 const serviceName = "institution/oanda"
@@ -12,10 +14,21 @@ const envTokenName = "OANDA_API_TOKEN"
 const bigQueryDataset = "oanda"
 
 var apiURL string
+var bqTableNameShortterm string
+var bqTableNameArchive string
 
 func main() {
 	apiURL = os.Getenv("OANDA_API_URL")
+	bqTableNameShortterm = os.Getenv("BIGQUERY_PRICE_SHORTTERM")
+	bqTableNameArchive = os.Getenv("BIGQUERY_PRICE_SHORTTERM")
+
 	setAPIKeyEnvVariable()
+
+	err := checkEnvVariable()
+	if err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		log.Fatalf("%v", err)
+	}
 
 	id, err := getAccountID()
 	if err != nil {
@@ -45,6 +58,33 @@ func setAPIKeyEnvVariable() {
 		// Set OANDA API KEY in env variable
 		os.Setenv(envTokenName, token)
 	}
+}
+
+func checkEnvVariable() error {
+	baseErr := "Environnement variables are empty : "
+	errSentence := baseErr
+	if apiURL == "" {
+		errSentence += "\napiURL"
+	}
+
+	if bqTableNameArchive == "" {
+		errSentence += "\nbqTableNameArchive"
+	}
+
+	if bqTableNameShortterm == "" {
+		errSentence += "\nbqTableNameShortterm"
+	}
+
+	if os.Getenv(envTokenName) == "" {
+		errSentence += "\n" + envTokenName
+	}
+
+	if errSentence != baseErr {
+		err := fmt.Errorf(errSentence)
+		return err
+	}
+
+	return nil
 }
 
 func readResult(stream candlesStream) {
