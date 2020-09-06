@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -9,8 +10,30 @@ const serviceName = "institution/oanda"
 const projectID = "brushed-charts"
 const envTokenName = "OANDA_API_TOKEN"
 const bigQueryDataset = "oanda"
+const latestCandleRefreshRate = 5 // In Seconds
 
 var apiURL string
+
+func main() {
+	apiURL = os.Getenv("OANDA_API_URL")
+	setAPIKeyEnvVariable()
+
+	id, err := getAccountID()
+	if err != nil {
+		log.Fatal("Can't retrieve the accound ID")
+	}
+
+	instruments := []string{"EUR_USD", "EUR_CAD"}
+
+	stream, err := fetchlatestCandles(id, instruments)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for {
+		readResult(stream)
+	}
+}
 
 func setAPIKeyEnvVariable() {
 	// Check for OANDA API KEY
@@ -25,34 +48,11 @@ func setAPIKeyEnvVariable() {
 	}
 }
 
-func main() {
-	apiURL = os.Getenv("OANDA_API_URL")
-	setAPIKeyEnvVariable()
-
-	id, err := getAccountID()
-	if err != nil {
-		log.Fatal("Can't retrieve the accound ID")
+func readResult(stream candlesStream) {
+	select {
+	case cand := <-stream.candles:
+		fmt.Printf("%+v\n\n", cand)
+	case err := <-stream.err:
+		log.Fatalln(err)
 	}
-
-	instruments := []string{"EUR_USD", "EUR_CAD"}
-
-	_, err = fetchlatestCandles(id, instruments)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// go insertStreamingBigQueryRow(stream, errChan)
-
-	/* var counter int
-	for {
-		select {
-		case <-stream:
-			counter++
-		case e := <-errChan:
-			close(stream)
-			close(errChan)
-			log.Fatalf("%v\n", e)
-		}
-		fmt.Println(counter)
-	} */
 }

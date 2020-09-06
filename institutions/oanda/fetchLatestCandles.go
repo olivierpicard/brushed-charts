@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
@@ -36,20 +38,19 @@ type latestCandlesArray struct {
 }
 
 type candlesStream struct {
-	candles chan []candlestickResponse
+	candles chan latestCandlesArray
 	err     chan error
 }
 
 func _initCandleStream() candlesStream {
 	return candlesStream{
-		candles: make(chan []candlestickResponse),
+		candles: make(chan latestCandlesArray),
 		err:     make(chan error),
 	}
 }
 
 func fetchlatestCandles(accountID string, instruments []string) (candlesStream, error) {
 	cloudlogging.Init(projectID, serviceName)
-	var candles latestCandlesArray
 
 	url := buildURL(accountID, instruments)
 	stream := _initCandleStream()
@@ -59,19 +60,45 @@ func fetchlatestCandles(accountID string, instruments []string) (candlesStream, 
 		return candlesStream{}, err
 	}
 
+	go func() {
+		for {
+			err := requestLoop(req, stream)
+			if err != nil {
+				break
+			}
+			time.Sleep(time.Second * latestCandleRefreshRate)
+		}
+	}()
+
+	return stream, nil
+}
+
+func requestLoop(req *http.Request, stream candlesStream) error {
+	var candles latestCandlesArray
+
 	resp, err := sendRequest(req)
 	if err != nil {
 		stream.err <- err
 	}
 
+	isFatal, err := isFatalStatusCode(resp, stream)
+	if err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		stream.err <- err
+
+		if isFatal {
+			return err
+		}
+	}
+
 	err = json.NewDecoder(resp.Body).Decode(&candles)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return candlesStream{}, err
+		return err
 	}
 
-	fmt.Printf("%+v", candles)
-	return stream, nil
+	stream.candles <- candles
+	return nil
 }
 
 func buildURL(accountID string, instruments []string) string {
@@ -113,4 +140,31 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 	return resp, nil
+}
+
+func isFatalStatusCode(resp *http.Response, stream candlesStream) (bool, error) {
+	if resp.StatusCode == 200 {
+		return false, nil
+	}
+
+	body := tryReadingFailedResponse(resp)
+
+	err := fmt.Errorf("Latest candles response return status code : %v "+
+		"\nExtracted body: %v", resp.StatusCode, body)
+
+	// 400 Status could involve user error like misspelling instrument
+	// It not worth stopping the entire program for this. All others are fatal
+	if resp.StatusCode != 400 {
+		return true, err
+	}
+
+	return false, err
+}
+
+func tryReadingFailedResponse(resp *http.Response) string {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return ""
+	}
+	return string(body)
 }
