@@ -50,7 +50,8 @@ func setAPIKeyEnvVariable() {
 func readResult(stream candlesStream) {
 	select {
 	case cand := <-stream.candles:
-		fmt.Printf("%+v\n\n", cand)
+		bq := cand.parseForBigQuery()
+		fmt.Printf("%+v\n\n", bq)
 	case err := <-stream.err:
 		log.Fatalln(err)
 	}
