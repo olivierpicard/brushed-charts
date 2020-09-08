@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -39,12 +40,16 @@ type latestCandlesArray struct {
 
 type candlesStream struct {
 	candles chan latestCandlesArray
+	warning chan error
+	info    chan error
 	err     chan error
 }
 
 func _initCandleStream() candlesStream {
 	return candlesStream{
 		candles: make(chan latestCandlesArray),
+		warning: make(chan error),
+		info:    make(chan error),
 		err:     make(chan error),
 	}
 }
@@ -65,10 +70,13 @@ func fetchlatestCandles(accountID string, instruments *[]string, granularity str
 		return candlesStream{}, err
 	}
 
+	client := &http.Client{}
+
 	go func() {
 		for {
-			err := requestLoop(req, stream)
+			err := requestLoop(req, client, stream)
 			if err != nil {
+				stream.err <- err
 				break
 			}
 			time.Sleep(duration)
@@ -79,19 +87,18 @@ func fetchlatestCandles(accountID string, instruments *[]string, granularity str
 	return stream, nil
 }
 
-func requestLoop(req *http.Request, stream candlesStream) error {
+func requestLoop(req *http.Request, client *http.Client, stream candlesStream) error {
 	var candles latestCandlesArray
 
-	resp, err := sendRequest(req)
+	resp, err := sendRequest(req, client)
 	if err != nil {
-		stream.err <- err
+		manageCandleError(err, req, client, stream)
+		return nil
 	}
 
 	isFatal, err := isFatalStatusCode(resp, stream)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		stream.err <- err
-
 		if isFatal {
 			return err
 		}
@@ -102,6 +109,16 @@ func requestLoop(req *http.Request, stream candlesStream) error {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		return err
 	}
+
+	_, err = io.Copy(ioutil.Discard, (*resp).Body)
+	defer (*resp).Body.Close()
+
+	if err != nil {
+		err := fmt.Errorf("Couldn't read entire response to empty the body : %v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return err
+	}
+	fmt.Printf("%v\n\n", candles)
 
 	stream.candles <- candles
 	return nil
@@ -134,12 +151,10 @@ func buildRequest(reqURL string) (*http.Request, error) {
 	}
 
 	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Connection", "keep-alive")
 	return req, nil
 }
 
-func sendRequest(req *http.Request) (*http.Response, error) {
-	client := http.Client{}
+func sendRequest(req *http.Request, client *http.Client) (*http.Response, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
@@ -173,4 +188,15 @@ func tryReadingFailedResponse(resp *http.Response) string {
 		return ""
 	}
 	return string(body)
+}
+
+func manageCandleError(err error, req *http.Request, client *http.Client, stream candlesStream) {
+	if strings.Contains(err.Error(), "connection reset by peer") {
+		cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
+		client.CloseIdleConnections()
+		requestLoop(req, client, stream)
+		stream.warning <- err
+	} else {
+		stream.err <- err
+	}
 }

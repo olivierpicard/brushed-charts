@@ -9,7 +9,7 @@ import (
 )
 
 func parseWatchlist() []string {
-	bytes, err := ioutil.ReadFile("watchlist.txt")
+	bytes, err := ioutil.ReadFile(watchlistPath)
 	if err != nil {
 		err := fmt.Errorf("Can't read the Watchlist")
 		log.Fatalf("%v", err)
@@ -24,7 +24,6 @@ func parseWatchlist() []string {
 func watchlistRefreshLoop(rate string, watchlist *[]string) {
 	for {
 		*watchlist = parseWatchlist()
-		fmt.Printf("%v\n\n", *watchlist)
 		duration, _ := time.ParseDuration(rate)
 		time.Sleep(duration)
 	}

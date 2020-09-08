@@ -53,7 +53,7 @@ func main() {
 
 	go streamToBigQuery(stream.candles)
 	for err := range stream.err {
-		log.Fatalf("%v", err)
+		log.Printf("%v", err)
 	}
 }
 

@@ -3,3 +3,5 @@ credentials/*
 !credentials/*.gpg
 .env
 .DS_Store
+*.log
+var/
