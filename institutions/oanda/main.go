@@ -8,19 +8,27 @@ import (
 	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
-const serviceName = "institution/oanda"
-const projectID = "brushed-charts"
-const envTokenName = "OANDA_API_TOKEN"
-const bigQueryDataset = "oanda"
+const (
+	serviceName    = "institution/oanda"
+	projectID      = "brushed-charts"
+	envTokenName   = "OANDA_API_TOKEN"
+	minRefreshRate = "1s"
+)
 
-var apiURL string
-var bqTableNameShortterm string
-var bqTableNameArchive string
+var (
+	apiURL           string
+	bqPriceShortterm string
+	bqPriceArchive   string
+	bigQueryDataset  string
+	watchlistPath    string
+)
 
 func main() {
 	apiURL = os.Getenv("OANDA_API_URL")
-	bqTableNameShortterm = os.Getenv("BIGQUERY_SHORTTERM_TABLENAME")
-	bqTableNameArchive = os.Getenv("BIGQUERY_ARCHIVE_TABLENAME")
+	bqPriceShortterm = os.Getenv("BIGQUERY_SHORTTERM_TABLENAME")
+	bqPriceArchive = os.Getenv("BIGQUERY_ARCHIVE_TABLENAME")
+	bigQueryDataset = os.Getenv("BIGQUERY_OANDA_DATASET")
+	watchlistPath = os.Getenv("WATCHLIST_PATH")
 
 	setAPIKeyEnvVariable()
 
@@ -35,9 +43,10 @@ func main() {
 		log.Fatal("Can't retrieve the accound ID")
 	}
 
-	instruments := []string{"EUR_USD", "EUR_CAD"}
+	instruments := parseWatchlist()
+	go watchlistRefreshLoop(minRefreshRate, &instruments)
 
-	stream, err := fetchlatestCandles(id, instruments, "1s")
+	stream, err := fetchlatestCandles(id, &instruments, minRefreshRate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,12 +77,16 @@ func checkEnvVariable() error {
 		errSentence += "\napiURL"
 	}
 
-	if bqTableNameArchive == "" {
+	if bqPriceArchive == "" {
 		errSentence += "\nbqTableNameArchive"
 	}
 
-	if bqTableNameShortterm == "" {
+	if bqPriceShortterm == "" {
 		errSentence += "\nbqTableNameShortterm"
+	}
+
+	if watchlistPath == "" {
+		errSentence += "\nwatchlistPath"
 	}
 
 	if os.Getenv(envTokenName) == "" {
