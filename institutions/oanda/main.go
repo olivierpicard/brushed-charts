@@ -25,10 +25,10 @@ var (
 
 func main() {
 	apiURL = os.Getenv("OANDA_API_URL")
-	bqPriceShortterm = os.Getenv("BIGQUERY_SHORTTERM_TABLENAME")
-	bqPriceArchive = os.Getenv("BIGQUERY_ARCHIVE_TABLENAME")
-	bigQueryDataset = os.Getenv("BIGQUERY_OANDA_DATASET")
-	watchlistPath = os.Getenv("WATCHLIST_PATH")
+	bqPriceShortterm = os.Getenv("OANDA_BIGQUERY_SHORTTERM_TABLENAME")
+	bqPriceArchive = os.Getenv("OANDA_BIGQUERY_ARCHIVE_TABLENAME")
+	bigQueryDataset = os.Getenv("OANDA_BIGQUERY_DATASET")
+	watchlistPath = os.Getenv("OANDA_WATCHLIST_PATH")
 
 	setAPIKeyEnvVariable()
 
