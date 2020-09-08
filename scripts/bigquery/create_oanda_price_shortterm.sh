@@ -14,5 +14,6 @@ function create {
 }
 
 create "oanda_prod.price_shortterm" 13140000 # 5 months
+create "oanda_test.price_shortterm" 5256000 # 2 months
 create "oanda_dev.price_shortterm" 1210000 # 2 weeks
 

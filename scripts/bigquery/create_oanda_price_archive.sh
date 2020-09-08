@@ -13,4 +13,5 @@ function create {
 }
 
 create "oanda_prod.price_archive" 315400000 # 10 years
+create "oanda_test.price_archive" 5256000 # 2 months
 create "oanda_dev.price_archive" 1210000 # 2 weeks
