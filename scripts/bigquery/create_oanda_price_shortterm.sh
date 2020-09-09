@@ -1,5 +1,8 @@
 #!/bin/bash
 
+dir="$(dirname $(which $0))"
+cd $dir
+
 function create {
     # Table expiration 5 month. 
     bq mk -t \
@@ -13,7 +16,12 @@ function create {
         ./candle_bidask_shemas.json
 }
 
+bq ls oanda_prod || bq mk oanda_prod
 create "oanda_prod.price_shortterm" 13140000 # 5 months
+
+bq ls oanda_test || bq mk oanda_test
 create "oanda_test.price_shortterm" 5256000 # 2 months
+
+bq ls oanda_dev || bq mk oanda_dev
 create "oanda_dev.price_shortterm" 1210000 # 2 weeks
 
