@@ -73,41 +73,38 @@ func fetchlatestCandles(accountID string, instruments *[]string, granularity str
 	client := &http.Client{}
 
 	go func() {
-		for {
-			err := requestLoop(req, client, stream)
-			if err != nil {
-				stream.err <- err
-				break
-			}
-			time.Sleep(duration)
+		ticker := time.NewTicker(duration)
+		for range ticker.C {
+			go requestLoop(req, client, stream)
 		}
-
 	}()
 
 	return stream, nil
 }
 
-func requestLoop(req *http.Request, client *http.Client, stream candlesStream) error {
+func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 	var candles latestCandlesArray
 
 	resp, err := sendRequest(req, client)
 	if err != nil {
 		manageCandleError(err, req, client, stream)
-		return nil
+		return
 	}
+	fmt.Printf("%v\n\n", time.Now())
 
 	isFatal, err := isFatalStatusCode(resp, stream)
 	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		if isFatal {
-			return err
+			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+			stream.err <- err
+			return
 		}
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&candles)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return err
+		return
 	}
 
 	_, err = io.Copy(ioutil.Discard, (*resp).Body)
@@ -116,12 +113,12 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) e
 	if err != nil {
 		err := fmt.Errorf("Couldn't read entire response to empty the body : %v", err)
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return err
+		return
 	}
 	fmt.Printf("%v\n\n", candles)
 
 	stream.candles <- candles
-	return nil
+	return
 }
 
 func buildURL(accountID string, instruments []string) string {
@@ -192,11 +189,9 @@ func tryReadingFailedResponse(resp *http.Response) string {
 
 func manageCandleError(err error, req *http.Request, client *http.Client, stream candlesStream) {
 	if strings.Contains(err.Error(), "connection reset by peer") {
-		cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
-		client.CloseIdleConnections()
-		requestLoop(req, client, stream)
-		stream.warning <- err
-	} else {
-		stream.err <- err
+		// cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
+		// stream.warning <- err
+		// time.Sleep(time.Second)
+		// requestLoop(req, client, stream)
 	}
 }
