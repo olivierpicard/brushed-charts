@@ -12,7 +12,7 @@ const (
 	serviceName    = "institution/oanda"
 	projectID      = "brushed-charts"
 	envTokenName   = "OANDA_API_TOKEN"
-	minRefreshRate = "1s"
+	minRefreshRate = "5s"
 )
 
 var (
@@ -55,6 +55,16 @@ func main() {
 	for err := range stream.err {
 		log.Printf("%v", err)
 	}
+
+	for {
+		select {
+		case err := <-stream.err:
+			log.Printf("%v", err)
+		case err := <-stream.fatal:
+			log.Fatalf("%v", err)
+		}
+	}
+
 }
 
 func setAPIKeyEnvVariable() {

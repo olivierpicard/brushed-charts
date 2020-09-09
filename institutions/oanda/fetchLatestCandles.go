@@ -43,6 +43,7 @@ type candlesStream struct {
 	warning chan error
 	info    chan error
 	err     chan error
+	fatal   chan error
 }
 
 func _initCandleStream() candlesStream {
@@ -51,6 +52,7 @@ func _initCandleStream() candlesStream {
 		warning: make(chan error),
 		info:    make(chan error),
 		err:     make(chan error),
+		fatal:   make(chan error),
 	}
 }
 
@@ -96,7 +98,7 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 	if err != nil {
 		if isFatal {
 			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-			stream.err <- err
+			stream.fatal <- err
 			return
 		}
 	}
