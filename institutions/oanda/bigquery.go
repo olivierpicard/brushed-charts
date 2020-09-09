@@ -44,7 +44,7 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	insertArchive := client.Dataset(bigQueryDataset).Table(bqPriceArchive).Inserter()
 	insertShort := client.Dataset(bigQueryDataset).Table(bqPriceShortterm).Inserter()
 
-	tick := time.Tick(time.Second * waitingSeconds)
+	tick := time.NewTicker(time.Second * waitingSeconds)
 	var listPrices []bigQueryCandleRow
 
 	for {
@@ -53,9 +53,10 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 			bqRows := csArray.parseForBigQuery()
 			bqRows = keepUniqueRows(bqRows, transactionsLog)
 			listPrices = append(listPrices, bqRows...)
-		case <-tick:
-			err := insertCandles(ctx, listPrices, insertArchive, insertShort)
 			updateLogs(listPrices, &transactionsLog)
+		case <-tick.C:
+			err := insertCandles(ctx, listPrices, insertArchive, insertShort)
+			// fmt.Printf("update : %v", transactionsLog)
 			if err != nil {
 				cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 				continue

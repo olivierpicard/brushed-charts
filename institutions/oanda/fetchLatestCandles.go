@@ -92,7 +92,6 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		manageCandleError(err, req, client, stream)
 		return
 	}
-	fmt.Printf("%v\n\n", time.Now())
 
 	isFatal, err := isFatalStatusCode(resp, stream)
 	if err != nil {
@@ -117,7 +116,6 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		return
 	}
-	fmt.Printf("%v\n\n", candles)
 
 	stream.candles <- candles
 	return

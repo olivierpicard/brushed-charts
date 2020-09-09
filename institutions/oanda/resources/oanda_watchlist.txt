@@ -18,7 +18,7 @@ EUR_CHF
 XAU_USD     # Gold
 XAG_USD     # Silver
 XPT_USD     # Platinum
-XPD_USD    # Palladium
+XPD_USD     # Palladium
 BCO_USD     # Brent Crude Oil
 NATGAS_USD  # Natural Gas
 WHEAT_USD   # Wheat

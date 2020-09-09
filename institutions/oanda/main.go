@@ -12,7 +12,7 @@ const (
 	serviceName    = "institution/oanda"
 	projectID      = "brushed-charts"
 	envTokenName   = "OANDA_API_TOKEN"
-	minRefreshRate = "5s"
+	minRefreshRate = "1s"
 )
 
 var (
