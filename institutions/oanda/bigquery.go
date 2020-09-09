@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"cloud.google.com/go/bigquery"
@@ -33,7 +34,7 @@ func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
 func streamToBigQuery(candleStream chan latestCandlesArray) {
 	const waitingSeconds = 10
 	ctx := context.Background()
-	transactionsLog := make([]transactionLog, 0)
+	transactionsLog := loadLatestCandlesFromFile()
 
 	client, err := bigquery.NewClient(ctx, projectID)
 	if err != nil {
@@ -134,4 +135,29 @@ func saveLogToFile(logs []transactionLog) {
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 	}
+}
+
+func loadLatestCandlesFromFile() []transactionLog {
+	log := make([]transactionLog, 0)
+
+	info, err := os.Stat(latestCandlePath)
+	if os.IsNotExist(err) || info.IsDir() {
+		err = fmt.Errorf("Latest candle JSON file (%v) does not exist or it's a dir", latestCandlePath)
+		cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
+		return log
+	}
+
+	data, err := ioutil.ReadFile(latestCandlePath)
+	if err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return log
+	}
+
+	err = json.Unmarshal(data, &log)
+	if err != nil {
+		err = fmt.Errorf("Can't load json from %v file", latestCandlePath)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+	}
+
+	return log
 }

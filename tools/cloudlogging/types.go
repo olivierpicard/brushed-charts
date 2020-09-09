@@ -61,7 +61,7 @@ func (logType *Severity) toGoogleSeverity() logging.Severity {
 		severity = logging.Emergency
 		break
 	case Debug:
-		severity = logging.Emergency
+		severity = logging.Debug
 		break
 	default:
 		err := fmt.Errorf("no severity equavalent for google logging : (%d)", logType)

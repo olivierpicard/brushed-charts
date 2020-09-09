@@ -56,15 +56,15 @@ func _initCandleStream() candlesStream {
 	}
 }
 
-func fetchlatestCandles(accountID string, instruments *[]string, granularity string) (candlesStream, error) {
+func fetchlatestCandles(accountID string, instruments *[]string, refreshRate string, granularities []string) (candlesStream, error) {
 	cloudlogging.Init(projectID, serviceName)
 
-	duration, err := time.ParseDuration(granularity)
+	duration, err := time.ParseDuration(refreshRate)
 	if err != nil {
 		return candlesStream{}, err
 	}
 
-	url := buildURL(accountID, *instruments)
+	url := buildURL(accountID, *instruments, granularities)
 	stream := _initCandleStream()
 
 	req, err := buildRequest(url)
@@ -89,8 +89,10 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 
 	resp, err := sendRequest(req, client)
 	if err != nil {
-		manageCandleError(err, req, client, stream)
-		return
+		tryReadingFailedResponse(resp)
+		if !strings.Contains(err.Error(), "connection reset by peer") {
+			return
+		}
 	}
 
 	isFatal, err := isFatalStatusCode(resp, stream)
@@ -98,7 +100,6 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		if isFatal {
 			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 			stream.fatal <- err
-			return
 		}
 	}
 
@@ -108,9 +109,8 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		return
 	}
 
-	_, err = io.Copy(ioutil.Discard, (*resp).Body)
-	defer (*resp).Body.Close()
-
+	_, err = io.Copy(ioutil.Discard, resp.Body)
+	defer resp.Body.Close()
 	if err != nil {
 		err := fmt.Errorf("Couldn't read entire response to empty the body : %v", err)
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
@@ -121,7 +121,7 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 	return
 }
 
-func buildURL(accountID string, instruments []string) string {
+func buildURL(accountID string, instruments, granularities []string) string {
 	url := apiURL + "/v3/accounts/" + accountID +
 		"/candles/latest" + "?candleSpecifications="
 
@@ -129,8 +129,10 @@ func buildURL(accountID string, instruments []string) string {
 	var candlesSpecification string
 
 	// Add instrument before the candleSpecification and a ',' after
-	for _, c := range instruments {
-		candlesSpecification += c + ":S5:BA" + ","
+	for _, gran := range granularities {
+		for _, c := range instruments {
+			candlesSpecification += c + ":" + gran + ":BA" + ","
+		}
 	}
 
 	candlesSpecification = strings.TrimSuffix(candlesSpecification, ",")
@@ -170,16 +172,11 @@ func isFatalStatusCode(resp *http.Response, stream candlesStream) (bool, error) 
 	err := fmt.Errorf("Latest candles response return status code : %v "+
 		"\nExtracted body: %v", resp.StatusCode, body)
 
-	// 400 Status could involve user error like misspelling instrument
-	// It not worth stopping the entire program for this. All others are fatal
-	if resp.StatusCode != 400 {
-		return true, err
-	}
-
-	return false, err
+	return true, err
 }
 
 func tryReadingFailedResponse(resp *http.Response) string {
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return ""
@@ -188,10 +185,5 @@ func tryReadingFailedResponse(resp *http.Response) string {
 }
 
 func manageCandleError(err error, req *http.Request, client *http.Client, stream candlesStream) {
-	if strings.Contains(err.Error(), "connection reset by peer") {
-		// cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
-		// stream.warning <- err
-		// time.Sleep(time.Second)
-		// requestLoop(req, client, stream)
-	}
+
 }

@@ -48,21 +48,20 @@ func main() {
 	instruments := parseWatchlist()
 	go watchlistRefreshLoop(minRefreshRate, &instruments)
 
-	stream, err := fetchlatestCandles(id, &instruments, minRefreshRate)
+	stream, err := fetchlatestCandles(id, &instruments, minRefreshRate, []string{"S5", "M1", "H1", "D"})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	go streamToBigQuery(stream.candles)
-	for err := range stream.err {
-		log.Printf("%v", err)
-	}
 
 	for {
 		select {
 		case err := <-stream.err:
 			log.Printf("%v", err)
 		case err := <-stream.fatal:
+			mess := fmt.Errorf("Fatal Error program exited : %v", err)
+			cloudlogging.ReportEmergency(cloudlogging.EntryFromError(mess))
 			log.Fatalf("%v", err)
 		}
 	}
