@@ -7,10 +7,11 @@ export OANDA_BIGQUERY_SHORTTERM_TABLENAME="price_shortterm"
 export OANDA_BIGQUERY_ARCHIVE_TABLENAME="price_archive"
 export OANDA_BIGQUERY_DATASET="oanda_dev"
 export OANDA_WATCHLIST_PATH="./resources/oanda_watchlist.txt"
+export OANDA_LATEST_CANDLE_PATH="./var/latest_candles.json"
 
-#go run $src > "$src"/../../logs/oanda.log 2>&1 
-#oanda_PID=$!
-#echo $oanda_PID > ./var/PID
-mkdir -p var 
-mkdir -p ../../logs
-go run .
+mkdir -p var log
+
+go run . > log/oanda.log 2>&1 
+
+oanda_PID=$!
+echo $oanda_PID > ./var/PID

@@ -21,6 +21,7 @@ var (
 	bqPriceArchive   string
 	bigQueryDataset  string
 	watchlistPath    string
+	latestCandlePath string
 )
 
 func main() {
@@ -29,6 +30,7 @@ func main() {
 	bqPriceArchive = os.Getenv("OANDA_BIGQUERY_ARCHIVE_TABLENAME")
 	bigQueryDataset = os.Getenv("OANDA_BIGQUERY_DATASET")
 	watchlistPath = os.Getenv("OANDA_WATCHLIST_PATH")
+	latestCandlePath = os.Getenv("OANDA_LATEST_CANDLE_PATH")
 
 	setAPIKeyEnvVariable()
 
@@ -97,6 +99,10 @@ func checkEnvVariable() error {
 
 	if watchlistPath == "" {
 		errSentence += "\nwatchlistPath"
+	}
+
+	if latestCandlePath == "" {
+		errSentence += "\bLatestCandlePath"
 	}
 
 	if os.Getenv(envTokenName) == "" {

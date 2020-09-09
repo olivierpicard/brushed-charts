@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"time"
 
 	"cloud.google.com/go/bigquery"
@@ -10,19 +12,19 @@ import (
 )
 
 type transactionLog struct {
-	instrument string
-	date       string
-	interval   string
+	Instrument string `json:"instrument"`
+	Date       string `json:"date"`
+	Interval   string `json:"interval"`
 }
 
 func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
-	if bqr.Instrument != x.instrument {
+	if bqr.Instrument != x.Instrument {
 		return false
 	}
-	if bqr.Date != x.date {
+	if bqr.Date != x.Date {
 		return false
 	}
-	if bqr.Interval != x.interval {
+	if bqr.Interval != x.Interval {
 		return false
 	}
 	return true
@@ -54,9 +56,9 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 			bqRows = keepUniqueRows(bqRows, transactionsLog)
 			listPrices = append(listPrices, bqRows...)
 			updateLogs(listPrices, &transactionsLog)
+			saveLogToFile(transactionsLog)
 		case <-tick.C:
 			err := insertCandles(ctx, listPrices, insertArchive, insertShort)
-			// fmt.Printf("update : %v", transactionsLog)
 			if err != nil {
 				cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 				continue
@@ -100,7 +102,7 @@ func isBQLogContain(row bigQueryCandleRow, logs []transactionLog) bool {
 func updateLogs(rows []bigQueryCandleRow, logs *[]transactionLog) {
 	similar := func(row bigQueryCandleRow) (bool, int) {
 		for i, log := range *logs {
-			if log.instrument == row.Instrument && log.interval == row.Interval {
+			if log.Instrument == row.Instrument && log.Interval == row.Interval {
 				return true, i
 			}
 		}
@@ -110,13 +112,26 @@ func updateLogs(rows []bigQueryCandleRow, logs *[]transactionLog) {
 	for _, row := range rows {
 		isSimilar, index := similar(row)
 		if isSimilar {
-			(*logs)[index].date = row.Date
+			(*logs)[index].Date = row.Date
 		} else {
 			*logs = append(*logs, transactionLog{
-				instrument: row.Instrument,
-				interval:   row.Interval,
-				date:       row.Date,
+				Instrument: row.Instrument,
+				Interval:   row.Interval,
+				Date:       row.Date,
 			})
 		}
+	}
+}
+
+func saveLogToFile(logs []transactionLog) {
+	data, err := json.MarshalIndent(logs, "", "  ")
+	if err != nil {
+		err = fmt.Errorf("Can't marshal latestCandles : %v", err)
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		return
+	}
+	err = ioutil.WriteFile(latestCandlePath, data, 0644)
+	if err != nil {
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 	}
 }
