@@ -77,10 +77,9 @@ func display(err error, isQuiet bool) {
 	log.Println(string(debug.Stack()))
 }
 
-// report : dispatch the entry between google logging and
-// google errorReporting. Only Critical and Emergency messages
+// report : Only Critical and Emergency messages
 // will be transmitted to Google ErrorReporting. And only non Critical
-// messages will be sent to Google Logging
+// messages will be only displayed
 func report(entry LogEntry) error {
 	env := os.Getenv("BRUSHED-CHARTS-ENVIRONMENT")
 	if env == "test" || env == "dev" {
@@ -101,10 +100,5 @@ func report(entry LogEntry) error {
 		return err
 	}
 
-	err = googleLogging(entry)
-	if err != nil {
-		display(err, entry.IsQuiet)
-		return err
-	}
 	return nil
 }
