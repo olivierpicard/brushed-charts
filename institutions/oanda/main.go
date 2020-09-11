@@ -40,6 +40,8 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 
+	// bigqueryDeduplication()
+
 	id, err := getAccountID()
 	if err != nil {
 		log.Fatal("Can't retrieve the accound ID")

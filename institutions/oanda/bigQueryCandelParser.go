@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"cloud.google.com/go/bigquery"
 	"github.com/brushed-charts/backend/tools/cloudlogging"
 )
 
@@ -14,6 +15,15 @@ type bigQueryCandleData struct {
 	Close float64
 }
 
+func (c *bigQueryCandleData) Save() (map[string]bigquery.Value, string, error) {
+	return map[string]bigquery.Value{
+		"open":  c.Open,
+		"high":  c.High,
+		"low":   c.Low,
+		"close": c.Close,
+	}, "", nil
+}
+
 type bigQueryCandleRow struct {
 	Instrument string
 	Date       string
@@ -21,6 +31,17 @@ type bigQueryCandleRow struct {
 	Bid        bigQueryCandleData
 	Ask        bigQueryCandleData
 	Volume     int
+}
+
+func (c *bigQueryCandleRow) Save() (map[string]bigquery.Value, string, error) {
+	return map[string]bigquery.Value{
+		"instrument": c.Instrument,
+		"date":       c.Date,
+		"interval":   c.Interval,
+		"bid":        c.Bid,
+		"ask":        c.Ask,
+		"volume":     c.Volume,
+	}, "", nil
 }
 
 func (candArr *latestCandlesArray) parseForBigQuery() []bigQueryCandleRow {

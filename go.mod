@@ -8,5 +8,6 @@ require (
 	cloud.google.com/go/logging v1.0.0
 	golang.org/x/sys v0.0.0-20200810151505-1b9f1253b3ed // indirect
 	golang.org/x/tools v0.0.0-20200811032001-fd80f4dbb3ea // indirect
+	google.golang.org/api v0.30.0
 	google.golang.org/genproto v0.0.0-20200808173500-a06252235341
 )
