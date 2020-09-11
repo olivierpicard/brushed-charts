@@ -100,12 +100,15 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		if isFatal {
 			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 			stream.fatal <- err
+			return
 		}
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&candles)
 	if err != nil {
+		err := fmt.Errorf("Can't parse candles response to JSON struct : %v", err)
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		stream.fatal <- err
 		return
 	}
 
