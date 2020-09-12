@@ -11,14 +11,17 @@ read -r profile
 if [ -z $profil ]
 then
     profil="dev"
-fi
+fi 
 
-echo "Decrypting google credential..."
-./scripts/decrypt.sh
+if [ ! -f $GOOGLE_APPLICATION_CREDENTIALS ]
+then 
+    echo "Decrypting google credential..."
+    ./scripts/decrypt.sh
+fi 
 
 echo "Building go logexit application..."
 cd tools/logexit
-mkdir bin
+mkdir -p bin
 go build -o bin/ .
 cd $BCBPATH
 
