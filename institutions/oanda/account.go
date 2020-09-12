@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	clog "github.com/brushed-charts/backend/tools/cloudlogging"
+	clog "github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 func getAccountID() (string, error) {

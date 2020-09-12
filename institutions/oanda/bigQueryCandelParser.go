@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 type bigQueryCandleData struct {

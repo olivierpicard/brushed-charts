@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 const (

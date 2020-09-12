@@ -4,7 +4,7 @@ import (
 	"context"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
