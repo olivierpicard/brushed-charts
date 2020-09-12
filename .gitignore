@@ -5,3 +5,4 @@ credentials/*
 .DS_Store
 *.log
 var/
+bin/

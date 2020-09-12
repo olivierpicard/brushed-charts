@@ -2,10 +2,10 @@
 dirpath=$(dirname $(which $0))
 cd $dirpath/..
 
-mkdir -p log var
+mkdir -p log var bin
 
-echo "Choose a profile (dev|test|prod) [dev] ? "
-read profile
+echo -n "Choose a profile (dev|test|prod) [dev]: "
+read -r profile
 
 if [ -z $profile ]
 then
@@ -27,9 +27,8 @@ export OANDA_BIGQUERY_DATASET="oanda_$profile"
 export OANDA_WATCHLIST_PATH="resources/oanda_watchlist.txt"
 export OANDA_LATEST_CANDLE_PATH="var/latest_candles.json"
 
-#./scripts/prestart.sh || exit -1
-
-(go run . > log/oanda-$profile.log 2>&1 ; rm var/PID-oanda-$profile) &
+go build -o bin .
+bin/oanda > log/oanda-$profile.log 2>&1 &
 
 oanda_PID=$!
 echo $oanda_PID > var/PID-oanda-$profile
