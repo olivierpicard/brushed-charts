@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 const (
@@ -39,6 +39,8 @@ func main() {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		log.Fatalf("%v", err)
 	}
+
+	// bigqueryDeduplication()
 
 	id, err := getAccountID()
 	if err != nil {

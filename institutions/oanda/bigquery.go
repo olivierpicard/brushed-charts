@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/brushed-charts/backend/tools/cloudlogging"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 type transactionLog struct {
@@ -134,6 +135,7 @@ func saveLogToFile(logs []transactionLog) {
 	err = ioutil.WriteFile(latestCandlePath, data, 0644)
 	if err != nil {
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		log.Fatalf("Can't write the bigquery history/log file : %v", err)
 	}
 }
 
