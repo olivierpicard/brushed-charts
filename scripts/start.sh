@@ -13,6 +13,8 @@ then
     profil="dev"
 fi 
 
+echo "Use the profil : $profil"
+
 if [ ! -f $GOOGLE_APPLICATION_CREDENTIALS ]
 then 
     echo "Decrypting google credential..."
@@ -30,7 +32,7 @@ cd institutions/oanda/
 ./scripts/start.sh $profil
 
 
-echo "Start watching for oanda to report when the app exit"
+echo "Start logexit watch oanda app and report when it exited"
 pid=$(cat "var/PID-oanda-$profil")
 cd $BCBPATH
 ./tools/logexit/bin/logexit "brushed-charts" $pid "oanda" &
