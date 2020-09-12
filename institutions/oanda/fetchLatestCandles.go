@@ -95,13 +95,11 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		}
 	}
 
-	isFatal, err := isFatalStatusCode(resp, stream)
+	err = isErrStatusCode(resp, stream)
 	if err != nil {
-		if isFatal {
-			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-			stream.fatal <- err
-			return
-		}
+		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		stream.err <- err
+		return
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&candles)
@@ -165,17 +163,16 @@ func sendRequest(req *http.Request, client *http.Client) (*http.Response, error)
 	return resp, nil
 }
 
-func isFatalStatusCode(resp *http.Response, stream candlesStream) (bool, error) {
+func isErrStatusCode(resp *http.Response, stream candlesStream) error {
 	if resp.StatusCode == 200 {
-		return false, nil
+		return nil
 	}
 
 	body := tryReadingFailedResponse(resp)
-
 	err := fmt.Errorf("Latest candles response return status code : %v "+
 		"\nExtracted body: %v", resp.StatusCode, body)
 
-	return true, err
+	return err
 }
 
 func tryReadingFailedResponse(resp *http.Response) string {
