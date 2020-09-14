@@ -11,7 +11,7 @@ function create {
         --time_partitioning_type=HOUR \
         --time_partitioning_expiration "$2" \
         --require_partition_filter \
-        --clustering_fields interval,instrument \
+        --clustering_fields granularity,instrument \
         "$1" \
         ./candle_bidask_shemas.json
 }

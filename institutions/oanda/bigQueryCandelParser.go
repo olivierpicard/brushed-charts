@@ -25,22 +25,22 @@ func (c *bigQueryCandleData) Save() (map[string]bigquery.Value, string, error) {
 }
 
 type bigQueryCandleRow struct {
-	Instrument string
-	Date       string
-	Interval   string
-	Bid        bigQueryCandleData
-	Ask        bigQueryCandleData
-	Volume     int
+	Instrument  string
+	Date        string
+	Granularity string
+	Bid         bigQueryCandleData
+	Ask         bigQueryCandleData
+	Volume      int
 }
 
 func (c *bigQueryCandleRow) Save() (map[string]bigquery.Value, string, error) {
 	return map[string]bigquery.Value{
-		"instrument": c.Instrument,
-		"date":       c.Date,
-		"interval":   c.Interval,
-		"bid":        c.Bid,
-		"ask":        c.Ask,
-		"volume":     c.Volume,
+		"instrument":  c.Instrument,
+		"date":        c.Date,
+		"granularity": c.Granularity,
+		"bid":         c.Bid,
+		"ask":         c.Ask,
+		"volume":      c.Volume,
 	}, "", nil
 }
 
@@ -48,7 +48,7 @@ func (candArr *latestCandlesArray) parseForBigQuery() []bigQueryCandleRow {
 	rows := make([]bigQueryCandleRow, 0)
 	for _, meta := range candArr.LatestCandles {
 		bqRow := bigQueryCandleRow{}
-		bqRow.Interval = meta.Granularity
+		bqRow.Granularity = meta.Granularity
 		bqRow.Instrument = meta.Instrument
 
 		for _, cand := range meta.Candles {

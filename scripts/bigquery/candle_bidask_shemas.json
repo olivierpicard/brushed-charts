@@ -10,7 +10,7 @@
         "mode": "REQUIRED"
     },
     {
-        "name": "interval",
+        "name": "granularity",
         "type": "STRING",
         "mode": "REQUIRED"
     },

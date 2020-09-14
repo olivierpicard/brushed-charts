@@ -14,9 +14,9 @@ import (
 )
 
 type transactionLog struct {
-	Instrument string `json:"instrument"`
-	Date       string `json:"date"`
-	Interval   string `json:"interval"`
+	Instrument  string `json:"instrument"`
+	Date        string `json:"date"`
+	Granularity string `json:"granularity"`
 }
 
 func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
@@ -26,7 +26,7 @@ func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
 	if bqr.Date != x.Date {
 		return false
 	}
-	if bqr.Interval != x.Interval {
+	if bqr.Granularity != x.Granularity {
 		return false
 	}
 	return true
@@ -104,7 +104,7 @@ func isBQLogContain(row bigQueryCandleRow, logs []transactionLog) bool {
 func updateLogs(rows []bigQueryCandleRow, logs *[]transactionLog) {
 	similar := func(row bigQueryCandleRow) (bool, int) {
 		for i, log := range *logs {
-			if log.Instrument == row.Instrument && log.Interval == row.Interval {
+			if log.Instrument == row.Instrument && log.Granularity == row.Granularity {
 				return true, i
 			}
 		}
@@ -117,9 +117,9 @@ func updateLogs(rows []bigQueryCandleRow, logs *[]transactionLog) {
 			(*logs)[index].Date = row.Date
 		} else {
 			*logs = append(*logs, transactionLog{
-				Instrument: row.Instrument,
-				Interval:   row.Interval,
-				Date:       row.Date,
+				Instrument:  row.Instrument,
+				Granularity: row.Granularity,
+				Date:        row.Date,
 			})
 		}
 	}
