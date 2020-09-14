@@ -11,6 +11,7 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"github.com/brushed-charts/backend/lib/cloudlogging"
+	"google.golang.org/api/googleapi"
 )
 
 type transactionLog struct {
@@ -60,12 +61,20 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 			updateLogs(listPrices, &transactionsLog)
 			saveLogToFile(transactionsLog)
 		case <-tick.C:
-			err := insertCandles(ctx, listPrices, insertArchive, insertShort)
+			ctxtimeout, ctxcancel := context.WithTimeout(ctx, time.Hour*2)
+			err = insertCandles(ctxtimeout, listPrices, insertArchive, insertShort)
+			listPrices = []bigQueryCandleRow{}
 			if err != nil {
-				cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+				if e, ok := err.(*googleapi.Error); ok {
+					if e.Code == 404 {
+						log.Fatalf("Application crash because resources is NotFound : %v", err)
+					}
+
+				}
 				continue
 			}
-			listPrices = []bigQueryCandleRow{}
+
+			ctxcancel()
 		}
 	}
 }
