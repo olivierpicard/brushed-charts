@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/bigquery"
@@ -36,6 +37,7 @@ func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
 func streamToBigQuery(candleStream chan latestCandlesArray) {
 	const waitingSeconds = 10
 	ctx := context.Background()
+	streamCtx, streamCancel := context.WithCancel(ctx)
 	transactionsLog := loadLatestCandlesFromFile()
 
 	client, err := bigquery.NewClient(ctx, projectID)
@@ -61,20 +63,20 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 			updateLogs(listPrices, &transactionsLog)
 			saveLogToFile(transactionsLog)
 		case <-tick.C:
-			ctxtimeout, ctxcancel := context.WithTimeout(ctx, time.Hour*2)
-			err = insertCandles(ctxtimeout, listPrices, insertArchive, insertShort)
+			fmt.Printf("%+v\n\n", listPrices)
+			err = insertCandles(streamCtx, listPrices, insertArchive, insertShort)
 			listPrices = []bigQueryCandleRow{}
 			if err != nil {
 				if e, ok := err.(*googleapi.Error); ok {
 					if e.Code == 404 {
 						log.Fatalf("Application crash because resources is NotFound : %v", err)
 					}
-
 				}
-				continue
+				if strings.Contains(err.Error(), "row insertion failed") {
+					streamCancel()
+					streamCtx, streamCancel = context.WithCancel(ctx)
+				}
 			}
-
-			ctxcancel()
 		}
 	}
 }
