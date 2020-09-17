@@ -54,7 +54,7 @@ func onIncomingCandle(inCand latestCandlesArray, waitCand *[]bigQueryCandleRow,
 func onInsertionTick(ctx context.Context, waitingCandle *[]bigQueryCandleRow,
 	insertArchive, insertShort *bigquery.Inserter) {
 
-	streamCtx, cancelCtx := context.WithTimeout(ctx, time.Minute*3)
+	streamCtx, cancelCtx := context.WithTimeout(ctx, time.Minute*5)
 	defer cancelCtx()
 	err := insertCandles(streamCtx, *waitingCandle, insertArchive, insertShort)
 	*waitingCandle = []bigQueryCandleRow{}
