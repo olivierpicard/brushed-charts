@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"cloud.google.com/go/bigquery"
@@ -19,13 +18,11 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 
 	history.load(latestCandlePath)
 	ctx := context.Background()
-	streamCtx, cancelCtx := context.WithCancel(ctx)
 
 	client, err := bigquery.NewClient(ctx, projectID)
 	if err != nil {
 		err = fmt.Errorf("bigquery.NewClient: %v", err)
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		cancelCtx()
 		return
 	}
 	defer client.Close()
@@ -40,7 +37,7 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 		case incomingCandle := <-candleStream:
 			onIncomingCandle(incomingCandle, &waitingCandle, &history)
 		case <-tick.C:
-			onInsertionTick(&streamCtx, &cancelCtx, &waitingCandle, insertArchive, insertShort)
+			onInsertionTick(ctx, &waitingCandle, insertArchive, insertShort)
 		}
 	}
 }
@@ -54,16 +51,14 @@ func onIncomingCandle(inCand latestCandlesArray, waitCand *[]bigQueryCandleRow,
 	hist.save(latestCandlePath)
 }
 
-func onInsertionTick(streamCtx *context.Context, cancelCtx *context.CancelFunc,
-	waitingCandle *[]bigQueryCandleRow, insertArchive, insertShort *bigquery.Inserter) {
+func onInsertionTick(ctx context.Context, waitingCandle *[]bigQueryCandleRow,
+	insertArchive, insertShort *bigquery.Inserter) {
 
-	err := insertCandles(*streamCtx, *waitingCandle, insertArchive, insertShort)
+	streamCtx, cancelCtx := context.WithTimeout(ctx, time.Minute*5)
+	defer cancelCtx()
+	err := insertCandles(streamCtx, *waitingCandle, insertArchive, insertShort)
 	*waitingCandle = []bigQueryCandleRow{}
 	manageInsertionFatalError(err)
-	if isACancelContextError(err) {
-		(*cancelCtx)()
-		*streamCtx, *cancelCtx = context.WithCancel(*streamCtx)
-	}
 }
 
 func prepareIncomingCandles(history bigqueryCandleHistory, candSlice latestCandlesArray) []bigQueryCandleRow {
@@ -94,16 +89,4 @@ func manageInsertionFatalError(err error) {
 			log.Fatalf("Application crash because resources is NotFound : %v", err)
 		}
 	}
-}
-
-func isACancelContextError(err error) bool {
-	if err == nil {
-		return false
-	}
-
-	if strings.Contains(err.Error(), "row insertion failed") {
-		return true
-	}
-
-	return false
 }

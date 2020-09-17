@@ -44,6 +44,29 @@ func (c *bigQueryCandleRow) Save() (map[string]bigquery.Value, string, error) {
 	}, "", nil
 }
 
+func (c *bigQueryCandleRow) Equal(row bigQueryCandleRow) bool {
+	if c.Date != row.Date {
+		return false
+	}
+	if c.Instrument != row.Instrument {
+		return false
+	}
+	if c.Granularity != row.Granularity {
+		return false
+	}
+	return true
+}
+
+func (c *bigQueryCandleRow) EqualIgnoreDate(row bigQueryCandleRow) bool {
+	if c.Instrument != row.Instrument {
+		return false
+	}
+	if c.Granularity != row.Granularity {
+		return false
+	}
+	return true
+}
+
 func (candArr *latestCandlesArray) parseForBigQuery() []bigQueryCandleRow {
 	rows := make([]bigQueryCandleRow, 0)
 	for _, meta := range candArr.LatestCandles {
