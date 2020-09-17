@@ -8,15 +8,13 @@ import (
 	"os"
 
 	"github.com/brushed-charts/backend/lib/cloudlogging"
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 type bigqueryCandleHistory []bigQueryCandleRow
 
 func (history *bigqueryCandleHistory) contains(row bigQueryCandleRow) bool {
 	for _, h := range *history {
-		if cmp.Equal(row, h) {
+		if row.Equal(h) {
 			return true
 		}
 	}
@@ -24,14 +22,11 @@ func (history *bigqueryCandleHistory) contains(row bigQueryCandleRow) bool {
 }
 
 func (history *bigqueryCandleHistory) getIndexOfSimilar(row bigQueryCandleRow) int {
-	options := cmpopts.IgnoreFields(bigQueryCandleRow{}, "Date")
-
 	for i, h := range *history {
-		if cmp.Equal(h, row, options) {
+		if h.EqualIgnoreDate(row) {
 			return i
 		}
 	}
-
 	return -1
 }
 
