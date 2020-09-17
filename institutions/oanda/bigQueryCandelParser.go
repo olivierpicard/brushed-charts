@@ -9,10 +9,10 @@ import (
 )
 
 type bigQueryCandleData struct {
-	Open  float64
-	High  float64
-	Low   float64
-	Close float64
+	Open  float64 `json:"open"`
+	High  float64 `json:"high"`
+	Low   float64 `json:"low"`
+	Close float64 `json:"close"`
 }
 
 func (c *bigQueryCandleData) Save() (map[string]bigquery.Value, string, error) {
@@ -25,12 +25,12 @@ func (c *bigQueryCandleData) Save() (map[string]bigquery.Value, string, error) {
 }
 
 type bigQueryCandleRow struct {
-	Instrument  string
-	Date        string
-	Granularity string
-	Bid         bigQueryCandleData
-	Ask         bigQueryCandleData
-	Volume      int
+	Instrument  string             `json:"instrument"`
+	Date        string             `json:"date"`
+	Granularity string             `json:"granularity"`
+	Bid         bigQueryCandleData `json:"bid"`
+	Ask         bigQueryCandleData `json:"ask"`
+	Volume      int                `json:"volume"`
 }
 
 func (c *bigQueryCandleRow) Save() (map[string]bigquery.Value, string, error) {

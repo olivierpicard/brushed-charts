@@ -3,8 +3,7 @@
 dir="$(dirname $(which $0))"
 cd $dir
 
-function create {
-    # Table expiration 5 month. 
+function create { 
     bq mk -t \
         --expiration 0 \
         --time_partitioning_field date \

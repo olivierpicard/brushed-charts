@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 	"strings"
 	"time"
 
@@ -15,35 +12,20 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-type transactionLog struct {
-	Instrument  string `json:"instrument"`
-	Date        string `json:"date"`
-	Granularity string `json:"granularity"`
-}
-
-func (x *transactionLog) equal(bqr bigQueryCandleRow) bool {
-	if bqr.Instrument != x.Instrument {
-		return false
-	}
-	if bqr.Date != x.Date {
-		return false
-	}
-	if bqr.Granularity != x.Granularity {
-		return false
-	}
-	return true
-}
-
 func streamToBigQuery(candleStream chan latestCandlesArray) {
 	const waitingSeconds = 10
+	var history bigqueryCandleHistory
+	var waitingCandle []bigQueryCandleRow
+
+	history.load(latestCandlePath)
 	ctx := context.Background()
-	streamCtx, streamCancel := context.WithCancel(ctx)
-	transactionsLog := loadLatestCandlesFromFile()
+	streamCtx, cancelCtx := context.WithCancel(ctx)
 
 	client, err := bigquery.NewClient(ctx, projectID)
 	if err != nil {
 		err = fmt.Errorf("bigquery.NewClient: %v", err)
 		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+		cancelCtx()
 		return
 	}
 	defer client.Close()
@@ -52,33 +34,42 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	insertShort := client.Dataset(bigQueryDataset).Table(bqPriceShortterm).Inserter()
 
 	tick := time.NewTicker(time.Second * waitingSeconds)
-	var listPrices []bigQueryCandleRow
 
 	for {
 		select {
-		case csArray := <-candleStream:
-			bqRows := csArray.parseForBigQuery()
-			bqRows = keepUniqueRows(bqRows, transactionsLog)
-			listPrices = append(listPrices, bqRows...)
-			updateLogs(listPrices, &transactionsLog)
-			saveLogToFile(transactionsLog)
+		case incomingCandle := <-candleStream:
+			onIncomingCandle(incomingCandle, &waitingCandle, &history)
 		case <-tick.C:
-			fmt.Printf("%+v\n\n", listPrices)
-			err = insertCandles(streamCtx, listPrices, insertArchive, insertShort)
-			listPrices = []bigQueryCandleRow{}
-			if err != nil {
-				if e, ok := err.(*googleapi.Error); ok {
-					if e.Code == 404 {
-						log.Fatalf("Application crash because resources is NotFound : %v", err)
-					}
-				}
-				if strings.Contains(err.Error(), "row insertion failed") {
-					streamCancel()
-					streamCtx, streamCancel = context.WithCancel(ctx)
-				}
-			}
+			onInsertionTick(&streamCtx, &cancelCtx, &waitingCandle, insertArchive, insertShort)
 		}
 	}
+}
+
+func onIncomingCandle(inCand latestCandlesArray, waitCand *[]bigQueryCandleRow,
+	hist *bigqueryCandleHistory) {
+
+	bqRows := prepareIncomingCandles(*hist, inCand)
+	*waitCand = append(*waitCand, bqRows...)
+	hist.update(*waitCand)
+	hist.save(latestCandlePath)
+}
+
+func onInsertionTick(streamCtx *context.Context, cancelCtx *context.CancelFunc,
+	waitingCandle *[]bigQueryCandleRow, insertArchive, insertShort *bigquery.Inserter) {
+
+	err := insertCandles(*streamCtx, *waitingCandle, insertArchive, insertShort)
+	*waitingCandle = []bigQueryCandleRow{}
+	manageInsertionFatalError(err)
+	if isACancelContextError(err) {
+		(*cancelCtx)()
+		*streamCtx, *cancelCtx = context.WithCancel(*streamCtx)
+	}
+}
+
+func prepareIncomingCandles(history bigqueryCandleHistory, candSlice latestCandlesArray) []bigQueryCandleRow {
+	bqRows := candSlice.parseForBigQuery()
+	bqRows = bigqueryKeepUniqueCandleRow(history, bqRows)
+	return bqRows
 }
 
 func insertCandles(ctx context.Context, rows []bigQueryCandleRow, insertArchive, insertShort *bigquery.Inserter) error {
@@ -93,84 +84,26 @@ func insertCandles(ctx context.Context, rows []bigQueryCandleRow, insertArchive,
 	return nil
 }
 
-func keepUniqueRows(rows []bigQueryCandleRow, log []transactionLog) []bigQueryCandleRow {
-	newRows := make([]bigQueryCandleRow, 0)
-	for _, row := range rows {
-		if !isBQLogContain(row, log) {
-			newRows = append(newRows, row)
-		}
-	}
-	return newRows
-}
-
-func isBQLogContain(row bigQueryCandleRow, logs []transactionLog) bool {
-	for _, log := range logs {
-		if log.equal(row) {
-			return true
-		}
-	}
-	return false
-}
-
-func updateLogs(rows []bigQueryCandleRow, logs *[]transactionLog) {
-	similar := func(row bigQueryCandleRow) (bool, int) {
-		for i, log := range *logs {
-			if log.Instrument == row.Instrument && log.Granularity == row.Granularity {
-				return true, i
-			}
-		}
-		return false, -1
-	}
-
-	for _, row := range rows {
-		isSimilar, index := similar(row)
-		if isSimilar {
-			(*logs)[index].Date = row.Date
-		} else {
-			*logs = append(*logs, transactionLog{
-				Instrument:  row.Instrument,
-				Granularity: row.Granularity,
-				Date:        row.Date,
-			})
-		}
-	}
-}
-
-func saveLogToFile(logs []transactionLog) {
-	data, err := json.MarshalIndent(logs, "", "  ")
-	if err != nil {
-		err = fmt.Errorf("Can't marshal latestCandles : %v", err)
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+func manageInsertionFatalError(err error) {
+	if err == nil {
 		return
 	}
-	err = ioutil.WriteFile(latestCandlePath, data, 0644)
-	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		log.Fatalf("Can't write the bigquery history/log file : %v", err)
+
+	if e, ok := err.(*googleapi.Error); ok {
+		if e.Code == 404 {
+			log.Fatalf("Application crash because resources is NotFound : %v", err)
+		}
 	}
 }
 
-func loadLatestCandlesFromFile() []transactionLog {
-	log := make([]transactionLog, 0)
-
-	info, err := os.Stat(latestCandlePath)
-	if os.IsNotExist(err) || info.IsDir() {
-		err = fmt.Errorf("Latest candle JSON file (%v) does not exist or it's a dir", latestCandlePath)
-		cloudlogging.ReportInfo(cloudlogging.EntryFromError(err))
-		return log
+func isACancelContextError(err error) bool {
+	if err == nil {
+		return false
 	}
 
-	data, err := ioutil.ReadFile(latestCandlePath)
-	if err != nil {
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-		return log
+	if strings.Contains(err.Error(), "row insertion failed") {
+		return true
 	}
 
-	err = json.Unmarshal(data, &log)
-	if err != nil {
-		err = fmt.Errorf("Can't load json from %v file", latestCandlePath)
-		cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
-	}
-
-	return log
+	return false
 }
