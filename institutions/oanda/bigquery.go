@@ -15,7 +15,6 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	const waitingSeconds = 10
 	var history bigqueryCandleHistory
 	var waitingCandle []bigQueryCandleRow
-	var latestCandles latestCandlesArray
 
 	history.load(latestCandlePath)
 	ctx := context.Background()
@@ -32,17 +31,13 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	insertShort := client.Dataset(bigQueryDataset).Table(bqPriceShortterm).Inserter()
 
 	tick := time.NewTicker(time.Second * waitingSeconds)
-	pruneTick := time.NewTicker(time.Second * 1)
 
 	for {
 		select {
 		case incomingCandles := <-candleStream:
-			latestCandles = incomingCandles
 			onIncomingCandle(incomingCandles, &waitingCandle, &history)
 		case <-tick.C:
 			onInsertionTick(ctx, &waitingCandle, insertArchive, insertShort)
-		case <-pruneTick.C:
-			history.prune(latestCandles)
 		}
 
 	}

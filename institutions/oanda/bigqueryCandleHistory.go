@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"sort"
 
 	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
@@ -22,10 +21,20 @@ func (history *bigqueryCandleHistory) contains(row bigQueryCandleRow) bool {
 	return false
 }
 
+func (history *bigqueryCandleHistory) getIndexOfSimilar(row bigQueryCandleRow) int {
+	for i, h := range *history {
+		if h.EqualIgnoreDate(row) {
+			return i
+		}
+	}
+	return -1
+}
+
 func (history *bigqueryCandleHistory) update(rows []bigQueryCandleRow) {
 	for _, row := range rows {
-		if history.contains(row) {
-			continue
+		index := history.getIndexOfSimilar(row)
+		if index != -1 {
+			(*history)[index] = row
 		}
 		*history = append(*history, row)
 	}
@@ -65,58 +74,21 @@ func (history *bigqueryCandleHistory) save(filepath string) {
 	}
 }
 
-func (history *bigqueryCandleHistory) getSimilarIndexCounter(instrument, granularity string) ([]int, int) {
-	var index []int
-	counter := 0
-	for i, h := range *history {
-		if instrument == h.Instrument && granularity == h.Granularity {
-			counter++
-			index = append(index, i)
-		}
-	}
-	return index, counter
-}
-
-func (history *bigqueryCandleHistory) prune(latestCand latestCandlesArray) {
-	const minRowToKeep = 6
-	bqrows := latestCand.parseForBigQuery()
-
-	for _, row := range bqrows {
-		index, count := history.getSimilarIndexCounter(row.Instrument, row.Granularity)
-		if count <= minRowToKeep {
-			continue
-		}
-
-		counterOverflow := count - minRowToKeep
-		sort.Ints(index)
-		index = index[:counterOverflow]
-		deletionCounter := 0
-
-		for i := range index {
-			indexToDel := i - deletionCounter
-			*history = append((*history)[:indexToDel], (*history)[indexToDel+1:]...)
-			deletionCounter++
-		}
-		_, c := history.getSimilarIndexCounter(row.Instrument, row.Granularity)
-		fmt.Printf("%v -- %v -- %v\n", c, row.Instrument, row.Granularity)
-		// for hindex, h := range *history {
-		// 	isIn := false
-		// 	for _, i := range indexToDel {
-		// 		if hindex == i {
-		// 			isIn = true
-		// 		}
-		// 	}
-		// 	if !isIn {
-		// 		newHist = append(newHist, h)
-		// 	}
-		// }
-	}
-}
-
 func bigqueryKeepUniqueCandleRow(history bigqueryCandleHistory, rows []bigQueryCandleRow) []bigQueryCandleRow {
 	uniqRow := []bigQueryCandleRow{}
 	for _, row := range rows {
-		if !history.contains(row) {
+		index := history.getIndexOfSimilar(row)
+		if index == -1 {
+			uniqRow = append(uniqRow, row)
+			continue
+		}
+		isGreater, err := DateGreater(row.Date, history[index].Date)
+		if err != nil {
+			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+			log.Fatalf("%v", err)
+		}
+
+		if isGreater {
 			uniqRow = append(uniqRow, row)
 		}
 	}
