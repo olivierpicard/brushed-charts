@@ -78,7 +78,18 @@ func (history *bigqueryCandleHistory) save(filepath string) {
 func bigqueryKeepUniqueCandleRow(history bigqueryCandleHistory, rows []bigQueryCandleRow) []bigQueryCandleRow {
 	uniqRow := []bigQueryCandleRow{}
 	for _, row := range rows {
-		if !history.contains(row) {
+		index := history.getIndexOfSimilar(row)
+		if index == -1 {
+			uniqRow = append(uniqRow, row)
+			continue
+		}
+		isGreater, err := DateGreater(row.Date, history[index].Date)
+		if err != nil {
+			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
+			log.Fatalf("%v", err)
+		}
+
+		if isGreater {
 			uniqRow = append(uniqRow, row)
 		}
 	}

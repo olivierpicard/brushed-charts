@@ -34,11 +34,12 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 
 	for {
 		select {
-		case incomingCandle := <-candleStream:
-			onIncomingCandle(incomingCandle, &waitingCandle, &history)
+		case incomingCandles := <-candleStream:
+			onIncomingCandle(incomingCandles, &waitingCandle, &history)
 		case <-tick.C:
 			onInsertionTick(ctx, &waitingCandle, insertArchive, insertShort)
 		}
+
 	}
 }
 
@@ -53,10 +54,7 @@ func onIncomingCandle(inCand latestCandlesArray, waitCand *[]bigQueryCandleRow,
 
 func onInsertionTick(ctx context.Context, waitingCandle *[]bigQueryCandleRow,
 	insertArchive, insertShort *bigquery.Inserter) {
-
-	streamCtx, cancelCtx := context.WithTimeout(ctx, time.Minute*5)
-	defer cancelCtx()
-	err := insertCandles(streamCtx, *waitingCandle, insertArchive, insertShort)
+	err := insertCandles(ctx, *waitingCandle, insertArchive, insertShort)
 	*waitingCandle = []bigQueryCandleRow{}
 	manageInsertionFatalError(err)
 }
