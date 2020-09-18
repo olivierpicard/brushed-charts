@@ -15,6 +15,7 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	const waitingSeconds = 10
 	var history bigqueryCandleHistory
 	var waitingCandle []bigQueryCandleRow
+	var latestCandles latestCandlesArray
 
 	history.load(latestCandlePath)
 	ctx := context.Background()
@@ -31,14 +32,19 @@ func streamToBigQuery(candleStream chan latestCandlesArray) {
 	insertShort := client.Dataset(bigQueryDataset).Table(bqPriceShortterm).Inserter()
 
 	tick := time.NewTicker(time.Second * waitingSeconds)
+	pruneTick := time.NewTicker(time.Second * 1)
 
 	for {
 		select {
-		case incomingCandle := <-candleStream:
-			onIncomingCandle(incomingCandle, &waitingCandle, &history)
+		case incomingCandles := <-candleStream:
+			latestCandles = incomingCandles
+			onIncomingCandle(incomingCandles, &waitingCandle, &history)
 		case <-tick.C:
 			onInsertionTick(ctx, &waitingCandle, insertArchive, insertShort)
+		case <-pruneTick.C:
+			history.prune(latestCandles)
 		}
+
 	}
 }
 
@@ -53,10 +59,7 @@ func onIncomingCandle(inCand latestCandlesArray, waitCand *[]bigQueryCandleRow,
 
 func onInsertionTick(ctx context.Context, waitingCandle *[]bigQueryCandleRow,
 	insertArchive, insertShort *bigquery.Inserter) {
-
-	streamCtx, cancelCtx := context.WithTimeout(ctx, time.Minute*5)
-	defer cancelCtx()
-	err := insertCandles(streamCtx, *waitingCandle, insertArchive, insertShort)
+	err := insertCandles(ctx, *waitingCandle, insertArchive, insertShort)
 	*waitingCandle = []bigQueryCandleRow{}
 	manageInsertionFatalError(err)
 }
