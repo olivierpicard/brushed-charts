@@ -33,10 +33,11 @@ func (history *bigqueryCandleHistory) getIndexOfSimilar(row bigQueryCandleRow) i
 func (history *bigqueryCandleHistory) update(rows []bigQueryCandleRow) {
 	for _, row := range rows {
 		index := history.getIndexOfSimilar(row)
-		if index != -1 {
-			(*history)[index] = row
+		if index == -1 {
+			*history = append(*history, row)
+			continue
 		}
-		*history = append(*history, row)
+		(*history)[index] = row
 	}
 }
 

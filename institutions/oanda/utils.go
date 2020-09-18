@@ -15,13 +15,13 @@ func DateGreater(strDate1 string, strDate2 string) (bool, error) {
 		return false, err
 	}
 
-	dt2, err := time.Parse(time.RFC3339Nano, strDate1)
+	dt2, err := time.Parse(time.RFC3339Nano, strDate2)
 	if err != nil {
 		err := fmt.Errorf("%v : %v", parseErr, err)
 		return false, err
 	}
 
-	if dt1.Unix() > dt2.Unix() {
+	if dt1.After(dt2) {
 		return true, nil
 	}
 
