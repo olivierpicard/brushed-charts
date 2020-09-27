@@ -82,7 +82,7 @@ func display(err error, isQuiet bool) {
 // messages will be only displayed
 func report(entry LogEntry) error {
 	env := os.Getenv("BRUSHED-CHARTS-ENVIRONMENT")
-	if env == "test" || env == "dev" {
+	if env == "dev" {
 		return nil
 	}
 
