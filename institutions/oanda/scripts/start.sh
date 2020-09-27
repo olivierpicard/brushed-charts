@@ -33,7 +33,7 @@ export OANDA_WATCHLIST_PATH="$PWD/resources/oanda_watchlist.txt"
 export OANDA_LATEST_CANDLE_PATH="$PWD/var/latest_candles.json"
 
 
-go build -o bin .
+go build -o bin ./src
 bin/oanda > log/oanda-$profil.log 2>&1 &
 
 oanda_PID=$!
