@@ -1,37 +1,34 @@
 package util
 
 import (
-	"bytes"
-	"io/ioutil"
 	"net/http"
 	"testing"
 
 	"github.com/tj/assert"
 )
 
-func TestExtractResponseError_OK(t *testing.T) {
-	resp := makeResponse(http.StatusOK, "")
-	message := TryReadingResponseError(resp)
-	assert.Empty(t, message)
+func TestExtractResponseBody_StatusOK_WithEmptyBody(t *testing.T) {
+	parametrableTestExtractResponseBody(t, "", http.StatusOK)
+	parametrableTestExtractResponseBody(t, "", http.StatusNotFound)
+	parametrableTestExtractResponseBody(t, "this is a body", http.StatusNotFound)
 }
 
-func TestExtractResponseError_NoBodyNotFound(t *testing.T) {
-	resp := makeResponse(http.StatusNotFound, "")
-	message := TryReadingResponseError(resp)
-	assert.Empty(t, message)
+func parametrableTestExtractResponseBody(t *testing.T, body string, statusCode int) {
+	resp := MakeResponse(http.StatusOK, body)
+	extractedBody := TryReadingResponseBody(resp)
+	assert.Equal(t, body, extractedBody)
 }
 
-func TestExtractResponseError_InternalWithBody(t *testing.T) {
-	expected := "This is an error"
-	resp := makeResponse(http.StatusInternalServerError, expected)
-	message := TryReadingResponseError(resp)
-	assert.Equal(t, expected, message)
+func Test_IsHTTPResponseError(t *testing.T) {
+	parametrableTestIsHTTPResponseError(t, MakeResponse(http.StatusOK, ""), false)
+	parametrableTestIsHTTPResponseError(t, MakeResponse(http.StatusAccepted, "a body"), false)
+	parametrableTestIsHTTPResponseError(t, MakeResponse(http.StatusBadGateway, ""), true)
+	parametrableTestIsHTTPResponseError(t, MakeResponse(http.StatusInternalServerError, "a body"), true)
+	parametrableTestIsHTTPResponseError(t, MakeResponse(http.StatusNotFound, ""), true)
+
 }
 
-func makeResponse(statusCode int, body string) *http.Response {
-	return &http.Response{
-		Status:     http.StatusText(statusCode),
-		StatusCode: statusCode,
-		Body:       ioutil.NopCloser(bytes.NewBufferString(body)),
-	}
+func parametrableTestIsHTTPResponseError(t *testing.T, resp *http.Response, expected bool) {
+	isAnError := IsHTTPResponseError(resp)
+	assert.Equal(t, expected, isAnError)
 }
