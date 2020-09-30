@@ -16,10 +16,14 @@ type accountList struct {
 
 // GetAccountID retrieve one ID in the IDs returned by
 // oanda servers
-func GetAccountID(client *http.Client) string {
-	req, _ := makeAccountIDRequest()
+func GetAccountID(client *http.Client) (string, error) {
+	req, err := makeAccountIDRequest()
+	if err != nil {
+		return "", err
+	}
+
 	client.Do(req)
-	return ""
+	return "", nil
 }
 
 func makeAccountIDRequest() (*http.Request, error) {
