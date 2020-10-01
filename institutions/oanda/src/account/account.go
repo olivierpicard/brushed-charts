@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	oandaAccountSuffixURL = "/v3/accounts"
+	oandaAccountURLPath = "/v3/accounts"
 )
 
 type account struct {
-	ID string `json:"id"`
+	ID   string   `json:"id"`
+	Tags []string `json:"tags"`
 }
 type accountList struct {
 	Accounts []account `json:"accounts"`
@@ -46,19 +47,17 @@ func GetAccountID(client *http.Client) (string, error) {
 
 func makeAccountIDRequest() (*http.Request, error) {
 	token := os.Getenv("OANDA_API_TOKEN")
-	url := os.Getenv("OANDA_API_URL") + oandaAccountSuffixURL
+	url := os.Getenv("OANDA_API_URL") + oandaAccountURLPath
 	req, err := util.MakeBearerGetRequest(url, token)
 	return req, err
 }
 
 func sendRequest(client *http.Client, request *http.Request) (*http.Response, error) {
 	response, err := client.Do(request)
-	if err != nil {
+	if err != nil || util.IsHTTPResponseError(response) {
 		body := util.TryReadingResponseBody(response)
-		if util.IsHTTPResponseError(response) {
-			err := errors.New("Error when fetching accountID from oanda\n" + body)
-			return nil, err
-		}
+		err := errors.New("Error when fetching accountID from oanda\n" + body)
+		return nil, err
 	}
 
 	return response, nil
