@@ -16,7 +16,7 @@ var (
 // GetOandaAPIToken fetch the token to work with Oanda API
 // stored on google secret manager
 func GetOandaAPIToken(projectID string) (string, error) {
-	secretName, err := getSecretNameFromEnvironmentVariable("SECRET_NAME_OANDA_API_TOKEN")
+	secretName, err := getOandaAPITokenFromEnvironmentVariable("SECRET_NAME_OANDA_API_TOKEN")
 	URL := makeURLForSecret(projectID, secretName, "latest")
 	secret, err := getSecret(URL, secretName)
 	return secret, err
@@ -39,7 +39,7 @@ func getSecret(URL, secretName string) (string, error) {
 	return secret, nil
 }
 
-func getSecretNameFromEnvironmentVariable(name string) (string, error) {
+func getOandaAPITokenFromEnvironmentVariable(name string) (string, error) {
 	secretName := os.Getenv(name)
 	if secretName == "" {
 		return "", errors.New("Environment variables \"" + name + "\" is empty")
