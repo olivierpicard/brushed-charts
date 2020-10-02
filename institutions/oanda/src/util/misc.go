@@ -4,9 +4,9 @@ import (
 	"os"
 )
 
-// IsInDevelopperEnvironment return true if
+// IsInDevelopmentEnvironment return true if
 // the environment variable BRUSHED-CHARTS-ENVIRONMENT equal "dev"
-func IsInDevelopperEnvironment() bool {
+func IsInDevelopmentEnvironment() bool {
 	envVarName := "BRUSHED-CHARTS-ENVIRONMENT"
 	mode, _ := os.LookupEnv(envVarName)
 	return mode == "dev"

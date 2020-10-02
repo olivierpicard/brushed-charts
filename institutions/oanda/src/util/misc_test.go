@@ -25,6 +25,6 @@ func parametrableTestIsInDevelopmentEnvironment(t *testing.T, desiredMode string
 	defer os.Setenv(variableName, previousMode)
 
 	os.Setenv(variableName, desiredMode)
-	isInDevMode := IsInDevelopperEnvironment()
+	isInDevMode := IsInDevelopmentEnvironment()
 	assert.Equal(t, expectedResult, isInDevMode)
 }
