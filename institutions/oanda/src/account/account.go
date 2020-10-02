@@ -70,7 +70,7 @@ func getAccountListFromBody(response *http.Response) ([]account, error) {
 	}
 	err := json.NewDecoder(response.Body).Decode(&accList)
 	if err != nil {
-		return []account{}, errors.New("Error during JSON parsing\n" + err.Error())
+		return []account{}, errors.New("Account -- Error during JSON parsing\n" + err.Error())
 	}
 	return accList.Accounts, nil
 }

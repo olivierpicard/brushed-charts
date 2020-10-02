@@ -6,6 +6,7 @@ import (
 	"log"
 	"testing"
 
+	"github.com/brushed-charts/backend/lib/testutil"
 	"github.com/pkg/errors"
 	"github.com/tj/assert"
 )
@@ -79,7 +80,9 @@ func Test_LogEntry_Print(t *testing.T) {
 
 	err := errors.New("Random error")
 	entry.initFromError(err)
-	logExpected := excuteFunctionToCaptureLog(func() { log.Printf("%v\n%s", entry.Error, entry.Stack) })
-	logCaptured := excuteFunctionToCaptureLog(func() { entry.print() })
+	logExpected := testutil.ExcuteFunctionToCaptureLog(func() {
+		log.Printf("%v\n%s", entry.Error, entry.Stack)
+	})
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() { entry.print() })
 	assert.Equal(t, logExpected, logCaptured)
 }

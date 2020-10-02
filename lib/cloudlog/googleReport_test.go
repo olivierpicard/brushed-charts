@@ -4,13 +4,16 @@ import (
 	"os"
 	"testing"
 
+	"github.com/brushed-charts/backend/lib/testutil"
 	"github.com/pkg/errors"
 	"github.com/tj/assert"
 )
 
 func Test_OnGoogleErrorReportingFail(t *testing.T) {
 	anError := errors.New("Random error")
-	logCaptured := excuteFunctionToCaptureLog(func() { onGoogleErrorReportingFail(anError) })
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() {
+		onGoogleErrorReportingFail(anError)
+	})
 	assert.Contains(t, logCaptured, "Could not log error to ErrorReporting")
 }
 
