@@ -46,6 +46,14 @@ func CriticalWithMessage(err error, message string) error {
 	return err
 }
 
+// Panic is the same as calling Critical then panic. It will
+// log the error on the cloud and locally then panic with empty
+// body
+func Panic(err error) error {
+	Critical(err)
+	panic("")
+}
+
 func report(entry LogEntry) error {
 	if err := tryToInit(); err != nil {
 		log.Printf("%+v", err)

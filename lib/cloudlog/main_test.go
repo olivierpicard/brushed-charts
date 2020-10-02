@@ -56,7 +56,22 @@ func Test_CriticalWithMessage_Log(t *testing.T) {
 
 	logExpected := fmt.Sprintf("%v\n%v", message, err)
 	logCaptured := excuteFunctionToCaptureLog(
-		func() { CriticalWithMessage(err, message) })
+		func() { CriticalWithMessage(err, message) },
+	)
 
 	assert.Contains(t, logCaptured, logExpected)
+}
+
+func Test_Panic_Log(t *testing.T) {
+	defer func() { recover() }()
+	err := errors.New("An error")
+	logCaptured := excuteFunctionToCaptureLog(func() { Panic(err) })
+	stack := fmt.Sprintf("%+v", err)
+	assert.Contains(t, logCaptured, err.Error())
+	assert.Contains(t, logCaptured, stack)
+}
+
+func Test_Panic_WillPanic(t *testing.T) {
+	err := errors.New("An error")
+	assert.Panics(t, func() { Panic(err) })
 }
