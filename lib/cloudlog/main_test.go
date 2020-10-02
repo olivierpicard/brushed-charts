@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/brushed-charts/backend/lib/testutil"
 	"github.com/pkg/errors"
 	"github.com/tj/assert"
 )
@@ -25,7 +26,7 @@ func init() {
 
 func Test_Critical_Log(t *testing.T) {
 	err := errors.New("An error")
-	logCaptured := excuteFunctionToCaptureLog(func() { Critical(err) })
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() { Critical(err) })
 	stack := fmt.Sprintf("%+v", err)
 	assert.Contains(t, logCaptured, err.Error())
 	assert.Contains(t, logCaptured, stack)
@@ -55,7 +56,7 @@ func Test_CriticalWithMessage_Log(t *testing.T) {
 	message := "This is a message"
 
 	logExpected := fmt.Sprintf("%v\n%v", message, err)
-	logCaptured := excuteFunctionToCaptureLog(
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(
 		func() { CriticalWithMessage(err, message) },
 	)
 
@@ -65,7 +66,7 @@ func Test_CriticalWithMessage_Log(t *testing.T) {
 func Test_Panic_Log(t *testing.T) {
 	defer func() { recover() }()
 	err := errors.New("An error")
-	logCaptured := excuteFunctionToCaptureLog(func() { Panic(err) })
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() { Panic(err) })
 	stack := fmt.Sprintf("%+v", err)
 	assert.Contains(t, logCaptured, err.Error())
 	assert.Contains(t, logCaptured, stack)
