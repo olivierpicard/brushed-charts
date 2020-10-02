@@ -17,7 +17,11 @@ var (
 // stored on google secret manager
 func GetOandaAPIToken(projectID string) (string, error) {
 	secretName, err := getOandaAPITokenFromEnvironmentVariable("SECRET_NAME_OANDA_API_TOKEN")
-	URL := makeURLForSecret(projectID, secretName, "latest")
+	URL, err := makeURLForSecret(projectID, secretName, "latest")
+	if err != nil {
+		return "", err
+	}
+
 	secret, err := getSecret(URL, secretName)
 	return secret, err
 
@@ -47,8 +51,11 @@ func getOandaAPITokenFromEnvironmentVariable(name string) (string, error) {
 	return secretName, nil
 }
 
-func makeURLForSecret(projectID string, secretName string, version string) string {
-	return "projects/" + projectID + "/secrets/" + secretName + "/versions/" + version
+func makeURLForSecret(projectID string, secretName string, version string) (string, error) {
+	if projectID == "" || secretName == "" || version == "" {
+		return "", errors.New("Secret -- Can't make URL to fetch secret because some input arguments are empty")
+	}
+	return "projects/" + projectID + "/secrets/" + secretName + "/versions/" + version, nil
 }
 
 func createClient() (*secretmanager.Client, error) {
