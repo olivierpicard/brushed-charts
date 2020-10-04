@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/tj/assert"
 )
 
@@ -17,23 +16,6 @@ const (
 	domainname = "oanda.api"
 	accountURL = domainname + "/v3/accounts"
 )
-
-type mockClient struct {
-	statusCode int
-	body       string
-	response   *http.Response
-	err        error
-}
-
-func (client *mockClient) Do(req *http.Request) (*http.Response, error) {
-	return client.response, nil
-}
-
-func (client *mockClient) makeResponse() {
-	response := util.MakeResponse(client.statusCode, client.body)
-	client.response = response
-
-}
 
 func init() {
 	os.Setenv("OANDA_API_TOKEN", token)
@@ -50,6 +32,25 @@ func Test_GetAccountID_NormalCondition(t *testing.T) {
 	defer mockServer.Close()
 	makeMockAccountEnvironmentURL(mockServer.URL)
 	assertNoErrorGetAccountID(t, expectedID, mockServer.Client())
+}
+
+func createMockServer(statusCode int, body string) *httptest.Server {
+	mockServer := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(statusCode)
+		if body == "" {
+			http.NoBody.WriteTo(w)
+		}
+		w.Write([]byte(body))
+	}))
+
+	mockServer.EnableHTTP2 = true
+	mockServer.StartTLS()
+	return mockServer
+}
+
+func makeMockAccountEnvironmentURL(url string) {
+	os.Setenv("OANDA_API_URL", url)
+	oandaAccountURLPath = ""
 }
 
 func assertNoErrorGetAccountID(t *testing.T, expectedID string, client *http.Client) {
@@ -103,23 +104,4 @@ func Test_GetAccountID_OK_MultiIDs(t *testing.T) {
 	defer mockServer.Close()
 	makeMockAccountEnvironmentURL(mockServer.URL)
 	assertNoErrorGetAccountID(t, expectedID, mockServer.Client())
-}
-
-func createMockServer(statusCode int, body string) *httptest.Server {
-	mockServer := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(statusCode)
-		if body == "" {
-			http.NoBody.WriteTo(w)
-		}
-		w.Write([]byte(body))
-	}))
-
-	mockServer.EnableHTTP2 = true
-	mockServer.StartTLS()
-	return mockServer
-}
-
-func makeMockAccountEnvironmentURL(url string) {
-	os.Setenv("OANDA_API_URL", url)
-	oandaAccountURLPath = ""
 }

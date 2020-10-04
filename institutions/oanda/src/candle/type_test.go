@@ -8,7 +8,7 @@ import (
 
 func Test_InputEntryIsValid_Empty(t *testing.T) {
 	input := InputEntry{}
-	err := input.containError()
+	err := input.containsError()
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "is nil")
 }
@@ -18,7 +18,7 @@ func Test_InputEntryIsValid_EmptyAccountID(t *testing.T) {
 		Instruments:   []string{"A", "Value"},
 		Granularities: []string{"N"},
 	}
-	err := input.containError()
+	err := input.containsError()
 	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), "Account ID can't be an empty")
 }
@@ -29,7 +29,7 @@ func Test_InputEntryIsValid_LengthZero(t *testing.T) {
 		Granularities: make([]string, 0),
 	}
 
-	err := input.containError()
+	err := input.containsError()
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "is empty")
 }
@@ -40,7 +40,7 @@ func Test_InputEntryIsValid_WithEmptyStringContent(t *testing.T) {
 		Granularities: make([]string, 3),
 	}
 
-	err := input.containError()
+	err := input.containsError()
 	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), "Empty strings are not allowed")
 }
@@ -50,8 +50,10 @@ func Test_InputEntryIsValid_Correct(t *testing.T) {
 		Instruments:   []string{"A", "Value"},
 		Granularities: []string{"N"},
 		AccountID:     "12312223",
+		APIDomainName: "adomain",
+		APIToken:      "atoken11111",
 	}
-	err := input.containError()
+	err := input.containsError()
 	assert.Nil(t, err)
 }
 
