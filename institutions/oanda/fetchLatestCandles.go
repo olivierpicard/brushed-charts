@@ -56,6 +56,10 @@ func _initCandleStream() candlesStream {
 	}
 }
 
+var (
+	counterError = 0
+)
+
 func fetchlatestCandles(accountID string, instruments *[]string, refreshRate string, granularities []string) (candlesStream, error) {
 	cloudlogging.Init(projectID, serviceName)
 
@@ -89,10 +93,12 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 
 	resp, err := sendRequest(req, client)
 	if err != nil {
-		tryReadingFailedResponse(resp)
-		if strings.Contains(strings.ToLower(err.Error()), "connection reset by peer") {
-			return
+		counterError++
+		if counterError >= 20 {
+			err = fmt.Errorf("there is more than 20 errors in a row")
+			cloudlogging.ReportCritical(cloudlogging.EntryFromError(err))
 		}
+		return
 	}
 
 	err = isErrStatusCode(resp, stream)
@@ -101,6 +107,8 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 		stream.err <- err
 		return
 	}
+
+	counterError = 0
 
 	err = json.NewDecoder(resp.Body).Decode(&candles)
 	if err != nil {
