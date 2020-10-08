@@ -90,7 +90,7 @@ func requestLoop(req *http.Request, client *http.Client, stream candlesStream) {
 	resp, err := sendRequest(req, client)
 	if err != nil {
 		tryReadingFailedResponse(resp)
-		if !strings.Contains(err.Error(), "connection reset by peer") {
+		if strings.Contains(strings.ToLower(err.Error()), "connection reset by peer") {
 			return
 		}
 	}
