@@ -37,7 +37,7 @@ func onGoogleErrorReportingFail(err error) {
 	var entryForGoogleError LogEntry
 	customError := fmt.Errorf("API GCloud -- Could not log error to ErrorReporting: \n%v", err)
 	entryForGoogleError.initFromError(customError)
-	entryForGoogleError.print()
+	entryForGoogleError.printIfAllowed()
 }
 
 func isInDevelopmentEnvironment() bool {

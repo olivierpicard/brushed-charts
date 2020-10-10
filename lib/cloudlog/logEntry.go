@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"runtime/debug"
 	"strings"
 
@@ -22,7 +23,11 @@ func (entry *LogEntry) initFromError(err error) {
 	entry.Stack = makeStackTrace(err)
 }
 
-func (entry *LogEntry) print() {
+func (entry *LogEntry) printIfAllowed() {
+	if os.Getenv(envKeyNoPrint) == "true" {
+		return
+	}
+
 	log.Printf("%v\n%s", entry.Error, entry.Stack)
 }
 

@@ -83,6 +83,6 @@ func Test_LogEntry_Print(t *testing.T) {
 	logExpected := testutil.ExcuteFunctionToCaptureLog(func() {
 		log.Printf("%v\n%s", entry.Error, entry.Stack)
 	})
-	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() { entry.print() })
+	logCaptured := testutil.ExcuteFunctionToCaptureLog(func() { entry.printIfAllowed() })
 	assert.Equal(t, logExpected, logCaptured)
 }

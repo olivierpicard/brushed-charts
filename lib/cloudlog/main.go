@@ -6,7 +6,6 @@ package cloudlog
 // Hence all error follow the same format accross all services
 import (
 	"errors"
-	"fmt"
 	"log"
 	"os"
 )
@@ -14,6 +13,7 @@ import (
 const (
 	envKeyProjectID   = "CLOUDLOG_PROJECTID"
 	envKeyServiceName = "CLOUDLOG_SERVICE_NAME"
+	envKeyNoPrint     = "CLOUDLOG_NO_PRINT"
 	envKeyEnvironment = "BRUSHED-CHARTS-ENVIRONMENT"
 )
 
@@ -29,20 +29,9 @@ var (
 func Critical(err error) error {
 	var entry LogEntry
 	entry.initFromError(err)
-	entry.print()
+	entry.printIfAllowed()
 	err = report(entry)
 
-	return err
-}
-
-// CriticalWithMessage same as `Critical` but concat the given
-// `message` before the given error (`err`)
-func CriticalWithMessage(err error, message string) error {
-	var entry LogEntry
-	entry.initFromError(err)
-	entry.Error = fmt.Errorf("%s\n%v", message, entry.Error)
-	entry.print()
-	err = report(entry)
 	return err
 }
 

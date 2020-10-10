@@ -51,18 +51,6 @@ func Test_Critical_NoServiceName_ErrorReturn(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func Test_CriticalWithMessage_Log(t *testing.T) {
-	err := errors.New("An error")
-	message := "This is a message"
-
-	logExpected := fmt.Sprintf("%v\n%v", message, err)
-	logCaptured := testutil.ExcuteFunctionToCaptureLog(
-		func() { CriticalWithMessage(err, message) },
-	)
-
-	assert.Contains(t, logCaptured, logExpected)
-}
-
 func Test_Panic_Log(t *testing.T) {
 	defer func() { recover() }()
 	err := errors.New("An error")
