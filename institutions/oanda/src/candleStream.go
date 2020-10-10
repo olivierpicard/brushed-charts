@@ -7,6 +7,7 @@ import (
 	"github.com/brushed-charts/backend/institutions/oanda/src/candle"
 	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/brushed-charts/backend/lib/cloudlog"
+	"github.com/pkg/errors"
 )
 
 func getCandleStream() candle.OutputStream {
@@ -37,6 +38,10 @@ func readWatchlistInstruments() []string {
 func parseWatchlist(stringWatchlist string) ([]string, error) {
 	re := regexp.MustCompile(`(?mi)^[[:word:]]+`)
 	instruments := re.FindAllString(stringWatchlist, -1)
+	if instruments == nil {
+		err := errors.New("Error when parsing watchlist. Format may be incorrect or the file may be empty")
+		return nil, err
+	}
 	return instruments, nil
 }
 

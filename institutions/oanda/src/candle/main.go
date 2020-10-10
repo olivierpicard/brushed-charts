@@ -48,7 +48,7 @@ func startRequestLoopAfterTime() {
 
 func requestLoop() {
 	resp, err := sendRequest()
-	if err != nil {
+	if err != nil || resp == nil {
 		return
 	}
 
