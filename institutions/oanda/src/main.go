@@ -8,23 +8,26 @@ import (
 	"github.com/pkg/errors"
 )
 
+var (
+	accountID     string
+	granularities = []string{"S5", "M1", "H1", "D"}
+)
+
 func main() {
 	initGlobalVariables()
-	_, err := getOandaAccountID()
-	if err != nil {
-		cloudlog.Panic(err)
-	}
+	accountID = getOandaAccountID()
+	// outputStream := getCandleStream()
 }
 
-func getOandaAccountID() (string, error) {
-	oandaAccountID, err := account.GetAccountID(&http.Client{})
+func getOandaAccountID() string {
+	oandaAccountID, err := account.GetAccountID(&http.Client{}, oandaAPIToken, oandaAPIURL)
 	if err != nil {
-		return "", err
+		cloudlog.Panic(err)
 	}
 
 	if oandaAccountID == "" {
 		err = errors.New("Oanda account ID is empty")
-		return "", err
+		cloudlog.Panic(err)
 	}
-	return oandaAccountID, nil
+	return oandaAccountID
 }

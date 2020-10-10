@@ -25,13 +25,13 @@ func Test_Stream(t *testing.T) {
 	stream, err := Stream(mockServer.Client(), mockInput)
 	assert.Nil(t, err)
 	select {
-	case resp := <-stream.response:
+	case resp := <-stream.Stream:
 		assert.NotEmpty(t, resp)
 		assert.Equal(t, resp.LatestCandles[0].Instrument, "EUR_USD")
 		assert.Equal(t, resp.LatestCandles[1].Granularity, "M1")
-	case e := <-stream.err:
+	case e := <-stream.Err:
 		assert.FailNow(t, e.Error())
-	case e := <-stream.fatal:
+	case e := <-stream.Fatal:
 		assert.FailNow(t, e.Error())
 	}
 }
@@ -47,11 +47,11 @@ func Test_Stream_MissingJSONField(t *testing.T) {
 	stream, err := Stream(mockServer.Client(), mockInput)
 	assert.Nil(t, err)
 	select {
-	case <-stream.response:
+	case <-stream.Stream:
 		assert.FailNow(t, "No response was expected")
-	case <-stream.err:
+	case <-stream.Err:
 		assert.FailNow(t, "No error but a fatal was expected")
-	case e := <-stream.fatal:
+	case e := <-stream.Fatal:
 		assert.NotNil(t, e)
 		assert.NotEmpty(t, e.Error())
 	}
@@ -69,11 +69,11 @@ func Test_Stream_BadJSONSyntaxe(t *testing.T) {
 	stream, err := Stream(mockServer.Client(), mockInput)
 	assert.Nil(t, err)
 	select {
-	case <-stream.response:
+	case <-stream.Stream:
 		assert.FailNow(t, "No response was expected")
-	case <-stream.err:
+	case <-stream.Err:
 		assert.FailNow(t, "No error but a fatal was expected")
-	case e := <-stream.fatal:
+	case e := <-stream.Fatal:
 		assert.NotNil(t, e)
 		assert.NotEmpty(t, e.Error())
 	}
@@ -90,12 +90,12 @@ func Test_Stream_HTTPErrorStatusCode(t *testing.T) {
 	assert.Nil(t, err)
 
 	select {
-	case <-stream.response:
+	case <-stream.Stream:
 		assert.FailNow(t, "No response was expected")
-	case err := <-stream.err:
+	case err := <-stream.Err:
 		assert.NotNil(t, err)
 		assert.NotEmpty(t, err.Error())
-	case <-stream.fatal:
+	case <-stream.Fatal:
 		assert.FailNow(t, "No error but a fatal was expected")
 	}
 }

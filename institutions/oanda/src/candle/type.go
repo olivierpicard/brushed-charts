@@ -94,15 +94,15 @@ func (resp *Response) isValid() error {
 // of this package in real time.
 // It could indicate the latest prices fetched, an error or a fatal error
 type OutputStream struct {
-	response chan Response
-	err      chan error
-	fatal    chan error
+	Stream chan Response
+	Err    chan error
+	Fatal  chan error
 }
 
 func (out *OutputStream) init() {
-	out.response = make(chan Response)
-	out.err = make(chan error)
-	out.fatal = make(chan error)
+	out.Stream = make(chan Response)
+	out.Err = make(chan error)
+	out.Fatal = make(chan error)
 }
 
 // InputEntry correspond to data that must

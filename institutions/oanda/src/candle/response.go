@@ -18,11 +18,11 @@ func extractExplicitHTTPError(resp *http.Response) error {
 
 func tryKeepingConnectionAlive(response *http.Response) {
 	if err := emptyResponseBody(response); err != nil {
-		outputStream.err <- err
+		outputStream.Err <- err
 	}
 
 	if err := closeResponseBody(response); err != nil {
-		outputStream.err <- err
+		outputStream.Err <- err
 	}
 }
 

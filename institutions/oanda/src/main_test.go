@@ -7,10 +7,6 @@ import (
 	"github.com/tj/assert"
 )
 
-func init() {
-	os.Setenv(envKeyEnvironmentMode, "dev")
-}
-
 func TestIntegration_AccountID_NotDevEnv(t *testing.T) {
 	previousEnvMode := os.Getenv(envKeyEnvironmentMode)
 	os.Setenv(envKeyEnvironmentMode, "integration_test")
@@ -26,8 +22,17 @@ func TestIntegration_AccountID_DevEnv(t *testing.T) {
 	testAccountID(t)
 }
 
+func Test_AccountID_NoAPIToken(t *testing.T) {
+	rescuedAPIToken := oandaAPIToken
+	oandaAPIToken = ""
+	defer func() { oandaAPIToken = rescuedAPIToken }()
+	funcThatShouldPanic := func() { getOandaAccountID() }
+	assert.Panics(t, funcThatShouldPanic)
+}
+
 func testAccountID(t *testing.T) {
-	accountID, err := getOandaAccountID()
-	assert.Nil(t, err)
+	var accountID string
+	funcThatShouldNotPanic := func() { accountID = getOandaAccountID() }
+	assert.NotPanics(t, funcThatShouldNotPanic)
 	assert.NotEmpty(t, accountID)
 }

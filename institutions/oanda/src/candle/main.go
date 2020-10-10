@@ -56,20 +56,20 @@ func requestLoop() {
 
 	if util.IsHTTPResponseError(resp) {
 		extractedError := extractExplicitHTTPError(resp)
-		outputStream.err <- extractedError
+		outputStream.Err <- extractedError
 		return
 	}
 
 	structuredResponse, err := decodeJSONToStructuredResponse(resp)
 	if err != nil {
-		outputStream.fatal <- err
+		outputStream.Fatal <- err
 		return
 	}
 	if err := structuredResponse.isValid(); err != nil {
-		outputStream.fatal <- err
+		outputStream.Fatal <- err
 	}
 
-	outputStream.response <- structuredResponse
+	outputStream.Stream <- structuredResponse
 }
 
 func decodeJSONToStructuredResponse(response *http.Response) (Response, error) {

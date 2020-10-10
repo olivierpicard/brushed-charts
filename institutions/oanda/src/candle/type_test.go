@@ -60,7 +60,7 @@ func Test_InputEntryIsValid_Correct(t *testing.T) {
 func Test_OutputStream_Init(t *testing.T) {
 	var outputStream OutputStream
 	outputStream.init()
-	assert.NotNil(t, outputStream.response)
-	assert.NotNil(t, outputStream.err)
-	assert.NotNil(t, outputStream.fatal)
+	assert.NotNil(t, outputStream.Stream)
+	assert.NotNil(t, outputStream.Err)
+	assert.NotNil(t, outputStream.Fatal)
 }

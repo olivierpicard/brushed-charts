@@ -3,7 +3,6 @@ package account
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/pkg/errors"
@@ -23,8 +22,8 @@ type accountList struct {
 
 // GetAccountID retrieve one ID in the IDs returned by
 // oanda servers
-func GetAccountID(client *http.Client) (string, error) {
-	request, err := makeAccountIDRequest()
+func GetAccountID(client *http.Client, token, url string) (string, error) {
+	request, err := makeAccountIDRequest(token, url)
 	if err != nil {
 		return "", err
 	}
@@ -45,10 +44,9 @@ func GetAccountID(client *http.Client) (string, error) {
 	return firstAccountID, nil
 }
 
-func makeAccountIDRequest() (*http.Request, error) {
-	token := os.Getenv("OANDA_API_TOKEN")
-	url := os.Getenv("OANDA_API_URL") + oandaAccountURLPath
-	req, err := util.MakeBearerGetRequest(url, token)
+func makeAccountIDRequest(token, url string) (*http.Request, error) {
+	urlWithPath := url + oandaAccountURLPath
+	req, err := util.MakeBearerGetRequest(urlWithPath, token)
 	return req, err
 }
 
