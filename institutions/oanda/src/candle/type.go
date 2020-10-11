@@ -23,9 +23,9 @@ func (ohlc *OHLC) isValid() error {
 	return nil
 }
 
-// StockAtTime show for a precise time, the volume,
+// MarketAtTime show for a precise time, the volume,
 // the bid and ask prices, and if a candlestick is complete
-type StockAtTime struct {
+type MarketAtTime struct {
 	Time     string `json:"time"`
 	Complete bool   `json:"complete"`
 	Bid      OHLC   `json:"bid"`
@@ -33,7 +33,7 @@ type StockAtTime struct {
 	Volume   int    `json:"volume"`
 }
 
-func (stock *StockAtTime) isValid() error {
+func (stock *MarketAtTime) isValid() error {
 	_, parseError := time.Parse(time.RFC3339Nano, stock.Time)
 	if stock.Time == "" || parseError != nil {
 		return errors.New("Field Time in StockAtTime is not valid")
@@ -52,22 +52,22 @@ func (stock *StockAtTime) isValid() error {
 
 }
 
-// ResponsePerInstrumentAndGranularity is a response returned by
+// PacketOfCandles is a response returned by
 // oanda that match a specific instrument or granularity
-type ResponsePerInstrumentAndGranularity struct {
-	Instrument  string        `json:"instrument"`
-	Granularity string        `json:"granularity"`
-	Candles     []StockAtTime `json:"candles"`
+type PacketOfCandles struct {
+	Instrument   string         `json:"instrument"`
+	Granularity  string         `json:"granularity"`
+	MarketAtTime []MarketAtTime `json:"candles"`
 }
 
-func (resp *ResponsePerInstrumentAndGranularity) isValid() error {
+func (resp *PacketOfCandles) isValid() error {
 	if resp.Instrument == "" {
 		return errors.New("Instrument can't be empty")
 	}
 	if resp.Granularity == "" {
 		return errors.New("Granularity can't be empty")
 	}
-	for _, candle := range resp.Candles {
+	for _, candle := range resp.MarketAtTime {
 		if err := candle.isValid(); err != nil {
 			return err
 		}
@@ -78,7 +78,7 @@ func (resp *ResponsePerInstrumentAndGranularity) isValid() error {
 // Response is a structured response return by oanda, that
 // include every instruments and granularities asked
 type Response struct {
-	LatestCandles []ResponsePerInstrumentAndGranularity `json:"latestCandles"`
+	LatestCandles []PacketOfCandles `json:"latestCandles"`
 }
 
 func (resp *Response) isValid() error {
