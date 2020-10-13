@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
 
@@ -18,32 +17,37 @@ const (
 
 func Test_convertCandleToBigquery(t *testing.T) {
 	var mockCandleResponse candle.Response
-	const expectedCandleRows = 5
+	var expectedBigqueryRow []bigquery.CandleRow
+	var actualBigqueryRow []bigquery.CandleRow
+	const expectedRowCount = 5
 
-	streamCandleMockContent, err := util.ReadFile(pathToMock + "streamCandles.json")
+	mockCandleReader := getTestedReaderFromFile(t, pathToMock+"streamCandles.json")
+	decodeFromReader(t, mockCandleReader, &mockCandleResponse)
+
+	actualBigqueryRow = convertCandlesToBigquery(mockCandleResponse)
+	testBigqueryRow(t, actualBigqueryRow, expectedRowCount)
+
+	bigqueryExpectationReader := getTestedReaderFromFile(t, pathToMock+"expectedBigqueryRow_basedOn_streamCandleFile.json")
+	decodeFromReader(t, bigqueryExpectationReader, &expectedBigqueryRow)
+
+	assert.Equal(t, expectedBigqueryRow, actualBigqueryRow)
+}
+
+func getTestedReaderFromFile(t *testing.T, filepath string) *strings.Reader {
+	streamCandleMockContent, err := util.ReadFile(filepath)
 	assert.Nil(t, err)
 	contentReader := strings.NewReader(streamCandleMockContent)
+	return contentReader
+}
 
-	err = json.NewDecoder(contentReader).Decode(&mockCandleResponse)
+func decodeFromReader(t *testing.T, jsonToDecode *strings.Reader, output interface{}) {
+	err := json.NewDecoder(jsonToDecode).Decode(output)
 	assert.Nil(t, err)
-	assert.NotEmpty(t, mockCandleResponse)
+	assert.NotEmpty(t, output)
+}
 
-	bigqueryCandleRows := convertCandlesToBigquery(mockCandleResponse)
-	assert.NotEmpty(t, bigqueryCandleRows)
-	counterCandleRows := len(bigqueryCandleRows)
-	fmt.Printf("%+v", bigqueryCandleRows)
-	assert.Equal(t, expectedCandleRows, counterCandleRows)
-
-	bigqueryMockContent, err := util.ReadFile(pathToMock + "bigqueryCandleFromStreamCandle.json")
-	assert.Nil(t, err)
-	assert.NotEmpty(t, bigqueryMockContent)
-	bigqueryMockReader := strings.NewReader(bigqueryMockContent)
-
-	var expectedBigqueryCandle []bigquery.CandleRow
-	err = json.NewDecoder(bigqueryMockReader).Decode(&expectedBigqueryCandle)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, mockCandleResponse)
-
-	assert.Equal(t, bigqueryCandleRows, bigqueryCandleRows)
-
+func testBigqueryRow(t *testing.T, row []bigquery.CandleRow, expectedRowCount int) {
+	assert.NotEmpty(t, row)
+	counterCandleRows := len(row)
+	assert.Equal(t, expectedRowCount, counterCandleRows)
 }

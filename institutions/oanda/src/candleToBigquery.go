@@ -11,30 +11,32 @@ func convertCandlesToBigquery(response candle.Response) []bigquery.CandleRow {
 	rows := make([]bigquery.CandleRow, 0)
 
 	for _, latestCandles := range response.LatestCandles {
-		extractedRows := getBigQueryRowFromCandle(latestCandles)
+		extractedRows := getBigQueryRowsFromCandle(latestCandles)
 		rows = append(rows, extractedRows...)
 	}
 
 	return rows
 }
 
-func getBigQueryRowFromCandle(candlePacket candle.PacketOfCandles) []bigquery.CandleRow {
+func getBigQueryRowsFromCandle(candlePacket candle.PacketOfCandles) []bigquery.CandleRow {
 	rows := make([]bigquery.CandleRow, 0)
 
 	for _, marketAtTime := range candlePacket.MarketAtTime {
-		if !marketAtTime.Complete {
-			continue
-		}
-		var row bigquery.CandleRow
-		updateBigqueryFromCandleMetadata(&row, candlePacket)
-		err := updateRowWithMarketAtTime(&row, marketAtTime)
-		if err != nil {
+		row, err := makeBigqueryRow(marketAtTime, candlePacket)
+		if !marketAtTime.Complete || err != nil {
 			continue
 		}
 		rows = append(rows, row)
 	}
 
 	return rows
+}
+
+func makeBigqueryRow(marketAtTime candle.MarketAtTime, candlePacket candle.PacketOfCandles) (bigquery.CandleRow, error) {
+	var row bigquery.CandleRow
+	updateBigqueryFromCandleMetadata(&row, candlePacket)
+	err := updateRowWithMarketAtTime(&row, marketAtTime)
+	return row, err
 }
 
 func updateBigqueryFromCandleMetadata(row *bigquery.CandleRow, candlePacket candle.PacketOfCandles) {
