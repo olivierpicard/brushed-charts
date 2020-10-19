@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/brushed-charts/backend/institutions/oanda/src/bigquery"
-	"github.com/brushed-charts/backend/institutions/oanda/src/candle"
+	"github.com/brushed-charts/backend/institutions/oanda/src/candlefetcher"
 	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/tj/assert"
 )
@@ -16,7 +16,7 @@ const (
 )
 
 func Test_convertCandleToBigquery(t *testing.T) {
-	var mockCandleResponse candle.Response
+	var mockCandleResponse candlefetcher.Response
 	var expectedBigqueryRow []bigquery.CandleRow
 	var actualBigqueryRow []bigquery.CandleRow
 	const expectedRowCount = 5

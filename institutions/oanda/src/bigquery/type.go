@@ -1,7 +1,11 @@
 package bigquery
 
 import (
+	"context"
+	"fmt"
+
 	"cloud.google.com/go/bigquery"
+	"github.com/pkg/errors"
 )
 
 // CandleOHLC ss
@@ -42,6 +46,44 @@ func (c *CandleRow) Save() (map[string]bigquery.Value, string, error) {
 		"ask":         c.Ask,
 		"volume":      c.Volume,
 	}, "", nil
+}
+
+// CandleRowEntry concat information needed to insert candles
+// with bigquery
+type CandleRowEntry struct {
+	client              *bigquery.Client
+	context             context.Context
+	inserters           []*bigquery.Inserter
+	Dataset             string `json:"dataset"`
+	TablePriceArchive   string `json:"tablePriceArchive"`
+	TablePriceShortterm string `json:"tablePriceShortterm"`
+	GCPProjectID        string `json:"gcpProjectID"`
+	InputCandleStream   chan CandleRow
+	OutputError         chan error
+}
+
+// Init initialize some variables like Bigquery client, and
+// also it create a channel InputCandleStream
+func (c *CandleRowEntry) Init() error {
+	err := c.initClient()
+	if err != nil {
+		return err
+	}
+	c.InputCandleStream = make(chan CandleRow)
+	c.inserters = append(c.inserters, c.client.Dataset(c.Dataset).Table(c.TablePriceArchive).Inserter())
+	c.inserters = append(c.inserters, c.client.Dataset(c.Dataset).Table(c.TablePriceShortterm).Inserter())
+	return nil
+}
+
+func (c *CandleRowEntry) initClient() error {
+	var err error
+	c.context = context.Background()
+	c.client, err = bigquery.NewClient(c.context, c.GCPProjectID)
+	if err != nil {
+		err = errors.New(fmt.Sprintf("bigquery.NewClient: %v", err))
+		return err
+	}
+	return nil
 }
 
 // func (c *CandleRow) Equal(row CandleRow) bool {

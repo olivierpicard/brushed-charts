@@ -4,10 +4,10 @@ import (
 	"strconv"
 
 	"github.com/brushed-charts/backend/institutions/oanda/src/bigquery"
-	"github.com/brushed-charts/backend/institutions/oanda/src/candle"
+	"github.com/brushed-charts/backend/institutions/oanda/src/candlefetcher"
 )
 
-func convertCandlesToBigquery(response candle.Response) []bigquery.CandleRow {
+func convertCandlesToBigquery(response candlefetcher.Response) []bigquery.CandleRow {
 	rows := make([]bigquery.CandleRow, 0)
 
 	for _, latestCandles := range response.LatestCandles {
@@ -18,7 +18,7 @@ func convertCandlesToBigquery(response candle.Response) []bigquery.CandleRow {
 	return rows
 }
 
-func getBigQueryRowsFromCandle(candlePacket candle.PacketOfCandles) []bigquery.CandleRow {
+func getBigQueryRowsFromCandle(candlePacket candlefetcher.PacketOfCandles) []bigquery.CandleRow {
 	rows := make([]bigquery.CandleRow, 0)
 
 	for _, marketAtTime := range candlePacket.MarketAtTime {
@@ -32,19 +32,19 @@ func getBigQueryRowsFromCandle(candlePacket candle.PacketOfCandles) []bigquery.C
 	return rows
 }
 
-func makeBigqueryRow(marketAtTime candle.MarketAtTime, candlePacket candle.PacketOfCandles) (bigquery.CandleRow, error) {
+func makeBigqueryRow(marketAtTime candlefetcher.MarketAtTime, candlePacket candlefetcher.PacketOfCandles) (bigquery.CandleRow, error) {
 	var row bigquery.CandleRow
 	updateBigqueryFromCandleMetadata(&row, candlePacket)
 	err := updateRowWithMarketAtTime(&row, marketAtTime)
 	return row, err
 }
 
-func updateBigqueryFromCandleMetadata(row *bigquery.CandleRow, candlePacket candle.PacketOfCandles) {
+func updateBigqueryFromCandleMetadata(row *bigquery.CandleRow, candlePacket candlefetcher.PacketOfCandles) {
 	row.Instrument = candlePacket.Instrument
 	row.Granularity = candlePacket.Granularity
 }
 
-func updateRowWithMarketAtTime(bigqueryRow *bigquery.CandleRow, candle candle.MarketAtTime) error {
+func updateRowWithMarketAtTime(bigqueryRow *bigquery.CandleRow, candle candlefetcher.MarketAtTime) error {
 	var err error
 	bigqueryRow.Date = candle.Time
 	bigqueryRow.Volume = candle.Volume
@@ -62,7 +62,7 @@ func updateRowWithMarketAtTime(bigqueryRow *bigquery.CandleRow, candle candle.Ma
 	return nil
 }
 
-func parseOHLCForBigQuery(ohlc candle.OHLC) (bigquery.CandleOHLC, error) {
+func parseOHLCForBigQuery(ohlc candlefetcher.OHLC) (bigquery.CandleOHLC, error) {
 	open, err := strconv.ParseFloat(ohlc.Open, 64)
 	if err != nil {
 		return bigquery.CandleOHLC{}, err

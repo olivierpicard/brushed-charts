@@ -4,16 +4,16 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/brushed-charts/backend/institutions/oanda/src/candle"
+	"github.com/brushed-charts/backend/institutions/oanda/src/candlefetcher"
 	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/brushed-charts/backend/lib/cloudlog"
 	"github.com/pkg/errors"
 )
 
-func getCandleStream() candle.OutputStream {
+func getCandleStream() candlefetcher.OutputStream {
 	instruments := readWatchlistInstruments()
 	inputArgs := makeCandleInputEntry(instruments)
-	outputStream, err := candle.Stream(&http.Client{}, inputArgs)
+	outputStream, err := candlefetcher.Stream(&http.Client{}, inputArgs)
 	if err != nil {
 		cloudlog.Panic(err)
 	}
@@ -45,8 +45,8 @@ func parseWatchlist(stringWatchlist string) ([]string, error) {
 	return instruments, nil
 }
 
-func makeCandleInputEntry(instruments []string) candle.InputEntry {
-	inputArguments := candle.InputEntry{
+func makeCandleInputEntry(instruments []string) candlefetcher.InputEntry {
+	inputArguments := candlefetcher.InputEntry{
 		Granularities: granularities,
 		Instruments:   instruments,
 		APIDomainName: oandaAPIURL,

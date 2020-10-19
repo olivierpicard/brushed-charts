@@ -1,4 +1,4 @@
-package candle
+package candlefetcher
 
 import (
 	"strings"
