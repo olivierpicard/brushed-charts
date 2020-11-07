@@ -38,7 +38,7 @@ func Critical(err error) error {
 // Panic is the same as calling Critical then panic. It will
 // log the error on the cloud and locally then panic with empty
 // body
-func Panic(err error) error {
+func Panic(err error) {
 	Critical(err)
 	panic("")
 }

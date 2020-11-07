@@ -27,7 +27,7 @@ func Test_convertCandleToBigquery(t *testing.T) {
 	actualBigqueryRow = convertCandlesToBigquery(mockCandleResponse)
 	testBigqueryRow(t, actualBigqueryRow, expectedRowCount)
 
-	bigqueryExpectationReader := getTestedReaderFromFile(t, pathToMock+"expectedBigqueryRow_basedOn_streamCandleFile.json")
+	bigqueryExpectationReader := getTestedReaderFromFile(t, pathToMock+"expectedBigqueryRow_clean_basedOn_streamCandleFile.json")
 	decodeFromReader(t, bigqueryExpectationReader, &expectedBigqueryRow)
 
 	assert.Equal(t, expectedBigqueryRow, actualBigqueryRow)

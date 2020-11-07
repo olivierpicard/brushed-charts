@@ -16,7 +16,8 @@ var (
 func main() {
 	initGlobalVariables()
 	accountID = getOandaAccountID()
-	// outputStream := getCandleStream()
+	outputStream := getCandleStream()
+	go saveCandleStreamToBigquery(outputStream.Stream)
 }
 
 func getOandaAccountID() string {

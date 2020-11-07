@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/brushed-charts/backend/institutions/oanda/src/util"
 	"github.com/tj/assert"
 )
 
@@ -15,13 +16,13 @@ const (
 
 func Test_load(t *testing.T) {
 	expectedHistory := makeCandleHistory("2020-11-21T12:00:00.0000Z", "S5", "EUR_USD")
-	history := candleHistory{}
-	err := history.load(mockPath + "bigquery_candleHistory_loadsaveTest.json")
+	history := CandleHistory{}
+	err := history.Load(mockPath + "bigquery_candleHistory_loadsaveTest.json")
 	assert.Nil(t, err)
 	assert.Equal(t, expectedHistory, history)
 }
 
-func makeCandleHistory(date, granularity, instrument string) candleHistory {
+func makeCandleHistory(date, granularity, instrument string) CandleHistory {
 	candle := CandleRow{
 		Date:        date,
 		Granularity: granularity,
@@ -40,15 +41,15 @@ func makeCandleHistory(date, granularity, instrument string) candleHistory {
 		},
 		Volume: 12342,
 	}
-	history := candleHistory{candle}
+	history := CandleHistory{candle}
 	return history
 }
 
 func Test_save(t *testing.T) {
-	var currentHistory candleHistory
+	var currentHistory CandleHistory
 	expectedHistory := makeCandleHistory("2020-11-21T12:00:00.0000Z", "S5", "EUR_USD")
 	savedFilePath := os.TempDir() + "bigquery_candleHistory_loadsaveTest.json"
-	err := expectedHistory.save(savedFilePath)
+	err := expectedHistory.Save(savedFilePath)
 	assert.Nil(t, err)
 
 	currentHistory = loadHistoryFile(t, savedFilePath)
@@ -59,8 +60,8 @@ func Test_save(t *testing.T) {
 	assert.Equal(t, expectedHistory, currentHistory)
 }
 
-func loadHistoryFile(t *testing.T, filename string) candleHistory {
-	var history candleHistory
+func loadHistoryFile(t *testing.T, filename string) CandleHistory {
+	var history CandleHistory
 	savedFile, err := ioutil.ReadFile(filename)
 	assert.Nil(t, err)
 
@@ -75,7 +76,7 @@ func Test_IsAFreshRow_true(t *testing.T) {
 	freshHistory := makeCandleHistory("2020-11-21T13:00:00.0000Z", "S5", "EUR_USD")
 	freshRow := freshHistory[0]
 
-	history := loadHistoryFile(t, mockPath+"bigquery_candleHistory.json")
+	history := loadHistoryFile(t, mockPath+"bigquery_candleHistory_dirty_withFreshAndOldDataMixed.json")
 
 	isFresh, err := history.IsAFreshRow(freshRow)
 	assert.Nil(t, err)
@@ -87,7 +88,7 @@ func Test_IsAFreshRow_false(t *testing.T) {
 	freshHistory := makeCandleHistory("2020-11-21T11:55:00.0000Z", "S5", "EUR_USD")
 	freshRow := freshHistory[0]
 
-	var history = loadHistoryFile(t, mockPath+"bigquery_candleHistory.json")
+	var history = loadHistoryFile(t, mockPath+"bigquery_candleHistory_dirty_withFreshAndOldDataMixed.json")
 
 	isFresh, err := history.IsAFreshRow(freshRow)
 	assert.Nil(t, err)
@@ -97,13 +98,34 @@ func Test_IsAFreshRow_false(t *testing.T) {
 func Test_History_Update(t *testing.T) {
 	const originalDate = "2020-11-21T12:00:00.0000Z"
 	const updatedDate = "2020-11-21T13:55:00.0000Z"
-	history := loadHistoryFile(t, mockPath+"bigquery_candleHistory.json")
+	history := loadHistoryFile(t, mockPath+"bigquery_candleHistory_dirty_withFreshAndOldDataMixed.json")
 	assert.Equal(t, originalDate, history[0].Date)
 
 	historyGenerated := makeCandleHistory(updatedDate, "S5", "EUR_USD")
 	extractedRow := historyGenerated[0]
 	rowsUseToUpdate := []CandleRow{extractedRow}
 
-	history.update(rowsUseToUpdate)
+	history.Update(rowsUseToUpdate)
 	assert.Equal(t, updatedDate, history[0].Date)
+}
+
+func Test_KeepOnlyLatestRows(t *testing.T) {
+	actualHistory := loadHistoryFile(t, mockPath+"bigquery_candleHistory_dirty_withFreshAndOldDataMixed.json")
+	actualHistory.KeepOnlyLatestRows()
+
+	expectedHistory := loadHistoryFile(t, mockPath+"expectedBigqueryRow_clean_basedOn_streamCandleFile.json")
+	testHistoryCandlesEquality(t, expectedHistory, actualHistory)
+}
+
+func testHistoryCandlesEquality(t *testing.T, expected, actual CandleHistory) {
+	const pathCandleExpected = "/tmp/expectedCandleHistory.json"
+	const pathCandleActual = "/tmp/actualCandleHistory.json"
+
+	err := expected.Save(pathCandleExpected)
+	assert.Nil(t, err)
+
+	expected.Save(pathCandleActual)
+	assert.Nil(t, err)
+
+	util.TestJSONFileEquality(t, pathCandleExpected, pathCandleActual)
 }

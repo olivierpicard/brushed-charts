@@ -10,24 +10,24 @@ const (
 	sendingTimer = 10 // In seconds
 )
 
-// SaveCandleRow save candle to bigquery in table archive and shortterm
-func SaveCandleRow(entry CandleRowEntry) {
+// WaitForInsertion save candle to bigquery in table archive and shortterm
+func WaitForInsertion(link CandleLink) {
 	var cumulatedRows []CandleRow
 	tick := time.NewTicker(time.Second * sendingTimer)
 	for {
 		select {
-		case inputCandle := <-entry.InputCandleStream:
+		case inputCandle := <-link.InputCandleStream:
 			cumulatedRows = append(cumulatedRows, inputCandle)
 		case <-tick.C:
-			insertCandleRow(entry, cumulatedRows)
+			insertCandleRow(link, cumulatedRows)
 		}
 	}
 }
 
-func insertCandleRow(entry CandleRowEntry, rows []CandleRow) {
-	for _, inserter := range entry.inserters {
-		if err := inserter.Put(entry.context, rows); err != nil {
-			entry.OutputError <- errors.New(err.Error())
+func insertCandleRow(link CandleLink, rows []CandleRow) {
+	for _, inserter := range link.inserters {
+		if err := inserter.Put(link.context, rows); err != nil {
+			link.OutputError <- errors.New(err.Error())
 		}
 	}
 }
