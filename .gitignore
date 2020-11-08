@@ -8,3 +8,4 @@ var/
 bin/
 src_old/
 cover.out
+.venv/

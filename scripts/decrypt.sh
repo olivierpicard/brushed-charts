@@ -3,8 +3,8 @@
 dirpath=$(dirname $(which $0))
 cd "$dirpath"/..
 
-creddir="/etc/brushed-charts/credentials"
-localcred="./credentials"
+creddir="/etc/brushed-charts"
+localcred="./etc"
 fname="backend-institution_account-service.json"
 
 # Load the variables in the .env file if exist
@@ -18,6 +18,8 @@ gpg --quiet --batch --yes --decrypt \
     --output "${localcred}/${fname}" \
     "${localcred}/${fname}.gpg"
 
+# Create directory with correct owner name. It will be use mostly
+# on dev computer
 if [ ! -d $creddir ]; then 
     sudo mkdir -p $creddir
 fi
