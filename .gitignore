@@ -9,3 +9,4 @@ bin/
 src_old/
 cover.out
 .venv/
+__pycache__/
