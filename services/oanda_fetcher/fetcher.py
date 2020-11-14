@@ -1,8 +1,10 @@
 from typing import Dict, List
 import requests
+import json
 
 
 class Fetcher(object):
+    session: requests.Session
     token: str
     url_path: str
     granularities: List[str]
@@ -12,14 +14,24 @@ class Fetcher(object):
         self.token = token
         self.url_path = url_path
         self.granularities = granularities
+        self.session = requests.Session()
 
 
-    def fetch(self, instruments: List[str]) -> requests.Response:
+    def get_latest_candles(self, instruments: List[str]) -> List:
+        json_response = self.fetch(instruments)
+        latest_candles = json_response["latestCandles"]
+        
+        return latest_candles
+
+
+    def fetch(self, instruments: List[str]) -> Dict:
         headers = self.make_header()
         url = self.build_url_with_parameters(instruments)
-        response = requests.get(url, headers=headers)
-
-        return response
+        response = self.session.get(url=url, headers=headers)
+        response.raise_for_status()
+        json_response = response.json()
+        
+        return json_response
         
 
     def make_header(self) -> Dict[str, str]:
@@ -31,7 +43,7 @@ class Fetcher(object):
         return header
 
 
-    def build_url_with_parameters(self, instruments: List[str]) -> str:
+    def build_url_with_parameters(self, instruments: List[str]) -> str :
         parameter_list = self.make_parameter_list(instruments)
         assembled_parameters_str = self.concat_parameters(parameter_list)
         full_url = self.url_path + "?candleSpecifications=" + assembled_parameters_str
