@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  oanda_bigquery:
+    build: ./services/oanda_bigquery
+  oanda_fetcher:
+    build: ./services/oanda_fetcher
+  oanda_history:
+    build: ./services/oanda_history
+  oanda_watchlist:
+    build: ./services/oanda_watchlist
+  
