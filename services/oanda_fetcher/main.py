@@ -28,7 +28,7 @@ def execute():
 def try_to_execute():
     try:
         execute()
-    except Exception:
+    except:
         error_reporting.Client().report_exception()
 
 
