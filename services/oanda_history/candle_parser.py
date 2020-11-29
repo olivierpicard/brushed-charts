@@ -25,10 +25,22 @@ def flatten_single(candle: Dict) -> List:
         temp_flat['bid'] = _candle['bid']
         temp_flat['ask'] = _candle['ask']
         temp_flat['complete'] = _candle['complete']
-
+        parse_OHLC(temp_flat['bid'])
+        parse_OHLC(temp_flat['ask'])
         flattened_candle.append(temp_flat)
     
     return flattened_candle
+
+
+def parse_OHLC(ohlc: Dict):
+    ohlc['open'] = ohlc['o']
+    del ohlc['o']
+    ohlc['high'] = ohlc['h']
+    del ohlc['h']
+    ohlc['low'] = ohlc['l']
+    del ohlc['l']
+    ohlc['close'] = ohlc['c']
+    del ohlc['c']
 
 
 def remove_incomplete_candle(flat_candle: List[Dict]) -> List:
@@ -40,3 +52,9 @@ def remove_incomplete_candle(flat_candle: List[Dict]) -> List:
         complete_candles.append(candle)
     
     return complete_candles
+
+
+def change_fieldname_time_with_date(flat_candles: List[Dict]) -> List:
+    for candle in flat_candles:
+        candle["date"] = candle["time"]
+        del candle["time"]

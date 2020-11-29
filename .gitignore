@@ -1,7 +1,7 @@
 .vscode/
 credentials/*
 !credentials/*.gpg
-.env
+*.env
 .DS_Store
 *.log
 var/
