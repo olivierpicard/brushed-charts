@@ -8,12 +8,12 @@ from bson import objectid
 HOST=os.getenv("MONGODB_HOST")
 PORT=os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
-COLLECTION = os.getenv("MONGODB_OANDA_LATEST_CANDLES_COLLECTION")
+COLLECTION = os.getenv("MONGODB_OANDA_HISTORY_COLLECTION")
 
 
 def get_candles_from_date(date: datetime):
     client = connect()
-    collection = get_collection(client)
+    collection = get_history_collection(client)
     documents = list(select_documents_after(date, collection))
     disconnect(client)
 
@@ -26,7 +26,7 @@ def connect() -> pymongo.MongoClient:
     return client
 
 
-def get_collection(client: pymongo.MongoClient):
+def get_history_collection(client: pymongo.MongoClient):
     database = client.get_database(DATABASE)
     collection = database.get_collection(COLLECTION)
 

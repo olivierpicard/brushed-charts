@@ -1,11 +1,51 @@
 version: "3.8"
 services:
+  mongodb:
+    image: mongo:4.4
+    restart: on-failure
+    container_name: mongodb
+    volumes: 
+      - mongo_db:/data/db
+
   oanda_bigquery:
     build: ./services/oanda_bigquery
+    container_name: oanda_bigquery 
+    env_file: 
+      - ./services.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+
   oanda_fetcher:
     build: ./services/oanda_fetcher
+    container_name: oanda_fetcher
+    env_file: 
+      - ./services.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+
   oanda_history:
     build: ./services/oanda_history
+    container_name: oanda_history
+    env_file: 
+      - ./services.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+
   oanda_watchlist:
     build: ./services/oanda_watchlist
-  
+    container_name: oanda_watchlist
+    env_file: 
+      - ./services.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+        
+volumes: 
+  mongo_db:

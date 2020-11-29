@@ -45,7 +45,8 @@ def try_to_execute():
         execute()
     except EmptyCandles:
         pass
-    except:
+    except Exception as e:
+        print(e)
         error_reporting.Client().report_exception()
 
 

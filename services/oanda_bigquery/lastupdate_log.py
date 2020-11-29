@@ -15,7 +15,7 @@ def read() -> datetime:
     client = connect()
     database = client.get_database(DATABASE)
     collection = database.get_collection(COLLECTION)
-    document = collection.find_one({})
+    document = collection.find_one()
     last_update = NO_DATE
     if document != None:
         last_update = document['last_update']
