@@ -9,4 +9,5 @@ src_old/
 cover.out
 .venv/
 __pycache__/
-!services.env
+!services*.env
+*secret*.env

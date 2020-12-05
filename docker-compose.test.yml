@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  oanda_bigquery:
+    env_file: 
+      - ./env/services.test.env
+
+  oanda_fetcher:
+    env_file: 
+      - ./env/services.test.env
+
+
+  oanda_history:
+    env_file: 
+      - ./env/services.test.env
+
+
+  oanda_watchlist:
+    env_file: 
+      - ./env/services.test.env
+        

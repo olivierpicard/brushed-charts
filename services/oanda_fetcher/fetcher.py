@@ -47,7 +47,6 @@ class Fetcher(object):
         parameter_list = self.make_parameter_list(instruments)
         assembled_parameters_str = self.concat_parameters(parameter_list)
         full_url = self.url_path + "?candleSpecifications=" + assembled_parameters_str
-
         return full_url
 
 
