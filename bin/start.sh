@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export GOOGLE_APPLICATION_CREDENTIALS="/etc/brushed-charts/backend-institution_account-service.json"
-
 dirpath=$(dirname $(which $0))
 cd "$dirpath"/..
 
@@ -13,7 +11,7 @@ fi
 
 echo "Use the profil : $profil"
 
-bin/write_oanda_env_file.sh
+bin/write_oanda_env_file.sh || exit 1
 
 docker-compose \
     -f docker-compose.yml -f docker-compose.$profil.yml \

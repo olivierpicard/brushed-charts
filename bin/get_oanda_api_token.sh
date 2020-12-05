@@ -15,4 +15,6 @@ API_TOKEN=$(gcloud secrets \
     --quiet
 )
 
+[[ $? != 0 ]] && exit 1
+
 echo "$API_TOKEN"

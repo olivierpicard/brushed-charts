@@ -10,7 +10,7 @@ set +o allexport
 
 OANDA_ACCOUNT_URL="$OANDA_API_URL/v3/accounts"
 FILE_NAME_ENV="env/oanda_secret.env"
-API_TOKEN=$(bin/get_oanda_api_token.sh)
+API_TOKEN=$(bin/get_oanda_api_token.sh) || exit 1
 
 ACCOUNT_ID=$(curl \
     --silent \
@@ -18,6 +18,8 @@ ACCOUNT_ID=$(curl \
     -H "Authorization: Bearer $API_TOKEN" \
     $OANDA_ACCOUNT_URL
 )
+
+[[ $? != 0]] && exit 1
 
 echo $ACCOUNT_ID | \
     jq ".accounts | .[0] | .id" | \
