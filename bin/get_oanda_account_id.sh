@@ -19,7 +19,7 @@ ACCOUNT_ID=$(curl \
     $OANDA_ACCOUNT_URL
 )
 
-[[ $? != 0]] && exit 1
+[[ $? != 0 ]] && exit 1
 
 echo $ACCOUNT_ID | \
     jq ".accounts | .[0] | .id" | \
