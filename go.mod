@@ -3,12 +3,15 @@ module github.com/brushed-charts/backend
 go 1.14
 
 require (
-	cloud.google.com/go v0.63.0
-	cloud.google.com/go/bigquery v1.10.0
-	cloud.google.com/go/logging v1.0.0
-	github.com/google/go-cmp v0.5.1
-	golang.org/x/sys v0.0.0-20200810151505-1b9f1253b3ed // indirect
-	golang.org/x/tools v0.0.0-20200811032001-fd80f4dbb3ea // indirect
-	google.golang.org/api v0.30.0
-	google.golang.org/genproto v0.0.0-20200808173500-a06252235341
+	cloud.google.com/go v0.70.0
+	cloud.google.com/go/bigquery v1.12.0
+	github.com/pkg/errors v0.9.1
+	github.com/tj/assert v0.0.3
+	golang.org/x/net v0.0.0-20201024042810-be3efd7ff127 // indirect
+	golang.org/x/sys v0.0.0-20201024232916-9f70ab9862d5 // indirect
+	golang.org/x/tools v0.0.0-20201023174141-c8cfbd0f21e6 // indirect
+	google.golang.org/api v0.33.0
+	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/genproto v0.0.0-20201022181438-0ff5f38871d5
+	google.golang.org/grpc v1.33.1 // indirect
 )
