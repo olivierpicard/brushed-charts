@@ -7,5 +7,6 @@ export PROFIL="$1"
 STACK_NAME="brushed-charts-$1"
 
 docker stack deploy \
+    --with-registry-auth \
     -c docker-compose.yml \
     $STACK_NAME

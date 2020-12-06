@@ -3,9 +3,15 @@
 dirpath=$(dirname $(which $0))
 cd "$dirpath"/..
 
-PROFIL="$1"
+export PROFIL="$1"
+
 if [[ -z $PROFIL ]]; then 
-    echo "Profil argument is unset"
+    echo "argument profil(test|prod) is missing"
+    exit 1
+fi
+
+if [[ $PROFIL != "test" && $PROFIL != "prod" ]]; then 
+    echo "wrong argument try (test|prod)"
     exit 1
 fi
 

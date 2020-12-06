@@ -10,8 +10,10 @@ if [ -z $profil ]; then
 fi
 echo "Use profil: $profil"
 
-# echo "Fetching secrets for oanda..."
-# bin/make_oanda_env_file.sh || exit 1
+
+echo "Fetching secrets for oanda..."
+bin/make_oanda_env_file.sh || exit 1
+
 
 if [[ $profil == "dev" ]]; then
     bin/start.local.sh $profil
