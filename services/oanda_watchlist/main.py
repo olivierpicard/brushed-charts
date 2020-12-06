@@ -22,7 +22,7 @@ def try_execute():
         execute()
     except Exception as e:
         print(e)
-        error_reporting.Client().report_exception()
+        error_reporting.client.Client(service="oanda_watchlist").report_exception()
 
 
 if __name__ == "__main__":

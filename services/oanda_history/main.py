@@ -31,7 +31,7 @@ def try_execute():
         pass
     except Exception as e:
         print(e)
-        error_reporting.Client().report_exception()
+        error_reporting.Client(service="oanda_history").report_exception()
 
 
 if __name__ == "__main__":

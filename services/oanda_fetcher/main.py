@@ -22,7 +22,6 @@ def execute():
     instruments = watchlist.get_instruments()
     latest_candles = fetcher.get_latest_candles(instruments)
     candles_saver.save(latest_candles)
-    error_reporting.Client()
 
 
 def try_to_execute():
@@ -30,7 +29,7 @@ def try_to_execute():
         execute()
     except Exception as e:
         print(e)
-        error_reporting.Client().report_exception()
+        error_reporting.Client(service="oanda_fetcher").report_exception()
 
 
 if __name__ == "__main__":
