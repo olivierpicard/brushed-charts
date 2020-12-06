@@ -6,16 +6,14 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/brushed-charts/backend/lib/cloudlog"
+	"github.com/brushed-charts/backend/lib/cloudlogging"
 )
 
 func main() {
 	projname := os.Args[1]
 	pid := os.Args[2]
 	pname := os.Args[3]
-
-	os.Setenv("CLOUDLOGGING_PROJECTID", projname)
-	os.Setenv("CLOUDLOG_SERVICE_NAME", "logexit")
+	cloudlogging.Init(projname, "logexit")
 
 	cmd := exec.Command("lsof", "-p", pid, "+r", "1")
 
@@ -30,5 +28,8 @@ func main() {
 	}
 
 	err = fmt.Errorf("%v app has stopped working", pname)
-	cloudlog.Critical(err)
+	cloudlogging.ReportEmergency(cloudlogging.LogEntry{
+		Error:   err,
+		IsQuiet: true,
+	})
 }

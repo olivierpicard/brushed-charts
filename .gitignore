@@ -6,5 +6,3 @@ credentials/*
 *.log
 var/
 bin/
-src_old/
-cover.out
