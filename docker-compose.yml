@@ -10,9 +10,11 @@ services:
 
   oanda_bigquery:
     build: ./services/oanda_bigquery
+    image: gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
     container_name: oanda_bigquery 
     env_file: 
       - ./env/services.env
+      - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
         source: /etc/brushed-charts/
@@ -21,10 +23,12 @@ services:
 
   oanda_fetcher:
     build: ./services/oanda_fetcher
+    image: gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
     container_name: oanda_fetcher
     env_file: 
       - ./env/services.env
       - ./env/oanda_secret.env
+      - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
         source: /etc/brushed-charts/
@@ -33,9 +37,11 @@ services:
 
   oanda_history:
     build: ./services/oanda_history
+    image: gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
     container_name: oanda_history
     env_file: 
       - ./env/services.env
+      - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
         source: /etc/brushed-charts/
@@ -44,9 +50,11 @@ services:
 
   oanda_watchlist:
     build: ./services/oanda_watchlist
+    image: gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
     container_name: oanda_watchlist
     env_file: 
       - ./env/services.env
+      - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
         source: /etc/brushed-charts/

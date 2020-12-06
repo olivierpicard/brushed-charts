@@ -12,5 +12,5 @@ ACCOUNT_ID=$(bin/get_oanda_account_id.sh) || exit 1
 rm -f $ENV_FILE_PATH || exit 2
 touch $ENV_FILE_PATH || exit 2
 
-echo "OANDA_API_TOKEN=\"$API_TOKEN\"" >> $ENV_FILE_PATH
-echo "OANDA_ACCOUNT_ID=\"$ACCOUNT_ID\"" >> $ENV_FILE_PATH
+echo "OANDA_API_TOKEN=$API_TOKEN" >> $ENV_FILE_PATH
+echo "OANDA_ACCOUNT_ID=$ACCOUNT_ID" >> $ENV_FILE_PATH

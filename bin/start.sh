@@ -8,11 +8,14 @@ read -r profil
 if [ -z $profil ]; then
     profil="dev"
 fi
+echo "Use profil: $profil"
 
-echo "Use the profil : $profil"
+# echo "Fetching secrets for oanda..."
+# bin/make_oanda_env_file.sh || exit 1
 
-bin/write_oanda_env_file.sh || exit 1
-
-docker-compose \
-    -f docker-compose.yml -f docker-compose.$profil.yml \
-    up -d --build
+if [[ $profil == "dev" ]]; then
+    bin/start.local.sh $profil
+else 
+    echo "This deployment assume that you've already build and push image to registry"
+    bin/start.stack.sh $profil
+fi
