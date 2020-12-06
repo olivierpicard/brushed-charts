@@ -20,7 +20,6 @@ def raise_if_candles_empty(candles: List):
 
 def send_to_bigquery(candles: List):
     client = bigquery.Client()
-    print(PATH_TABLE_SHORTTERM, candles, client)
     client.insert_rows_json(PATH_TABLE_SHORTTERM, candles)
     client.insert_rows_json(PATH_TABLE_ARCHIVE, candles)
     client.close()
