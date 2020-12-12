@@ -5,12 +5,12 @@ services:
     restart: on-failure
     container_name: mongodb
     volumes: 
-      - mongo_db:/data/db
+      - /var/volumes/mongo-data:/data/db
 
 
   oanda_bigquery:
     build: ./services/oanda_bigquery
-    image: gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
+    image: eu.gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
     container_name: oanda_bigquery 
     env_file: 
       - ./env/services.env
@@ -23,7 +23,7 @@ services:
 
   oanda_fetcher:
     build: ./services/oanda_fetcher
-    image: gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
+    image: eu.gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
     container_name: oanda_fetcher
     env_file: 
       - ./env/services.env
@@ -37,7 +37,7 @@ services:
 
   oanda_history:
     build: ./services/oanda_history
-    image: gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
+    image: eu.gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
     container_name: oanda_history
     env_file: 
       - ./env/services.env
@@ -50,7 +50,7 @@ services:
 
   oanda_watchlist:
     build: ./services/oanda_watchlist
-    image: gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
+    image: eu.gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
     container_name: oanda_watchlist
     env_file: 
       - ./env/services.env
@@ -60,6 +60,3 @@ services:
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
         
-        
-volumes: 
-  mongo_db:
