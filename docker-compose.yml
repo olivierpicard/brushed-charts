@@ -74,6 +74,7 @@ services:
       - ./env/services.env
       - ./env/services.${PROFIL}.env
     volumes: 
+      - type: bind
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
         
