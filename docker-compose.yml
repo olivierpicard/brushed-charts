@@ -11,6 +11,7 @@ services:
   oanda_bigquery:
     build: ./services/oanda_bigquery
     image: eu.gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
+    restart: on-failure
     container_name: oanda_bigquery 
     env_file: 
       - ./env/services.env
@@ -24,6 +25,7 @@ services:
   oanda_fetcher:
     build: ./services/oanda_fetcher
     image: eu.gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
+    restart: on-failure
     container_name: oanda_fetcher
     env_file: 
       - ./env/services.env
@@ -38,6 +40,7 @@ services:
   oanda_history:
     build: ./services/oanda_history
     image: eu.gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
+    restart: on-failure
     container_name: oanda_history
     env_file: 
       - ./env/services.env
@@ -51,12 +54,26 @@ services:
   oanda_watchlist:
     build: ./services/oanda_watchlist
     image: eu.gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
+    restart: on-failure
     container_name: oanda_watchlist
     env_file: 
       - ./env/services.env
       - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+
+
+  oanda_clean_history:
+    build: ./services/oanda_clean_history
+    image: eu.gcr.io/brushed-charts/oanda_clean_history:${PROFIL}-latest
+    restart: on-failure
+    container_name: oanda_clean_history
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    volumes: 
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
         

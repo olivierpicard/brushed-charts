@@ -37,11 +37,13 @@ def select_documents_after(date: datetime, collection: pymongo.collection.Collec
     objectID = make_objectid_from_date(date)
     time_criteria = {"_id": {"$gt": objectID}}
     cursor = collection.find(time_criteria)
+
     return cursor
 
 
 def make_objectid_from_date(date: datetime) -> objectid.ObjectId:
     objectID = objectid.ObjectId.from_datetime(date)
+    
     return objectID
 
 
