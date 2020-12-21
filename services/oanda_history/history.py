@@ -32,7 +32,7 @@ def get_collection(client: pymongo.MongoClient):
 
 def create_index(collection: pymongo.collection.Collection):
     collection.create_index(
-        [("instrument", 1), ("granularity", 1), ("time", -1)],
+        [("instrument", 1), ("granularity", 1), ("date", -1)],
         unique=True
     )
 
