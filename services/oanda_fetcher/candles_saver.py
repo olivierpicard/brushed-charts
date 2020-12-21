@@ -23,9 +23,8 @@ def connect_to_database() -> pymongo.database.Database :
 
 def get_reseted_collection(client: pymongo.MongoClient) -> pymongo.collection.Collection :
     database = client.get_database(name=DATABASE)
-    database.drop_collection(COLLECTION)
     collection = database.get_collection(name=COLLECTION)
-
+    collection.delete_many({})
     return collection
 
 
