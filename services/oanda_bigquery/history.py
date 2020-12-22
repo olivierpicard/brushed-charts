@@ -34,17 +34,12 @@ def get_history_collection(client: pymongo.MongoClient):
 
 
 def select_documents_after(date: datetime, collection: pymongo.collection.Collection) -> pymongo.cursor.Cursor:
-    objectID = make_objectid_from_date(date)
-    time_criteria = {"_id": {"$gt": objectID}}
-    cursor = collection.find(time_criteria)
+    parsed_str_datetime = str(date).replace(" ", "T")
+    time_criteria = {"date": {"$gt": parsed_str_datetime}}
+    projection_remove_id = {"_id": 0}
+    cursor = collection.find(time_criteria, projection_remove_id)
 
     return cursor
-
-
-def make_objectid_from_date(date: datetime) -> objectid.ObjectId:
-    objectID = objectid.ObjectId.from_datetime(date)
-    
-    return objectID
 
 
 def disconnect(client: pymongo.MongoClient):

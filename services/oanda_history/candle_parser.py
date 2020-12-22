@@ -57,4 +57,5 @@ def remove_incomplete_candle(flat_candle: List[Dict]) -> List:
 def change_fieldname_time_with_date(flat_candles: List[Dict]) -> List:
     for candle in flat_candles:
         candle["date"] = candle["time"]
+        candle["date"] = candle["date"].split(".")[0] + "Z"
         del candle["time"]
