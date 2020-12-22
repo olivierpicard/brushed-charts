@@ -6,7 +6,7 @@ services:
     container_name: mongodb
     hostname: mongodb
     volumes: 
-      - /var/volumes/mongo-data:/data/db
+      - /var/volumes/mongo-data/${PROFIL}:/data/db
 
 
   oanda_bigquery:
