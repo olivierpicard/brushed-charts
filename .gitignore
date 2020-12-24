@@ -1,10 +1,13 @@
 .vscode/
 credentials/*
 !credentials/*.gpg
-.env
+*.env
 .DS_Store
 *.log
 var/
-bin/
 src_old/
 cover.out
+.venv/
+__pycache__/
+!services*.env
+*secret*.env
