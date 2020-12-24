@@ -1,13 +1,13 @@
 import time
 import os
 import lastupdate_log
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict
 import history
 from google.cloud import bigquery, error_reporting
 
 
-REFRESH_RATE = 10  # In seconds
+REFRESH_RATE = 30  # In seconds
 PATH_TABLE_SHORTTERM = os.getenv("OANDA_BIGQUERY_PATH_TABLE_SHORTTERM")
 PATH_TABLE_ARCHIVE = os.getenv("OANDA_BIGQUERY_PATH_TABLE_ARCHIVE")
 
@@ -26,13 +26,21 @@ def send_to_bigquery(candles: List):
     client.close()
 
 
+def make_time_window():
+    lower_window = lastupdate_log.read()
+    current_time = datetime.utcnow()
+    upper_window = current_time - timedelta(minutes=3)
+
+    return (lower_window, upper_window)
+
+
 def execute():
-    lastupdate_datetime = lastupdate_log.read()
-    current_utc_time = datetime.utcnow()
-    candles = history.get_candles_from_date(lastupdate_datetime)
+    time_window = make_time_window()    
+    upper_window = time_window[1]
+    candles = history.get_candles_from_window(time_window)
     raise_if_candles_empty(candles)
     send_to_bigquery(candles)
-    lastupdate_log.save_last_reading_date(current_utc_time)
+    lastupdate_log.save_last_reading_date(upper_window)
 
 
 def try_to_execute():
