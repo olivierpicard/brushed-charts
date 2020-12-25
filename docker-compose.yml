@@ -78,4 +78,38 @@ services:
       - type: bind
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
+
+        
+  presence_shortterm_bigquery:
+    build: ./services/presence_bigquery
+    image: eu.gcr.io/brushed-charts/presence_bigquery:${PROFIL}-latest
+    restart: on-failure
+    container_name: presence_shortterm_bigquery
+    environment: 
+      - BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE=brushed-charts.oanda_${PROFIL}.price_shortterm
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+      - ./env/presence_shortterm.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+
+
+  presence_archive_bigquery:
+    build: ./services/presence_bigquery
+    image: eu.gcr.io/brushed-charts/presence_bigquery:${PROFIL}-latest
+    restart: on-failure
+    container_name: presence_archive_bigquery
+    environment: 
+      - BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE=brushed-charts.oanda_${PROFIL}.price_archive
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+      - ./env/presence_archive.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
         

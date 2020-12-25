@@ -1,7 +1,6 @@
 .vscode/
 credentials/*
 !credentials/*.gpg
-*.env
 .DS_Store
 *.log
 var/
@@ -9,5 +8,4 @@ src_old/
 cover.out
 .venv/
 __pycache__/
-!services*.env
 *secret*.env
