@@ -32,7 +32,8 @@ def get_collection(client: pymongo.MongoClient):
 
 
 def make_filter(date: datetime) -> Dict:
-    request_filter = {"date": {"$lt": str(date)}}
+    parsed_date = str(date).replace(" ", "T")
+    request_filter = {"date": {"$lt": parsed_date}}
 
     return request_filter
 
