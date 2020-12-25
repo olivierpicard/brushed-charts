@@ -38,7 +38,6 @@ def execute():
 def try_to_execute():
     try:
         execute()
-        time.sleep(int(REFRESH_RATE))
     except EmptyResultException:
         pass
     except Exception:
@@ -49,4 +48,5 @@ def try_to_execute():
 if __name__ == "__main__":
     while True:
         try_to_execute()
+        time.sleep(int(REFRESH_RATE))
              
