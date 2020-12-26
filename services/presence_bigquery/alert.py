@@ -29,21 +29,17 @@ def send_email():
     email_content = make_email_message()
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465 )
     server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-    server.sendmail(EMAIL_ADDRESS, EMAIL_PASSWORD, email_content)
+    server.sendmail(EMAIL_ADDRESS, EMAIL_ADDRESS, email_content)
     server.quit()
 
 
 def make_email_message():
     subject = "No presence in {}".format(BIGQUERY_TABLE_PATH)
-    body = "There is no data in {} since more than {} seconds".format(
+    body = "There is no data in '{}'\nsince more than {} seconds".format(
         BIGQUERY_TABLE_PATH,
         REFRESH_RATE
     )
-    email_content = """
-From: {}
-Subject: {}
-
-{}""".format(EMAIL_ADDRESS, subject, body)
+    email_content = "Subject: {}\n\n{}".format(subject, body)
 
     return email_content
 

@@ -11,7 +11,7 @@ COLLECTION = os.getenv("MONGODB_OANDA_LAST_EMAIL_SENT_DATE_COLLECTION")
 BIGQUERY_TABLE_PATH = os.getenv("BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE")
 REFRESH_RATE = os.getenv("PRESENCE_REFRESH_RATE_SECONDS")  # In seconds
 SUBJECT = "presence " + BIGQUERY_TABLE_PATH
-
+DUPLICATION_KEY_ERROR = 11000
 
 def is_ready_to_send_mail() -> bool:
     client = connect()
@@ -21,8 +21,8 @@ def is_ready_to_send_mail() -> bool:
     if document == None:
         return True
     last_sent_date = document['date']
-    delta = datetime.utcnow - last_sent_date
-    if delta.seconds > REFRESH_RATE:
+    delta = datetime.utcnow() - last_sent_date
+    if delta.total_seconds() > int(REFRESH_RATE):
         return True
     
     return False
@@ -32,7 +32,7 @@ def save():
     client = connect()
     collection = get_collection(client)
     create_index(collection)
-    upsert(client)
+    upsert(collection)
     
     
 def connect() -> pymongo.MongoClient:
@@ -53,11 +53,16 @@ def create_index(collection: pymongo.collection.Collection):
 
 
 def upsert(collection: pymongo.collection.Collection):
-    collection.delete_many({"subject": SUBJECT})
-    collection.insert_one({
-        "date": datetime.utcnow(),
-        "subject": SUBJECT
-    })
+    try:
+        collection.delete_many({"subject": SUBJECT})
+        collection.insert_one({
+            "date": datetime.utcnow(),
+            "subject": SUBJECT
+        })
+    except pymongo.errors.BulkWriteError as e:
+        panic_list = list(filter(lambda x: x['code'] != DUPLICATION_KEY_ERROR, e.details['writeErrors']))
+        if len(panic_list) > 0:
+            raise e
 
 
 def disconnect(client: pymongo.MongoClient):

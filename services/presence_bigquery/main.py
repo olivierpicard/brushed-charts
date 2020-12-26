@@ -47,7 +47,7 @@ def try_to_execute():
         pass
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="oanda_bigquery").report_exception()
+        error_reporting.Client(service="presence_bigquery").report_exception()
 
 
 if __name__ == "__main__":
