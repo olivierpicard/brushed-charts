@@ -9,9 +9,9 @@ PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_LAST_EMAIL_SENT_DATE_COLLECTION")
 BIGQUERY_TABLE_PATH = os.getenv("BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE")
-REFRESH_RATE = os.getenv("PRESENCE_REFRESH_RATE_SECONDS")  # In seconds
 SUBJECT = "presence " + BIGQUERY_TABLE_PATH
 DUPLICATION_KEY_ERROR = 11000
+HOUR_24 = 60*60*24
 
 def is_ready_to_send_mail() -> bool:
     client = connect()
@@ -22,7 +22,7 @@ def is_ready_to_send_mail() -> bool:
         return True
     last_sent_date = document['date']
     delta = datetime.utcnow() - last_sent_date
-    if delta.total_seconds() > int(REFRESH_RATE):
+    if delta.total_seconds() > HOUR_24:
         return True
     
     return False
