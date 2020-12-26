@@ -2,6 +2,7 @@ import os
 import re
 import requests
 import time
+import traceback
 
 from fetcher import Fetcher
 from google.cloud import error_reporting
@@ -27,8 +28,8 @@ def execute():
 def try_to_execute():
     try:
         execute()
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc()
         error_reporting.Client(service="oanda_fetcher").report_exception()
 
 

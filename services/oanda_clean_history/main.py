@@ -1,6 +1,7 @@
 import time
 import history
 import os
+import traceback
 from google.cloud import error_reporting
 from datetime import datetime, timedelta
 
@@ -18,8 +19,8 @@ def try_execute():
     try:
         datetime_limit = deletion_limit(DELETE_FROM_DATE)
         history.delete_old(datetime_limit)
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc()
         error_reporting.Client(service="oanda_history").report_exception()
 
 

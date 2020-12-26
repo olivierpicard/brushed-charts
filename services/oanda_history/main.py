@@ -2,6 +2,7 @@ import time
 import latest_candles
 import candle_parser
 import history
+import traceback
 from google.cloud import error_reporting
 from typing import List, Dict
 
@@ -29,8 +30,8 @@ def try_execute():
         add_to_history()
     except EmptyCandles:
         pass
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc()
         error_reporting.Client(service="oanda_history").report_exception()
 
 

@@ -4,6 +4,7 @@ import lastupdate_log
 from datetime import datetime, timedelta
 from typing import List, Dict
 import history
+import traceback
 from google.cloud import bigquery, error_reporting
 
 
@@ -48,8 +49,8 @@ def try_to_execute():
         execute()
     except EmptyCandles:
         pass
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc()
         error_reporting.Client(service="oanda_bigquery").report_exception()
 
 

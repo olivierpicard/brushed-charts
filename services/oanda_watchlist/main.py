@@ -1,6 +1,7 @@
 import os
 import time
 import parser
+import traceback
 from db import DatabaseUpdater
 from google.cloud import error_reporting
 
@@ -20,8 +21,8 @@ def execute():
 def try_execute():
     try:
         execute()
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc()
         error_reporting.client.Client(service="oanda_watchlist").report_exception()
 
 
