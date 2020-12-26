@@ -4,11 +4,13 @@ import bigquery_reader
 import lastupdate
 import presence_database
 import traceback
+import clean
 from datetime import datetime, timedelta
 from typing import List, Dict
 from google.cloud import bigquery, error_reporting
 
 REFRESH_RATE = os.getenv("PRESENCE_REFRESH_RATE_SECONDS")  # In seconds
+
 
 class EmptyResultException(Exception): pass
 
@@ -33,6 +35,7 @@ def execute():
     presence_database.insert_all(presences)
     upper_bound_date = date_window[1]
     lastupdate.save(upper_bound_date)
+    clean.delete_old()
 
 
 def try_to_execute():
