@@ -11,8 +11,8 @@ fi
 echo "Use profil: $profil"
 
 
-echo "Fetching secrets for oanda..."
-bin/make_oanda_env_file.sh || exit 1
+echo "Fetching secrets..."
+bin/make_secrets_env_file.sh || exit 1
 
 
 if [[ $profil == "dev" ]]; then
