@@ -5,6 +5,7 @@ import lastupdate
 import presence_database
 import traceback
 import clean
+import alert
 from datetime import datetime, timedelta
 from typing import List, Dict
 from google.cloud import bigquery, error_reporting
@@ -31,6 +32,7 @@ def make_date_window():
 def execute():
     date_window = make_date_window()
     presences = bigquery_reader.get_presence_from_date_window(date_window)
+    alert.email_on_no_presence(presences)
     raise_for_empty_result(presences)
     presence_database.insert_all(presences)
     upper_bound_date = date_window[1]
