@@ -1,5 +1,7 @@
+import smtplib
 import pymongo
 import os
+import last_email_sent_date
 from typing import List, Dict
 from datetime import datetime
 
@@ -9,6 +11,7 @@ PORT=os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION_NAME = os.getenv("MONGODB_MAIL_COLLECTION")
 EMAIL_ADDRESS = os.getenv("ADMIN_EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("ADMIN_EMAIL_PASSWORD")
 REFRESH_RATE = os.getenv("PRESENCE_REFRESH_RATE_SECONDS")  # In seconds
 BIGQUERY_TABLE_PATH = os.getenv("BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE")
 
@@ -16,37 +19,31 @@ BIGQUERY_TABLE_PATH = os.getenv("BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE")
 def email_on_no_presence(presences: List):
     if len(presences) != 0:
         return
-    client = connect()
-    collection = get_collection(client)
-    insert_mail_data(collection)
-    disconnect(client)
+    if not last_email_sent_date.is_ready_to_send_mail():
+        return
+    send_email()
+    last_email_sent_date.save()
 
 
-def connect() -> pymongo.MongoClient:
-    client = pymongo.MongoClient(host=HOST, port=int(PORT))
-    
-    return client
+def send_email():
+    email_content = make_email_message()
+    server = smtplib.SMTP_SSL("smtp.gmail.com", 465 )
+    server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+    server.sendmail(EMAIL_ADDRESS, EMAIL_PASSWORD, email_content)
+    server.quit()
 
 
-def get_collection(client: pymongo.MongoClient):
-    database = client.get_database(DATABASE)
-    collection = database.get_collection(COLLECTION_NAME)
-    
-    return collection
+def make_email_message():
+    subject = "No presence in {}".format(BIGQUERY_TABLE_PATH)
+    body = "There is no data in {} since more than {} seconds".format(
+        BIGQUERY_TABLE_PATH,
+        REFRESH_RATE
+    )
+    email_content = """
+From: {}
+Subject: {}
 
+{}""".format(EMAIL_ADDRESS, subject, body)
 
-def insert_mail_data(collection: pymongo.collection.Collection):
-    subject = "No data for {}".format(BIGQUERY_TABLE_PATH)
-    body = "No data in {} for more than {} seconds".format(BIGQUERY_TABLE_PATH, REFRESH_RATE)
-    collection.insert_one({
-        "frequency": 86400,
-        "from": EMAIL_ADDRESS,
-        "to": EMAIL_ADDRESS,
-        "at": str(datetime.utcnow()).replace(" ", "T"),
-        "subject": subject,
-        "body": body
-    })
+    return email_content
 
-
-def disconnect(client: pymongo.MongoClient):
-    client.close()
