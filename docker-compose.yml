@@ -30,7 +30,7 @@ services:
     container_name: oanda_fetcher
     env_file: 
       - ./env/services.env
-      - ./env/oanda_secret.env
+      - ./env/secrets.env
       - ./env/services.${PROFIL}.env
     volumes: 
       - type: bind
