@@ -1,16 +1,18 @@
 import time
 import os
 import lastupdate_log
-from datetime import datetime, timedelta
-from typing import List, Dict
 import history
 import traceback
+
+from datetime import datetime, timedelta
+from typing import List, Dict
 from google.cloud import bigquery, error_reporting
 
 
 REFRESH_RATE = 30  # In seconds
 PATH_TABLE_SHORTTERM = os.getenv("OANDA_BIGQUERY_PATH_TABLE_SHORTTERM")
 PATH_TABLE_ARCHIVE = os.getenv("OANDA_BIGQUERY_PATH_TABLE_ARCHIVE")
+ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 
 class EmptyCandles(Exception): pass
 
@@ -51,7 +53,7 @@ def try_to_execute():
         pass
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="oanda_bigquery").report_exception()
+        error_reporting.Client(service="oanda_bigquery."+ENVIRONMENT).report_exception()
 
 
 if __name__ == "__main__":

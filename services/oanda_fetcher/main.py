@@ -10,6 +10,7 @@ import watchlist
 import candles_saver
 
 
+ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 ACCOUNT_ID = os.getenv('OANDA_ACCOUNT_ID')
 TOKEN = os.getenv('OANDA_API_TOKEN')
 API_URL = os.getenv('OANDA_API_URL')
@@ -30,7 +31,7 @@ def try_to_execute():
         execute()
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="oanda_fetcher").report_exception()
+        error_reporting.Client(service="oanda_fetcher."+ENVIRONMENT).report_exception()
 
 
 if __name__ == "__main__":

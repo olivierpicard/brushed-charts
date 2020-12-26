@@ -3,10 +3,13 @@ import latest_candles
 import candle_parser
 import history
 import traceback
+import os
+
 from google.cloud import error_reporting
 from typing import List, Dict
 
 REFRESH_RATE = 5  # In seconds
+ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 
 class EmptyCandles(Exception): pass
 
@@ -32,7 +35,7 @@ def try_execute():
         pass
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="oanda_history").report_exception()
+        error_reporting.Client(service="oanda_history."+ENVIRONMENT).report_exception()
 
 
 if __name__ == "__main__":

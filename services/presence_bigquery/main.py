@@ -11,7 +11,7 @@ from typing import List, Dict
 from google.cloud import bigquery, error_reporting
 
 REFRESH_RATE = os.getenv("PRESENCE_REFRESH_RATE_SECONDS")  # In seconds
-
+ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 
 class EmptyResultException(Exception): pass
 
@@ -47,7 +47,7 @@ def try_to_execute():
         pass
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="presence_bigquery").report_exception()
+        error_reporting.Client(service="presence_bigquery."+ENVIRONMENT).report_exception()
 
 
 if __name__ == "__main__":
