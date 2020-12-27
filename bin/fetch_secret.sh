@@ -8,13 +8,15 @@ set -o allexport
 source ./env/services.env
 set +o allexport
 
+SECRET_NAME="$1"
 
-API_TOKEN=$(gcloud secrets \
+secret=$(gcloud secrets \
     versions access latest \
-    --secret="$SECRET_NAME_OANDA_API_TOKEN" \
+    --secret="$SECRET_NAME" \
     --quiet
 )
 
 [[ $? != 0 ]] && exit 1
+[[ -z $secret ]] && exit 1
 
-echo "$API_TOKEN"
+echo "$secret"
