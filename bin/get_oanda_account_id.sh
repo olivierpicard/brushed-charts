@@ -9,7 +9,7 @@ source ./env/services.env
 set +o allexport
 
 OANDA_ACCOUNT_URL="$OANDA_API_URL/v3/accounts"
-API_TOKEN=$(bin/get_oanda_api_token.sh) || exit 1
+API_TOKEN=$(bin/fetch_secret.sh $SECRET_NAME_OANDA_API_TOKEN) || exit 1
 
 ACCOUNT_ID=$(curl \
     --silent \
