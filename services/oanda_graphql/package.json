@@ -1,0 +1,25 @@
+{
+  "name": "oanda_graphql",
+  "version": "1.0.0",
+  "description": "A platform unified request between many brushed-charts's linked services",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ."
+  },
+  "keywords": [
+    "brushed-charts",
+    "graphql",
+    "query",
+    "platform"
+  ],
+  "author": "Olivier Picard",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^5.5.0",
+    "apollo-server": "^2.19.1",
+    "graphql": "^15.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
