@@ -4,8 +4,8 @@ const BIGQUERY_TABLE_PATH_PRICE_ARCHIVE = process.env['OANDA_BIGQUERY_PATH_TABLE
 
 var dateFrom, dateTo, granularity, instrument
 
+
 module.exports.getBigqueryCandles = async (args) => {
-  console.log(args)
   dateFrom = args['dateFrom']
   dateTo = args['dateTo']
   granularity = args['granularity']
@@ -13,8 +13,7 @@ module.exports.getBigqueryCandles = async (args) => {
 
   query = make_query()
   result = await fetch(query)
-  console.log(result)
-  results = prepare_output(result)
+  prepare_output(result)
   
   return result
 }
@@ -59,9 +58,11 @@ async function fetch(query) {
 
 
 function prepare_output(result) {
-  for (let i = 0; i < result.length; i++) {
+  for (var i = 0; i < result.length; i++) {
     var row = result[i]
-    row = parse_datetime(row)
+    parse_datetime(row)
+    add_field_mid(row)
+    add_field_spread(row)
   }
 }
 
@@ -73,16 +74,24 @@ function parse_datetime(row) {
 
 
 function add_field_mid(row) {
-  var mid = {
-    open: row['ask']['open'] + row['bid']['open'] / 2,
-    high: row['ask']['high'] + row['bid']['high'] / 2,
-    low: row['ask']['low'] + row['bid']['low'] / 2,
-    close: row['ask']['close'] + row['bid']['close'] / 2
+  const mid = {
+    open: (row['ask']['open'] + row['bid']['open']) / 2,
+    high: (row['ask']['high'] + row['bid']['high']) / 2,
+    low: (row['ask']['low'] + row['bid']['low']) / 2,
+    close: (row['ask']['close'] + row['bid']['close']) / 2
   }
 
   row['mid'] = mid
 }
 
-function add_field_spread(row) {
 
+function add_field_spread(row) {
+  const spread = {
+    open: row['ask']['open'] - row['bid']['open'],
+    high: row['ask']['high'] - row['bid']['high'],
+    low: row['ask']['low'] - row['bid']['low'],
+    close: row['ask']['close'] - row['bid']['close']
+  }
+
+  row['spread'] = spread
 }

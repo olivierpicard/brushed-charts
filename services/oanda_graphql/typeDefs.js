@@ -19,6 +19,7 @@ module.exports.typeDefs = gql`
     bid: Candlestick!
     ask: Candlestick!
     mid: Candlestick!
+    spread: Candlestick!
     volume: Int!
   }
   
