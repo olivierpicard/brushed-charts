@@ -115,3 +115,16 @@ services:
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
         
+  
+  oanda_graphql:
+    build: ./services/oanda_graphql
+    image: eu.gcr.io/brushed-charts/oanda_graphql:${PROFIL}-latest
+    restart: on-failure
+    container_name: oanda_graphql
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/

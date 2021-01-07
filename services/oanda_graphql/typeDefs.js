@@ -4,7 +4,6 @@ const { gql } = require('apollo-server');
 // that together define the "shape" of queries that are executed against
 // your data.
 module.exports.typeDefs = gql`
-
   type Candlestick {
     open: Float!
     high: Float!

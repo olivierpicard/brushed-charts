@@ -4,13 +4,15 @@
   "description": "A platform unified request between many brushed-charts's linked services",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "start": "node ."
   },
   "keywords": [
     "brushed-charts",
     "graphql",
     "query",
-    "platform"
+    "platform",
+    "finance"
   ],
   "author": "Olivier Picard",
   "license": "ISC",
