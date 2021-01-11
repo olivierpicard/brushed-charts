@@ -11,5 +11,5 @@ docker run \
     --name oanda_graphql_local \
     --env-file env/services.env \
     --env-file env/services.dev.env \
-    -p 3000:3000 \
+    -p 3330:3330 \
     -d oanda_graphql
