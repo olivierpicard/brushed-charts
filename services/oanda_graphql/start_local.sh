@@ -11,5 +11,6 @@ docker run \
     --name oanda_graphql_local \
     --env-file env/services.env \
     --env-file env/services.dev.env \
+    -v /etc/brushed-charts/backend-institution_account-service.json:/etc/brushed-charts/backend-institution_account-service.json \
     -p 3330:3330 \
     -d oanda_graphql
