@@ -1,10 +1,12 @@
-const { ApolloServer, gql } = require('apollo-server');
+const express = require('express')
+const { ApolloServer } = require('apollo-server-express');
 const { resolvers } = require('./resolvers');
 const { typeDefs } = require('./typeDefs');
-const { getBigqueryCandles } = require('./bigquery_get_candles');
 
+const app = express();
 const server = new ApolloServer({ typeDefs, resolvers });
+server.applyMiddleware({ app });
 
-server.listen(3330).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+app.listen({port: 3330}, () => 
+  console.log(`Server ready at port 3330`)
+);
