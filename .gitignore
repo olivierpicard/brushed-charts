@@ -9,4 +9,4 @@ cover.out
 .venv/
 __pycache__/
 node_modules
-*secret*.env
+venv
