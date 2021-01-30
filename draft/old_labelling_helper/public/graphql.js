@@ -23,8 +23,9 @@ export class GraphQL {
     try {
       const resp = await fetch(url, request);
       jsonResult = await resp.json()  
+      
     } catch (error) {
-      console.error('errro:' + error)
+      console.log('errro:' + error)
     }
     
     const candles = jsonResult['data']['getCandles']

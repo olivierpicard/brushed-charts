@@ -11,7 +11,6 @@ export class Chart {
     });
     this.handleResize();
     window.onresize = () => this.handleResize();
-    this.addCandlestickSeries(null)
   }
   
   handleResize() {
@@ -20,13 +19,26 @@ export class Chart {
     this.chart.resize(width, height);
   }
   
-  addCandlestickSeries(listOfCandle) {
-    // console.log(listOfCandle)
+  addCandlestick(listOfCandle) {
+    var arr = []
     const candlestickSeries = this.chart.addCandlestickSeries();
-    candlestickSeries.setData(listOfCandle)
-    const lineSeries = this.chart.addLineSeries();
+    listOfCandle.forEach(element => {
+      var dic = {
+        'time': element['time'],
+        'open': element['open'],
+        'high': element['high'],
+        'low': element['low'],
+        'close': element['close']
+      }
+      
+      arr.push(dic)
+    });
+    candlestickSeries.setData(arr)
+    // const lineSeries = this.chart.addLineSeries();
 //     candlestickSeries.setData([
-//     { time: 1611136800, open: 54.62, high: 55.5, low: 54.52, close: 54.9 },
+    
+//   { time: 1611136800, open: 54.62, high: 55.5, low: 54.52, close: 54.9 },
+//   { time: 1611828025, open: 1.21069, high: 1.210705, low: 1.21062, close: 1.21063}
 //   { time: 1611136900, open: 55.08, high: 55.27, low: 54.61, close: 54.98 },
 //   { time: 1611137001, open: 56.09, high: 57.47, low: 56.09, close: 57.21 },
 //   { time: 1611137100, open: 57.0, high: 58.44, low: 56.41, close: 57.42 },

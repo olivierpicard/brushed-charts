@@ -5,17 +5,17 @@ class Main {
   constructor() {
     this.chart = new Chart()
     GraphQL.GetCandles({
-      dateFrom: "2021-01-20 10:00:00",
-      dateTo: "2021-01-20 10:07:00",
+      dateFrom: "2021-01-28 10:00:00",
+      dateTo: "2021-01-28 10:01:00",
       instrument: "EUR_USD",
       granularity: "S5"
-    }).then((result) => this.handleCandleResult(result))
+    }).then((result) => this.handleCandleResult(result)).catch( reason => console.log(reason))
   }
 
 
-  handleCandleResult(result) {
+  async handleCandleResult(result) {
     const formattedCandles = this.formatCandleForChart(result)
-    this.chart.addCandlestickSeries(formattedCandles)
+    this.chart.addCandlestick(formattedCandles)
   }
 
 

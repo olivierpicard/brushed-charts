@@ -1,4 +1,4 @@
-import 'package:brushed_charts_graphql/main.dart' as graphql;
+import './backend_link/main.dart' as graphql;
 import 'package:flutter/material.dart';
 
 class Scene implements CustomPainter {
