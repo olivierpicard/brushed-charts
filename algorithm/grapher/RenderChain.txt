@@ -1,0 +1,7 @@
+Layout->Fragment->Panel1->Layer1->[Drawable]->Layer2->[Drawable]->Splitter->Fragment->Panel2->Layer1->[Drawable]->Layer2->[Drawable]
+
+Layer
+    Fragment                                  Splitter  Fragment
+            Panel1                                          Panel2
+                  Layer1            Layer2                       Layer1          Layer2 
+                        [Drawable]  [Drawable]                       [Drawable]     [Drawable]

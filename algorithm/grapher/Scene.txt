@@ -1,0 +1,31 @@
+class Scene {
+  objectToRepaint: SceneObject
+  objects: [SceneObject]
+  pointerHandle: PointerHandler
+
+  void add(SceneObject) {
+    objects.add(SceneObjects)
+    objectToRepaint = SceneObject
+  }
+
+  void paint(canvas, size) {
+    drawer = Drawer(canvas, size, objectToRepaint)
+    paintDrawables(drawer)
+  }
+
+  void paintDrawables(drawer) {
+    for object in objects {
+      if object is not Drawable : continue
+      objects.draw(drawer)
+    }
+  }
+
+  void shouldRepaint() {
+    if objectToRepaint == null  {
+      return false
+    }
+    return true
+  }
+
+  
+}

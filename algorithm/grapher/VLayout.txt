@@ -1,0 +1,68 @@
+class VLayout extends AbsoluteObject implements Resizable{
+  // size: Size
+  scene: Scene
+  objects: []
+  splitterCount = 0
+
+  constructor(this.scene, this.ancestor);
+  
+  void draw(cursor) {
+    previous = null
+    for object in objects {
+      objectCursor = updateCursor(cursor, previous)
+      object.draw(objectCursor)
+    }
+  }
+
+  void updateCursor(globalCursor: Cursor, previous, current: SceneObject) {
+    objectCursor = Cursor.Copy(globalCursor)
+    if previous != null {
+      objectCursor.position.y = previous.size.height
+      objectCursor.zoneSize.height = previous.size.height
+    }
+
+    return objectCursor
+  }
+
+  void add(object: SceneObject) {
+    getReductionRatio(object)
+    splitter = setupSplitters(object)
+  }
+
+  VSplitter setupSplitters(pendingObject) {
+    if object.len == 0 {
+      return null
+    }
+    lastObject = object[object.len - 1]
+    splitter = new VSplitter(lastObject, pendingObject)
+    
+    splitterCount += 1
+    objects.add(splitter)
+  } 
+
+  void getReductionRatio(object) {
+    
+  }
+
+  void applyReduction(ration) {
+    for object in objecs {
+      if object is reze
+      object.size.height * ratio
+    }
+  }
+
+  void rezize() {
+
+  }
+
+
+  void setSize(size) => this.size = size
+
+  
+
+
+
+
+}
+
+

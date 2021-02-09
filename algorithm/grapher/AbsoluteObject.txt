@@ -1,0 +1,4 @@
+abstract class AbsoluteObject extends SceneObject{
+  private size: Size
+  getSize() => return size
+}

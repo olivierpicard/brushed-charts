@@ -1,0 +1,4 @@
+abstract class SceneObject {
+  size: Size
+  void draw(cursor: Cursor);
+}

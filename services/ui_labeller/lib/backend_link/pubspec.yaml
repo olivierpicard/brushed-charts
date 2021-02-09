@@ -1,0 +1,4 @@
+# Minimal dependency, if this folder was a package
+#dev_dependencies:
+#  build_runner: ^1.11.0
+#  json_serializable: ^3.5.1
