@@ -3,6 +3,8 @@ class FinanceChart {
     layer1 = new Layer()
     layer2 = new Layer()
 
+    layer1.addAxis(Plan)
+
     panel1 = new Panel()
     panel1.add(layer1)
     panel1.add(layer2)
@@ -12,5 +14,9 @@ class FinanceChart {
     
     scene = new Scene()
     scene.add(layout)
+  
+    clickLayer = new ClickLayer()
+    clickLayer.add(panel1)
+    scene.add(clickLayer)
   }
 }

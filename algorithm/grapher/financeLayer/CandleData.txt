@@ -1,0 +1,8 @@
+class CandleData implements ISpatializable{
+  y: OHLC
+  x: DateStruct
+
+  CandleData() {
+    
+  }
+}

@@ -1,0 +1,5 @@
+abstract class SizedObject extends SceneObject{
+  private size: FlexSize
+  Size getSize() => return size
+  Size setSize(size: FlexSize) => this.size = size
+}

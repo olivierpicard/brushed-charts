@@ -1,0 +1,21 @@
+class Stack extends Sized {
+  children: [SceneObject]
+
+  constructor(this.scene)
+  
+  draw(cursor) {
+    for child in children {
+      child.draw(cursor)
+    }
+  }
+
+  add(child) {
+    children.add(child)
+    setState(this)
+  }
+
+  
+  
+}
+
+

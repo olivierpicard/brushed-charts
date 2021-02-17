@@ -1,0 +1,13 @@
+class FlexSize {
+  virtual: Size // percent
+  real: Size    // pixel
+
+  constructor(this.virtual, this.real);
+
+  Size getSize(canvasSize: Size) {
+    size = calculate virtual size base on canvas Size
+    size += real
+
+    return size
+  }
+}

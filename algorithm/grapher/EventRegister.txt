@@ -1,0 +1,15 @@
+class EventRegister {
+  register: Dict<SceneEvent, Function>
+
+  add(event: SceneEvent, f: Function) => register.add({scene, f})
+  remove(event: SceneEvent) => del register[event]
+
+  getFunction(event: SceneEvent) {
+    f = null
+    try {
+      f = register[event]
+    } catch {}
+
+    return f
+  }
+}

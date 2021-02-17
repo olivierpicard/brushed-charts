@@ -1,10 +1,10 @@
-class VLayout extends AbsoluteObject implements Resizable{
-  // size: Size
+class VLayout extends Sized {
+  // size inherited 
   scene: Scene
-  objects: []
+  objects: [Sized]
   splitterCount = 0
 
-  constructor(this.scene, this.ancestor);
+  constructor(this.scene);
   
   void draw(cursor) {
     previous = null
@@ -14,19 +14,21 @@ class VLayout extends AbsoluteObject implements Resizable{
     }
   }
 
-  void updateCursor(globalCursor: Cursor, previous, current: SceneObject) {
-    objectCursor = Cursor.Copy(globalCursor)
+  void updateCursor(canvasCursor: Cursor, previous, current: SceneObject) {
+    objectCursor = Cursor.Copy(canvasCursor)
     if previous != null {
-      objectCursor.position.y = previous.size.height
-      objectCursor.zoneSize.height = previous.size.height
+      objectCursor.position.y += previous.getSize().height
+      objectCursor.zoneSize.height = current.getSize().height
     }
 
     return objectCursor
   }
 
   void add(object: SceneObject) {
-    getReductionRatio(object)
+    ratio = getReductionRatio(object)
     splitter = setupSplitters(object)
+    applyReduction(ratio)
+    setState(this)
   }
 
   VSplitter setupSplitters(pendingObject) {
@@ -35,28 +37,21 @@ class VLayout extends AbsoluteObject implements Resizable{
     }
     lastObject = object[object.len - 1]
     splitter = new VSplitter(lastObject, pendingObject)
+    lastObject.getSize().real.height -= VSplitter.THICKNESS
     
     splitterCount += 1
     objects.add(splitter)
   } 
 
   void getReductionRatio(object) {
-    
+    return (this.size.height - 25%) / this.size.height
   }
 
-  void applyReduction(ration) {
+  void applyReduction(ratio) {
     for object in objecs {
-      if object is reze
-      object.size.height * ratio
+      object Height * ration
     }
   }
-
-  void rezize() {
-
-  }
-
-
-  void setSize(size) => this.size = size
 
   
 

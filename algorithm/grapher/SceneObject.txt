@@ -1,4 +1,29 @@
 abstract class SceneObject {
-  size: Size
-  void draw(cursor: Cursor);
+  scene: Scene
+  children: [SceneObject]
+  eventRegister: EventRegister
+  
+
+  constructor(this.scene);
+
+
+  handleEvent(event: SceneEvent) {
+    func = eventRegister.getFunction(sceneEvent) 
+    if func == null {
+      propagate(sceneEvent)
+    }
+  }
+
+
+  propagate(event: SceneEvent) {
+    for child in children {
+      child.handleEvent(event)
+    }
+  }
+  
+
+  setState(sceneObject) {
+    scene.setState(sceneObject)
+  }
+
 }

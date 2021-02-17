@@ -1,0 +1,8 @@
+class DateStruct extends 1DStruct{
+  final Date date
+
+  DateStruct(this.date) {
+    value = (double) date.toUnixTimestamp()
+  }
+  
+}

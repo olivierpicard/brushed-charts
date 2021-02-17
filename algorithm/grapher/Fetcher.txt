@@ -1,0 +1,10 @@
+abstract class Fetcher {
+  model: Model
+  async Map<String, dynamic> fetch();
+
+  addModel(model) {
+    model.add(model)
+  }
+
+  
+}

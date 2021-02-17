@@ -1,0 +1,10 @@
+class Layer extends Sized {
+  plan: Plan
+  model: Model
+
+  draw() {
+    xRange = plan.x.getRange()
+    dataIterator = model.getFromRange(xRange)
+    plan.interval 
+  }
+}

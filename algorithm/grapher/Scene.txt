@@ -1,12 +1,7 @@
 class Scene {
+  private child: SceneObject
   objectToRepaint: SceneObject
-  objects: [SceneObject]
   pointerHandle: PointerHandler
-
-  void add(SceneObject) {
-    objects.add(SceneObjects)
-    objectToRepaint = SceneObject
-  }
 
   void paint(canvas, size) {
     drawer = Drawer(canvas, size, objectToRepaint)
@@ -27,5 +22,11 @@ class Scene {
     return true
   }
 
+  void setChild(node) {
+    child = node
+    objectToRepaint = node
+  }
+
+  SceneObject getChild() => return child
   
 }

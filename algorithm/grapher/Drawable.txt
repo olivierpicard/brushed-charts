@@ -1,0 +1,7 @@
+class Drawable extends SceneObject {
+  abstract void draw(cursor: Cursor);
+  
+  constructor(this.scene) {
+    register.add(Draw)
+  }
+}
