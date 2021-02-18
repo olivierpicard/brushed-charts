@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.1
   http: ^0.12.2
+  graph_kernel:
+    path: ../../lib/graph_kernel
 
 dev_dependencies:
   flutter_test:

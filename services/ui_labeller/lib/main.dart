@@ -1,34 +1,45 @@
-import 'backend_link/main.dart' as graphql;
 import 'package:flutter/material.dart';
-import 'scene.dart';
+// import 'package:graph_kernel/main.dart';
+
+abstract class A {
+  static final id = "a";
+  String getID();
+}
+
+class B extends A {
+  static final id = "b";
+
+  @override
+  String getID() => B.id;
+}
+
+class C extends A {
+  static final id = "c";
+
+  @override
+  String getID() => C.id;
+}
 
 main(List<String> args) async {
-  runApp(App());
-  // final variables = graphql.VariablesGetCandles();
-  // variables.dateFrom = "2021-01-20 10:00:00";
-  // variables.dateTo = "2021-01-20 10:10:00";
-  // variables.instrument = "EUR_USD";
-  // variables.granularity = "S5";
-  // List<graphql.DataCandle> candles;
-
-  // try {
-  //   candles = await graphql.getCandles(variables);
-  // } on graphql.ResponseError catch (e) {
-  //   print(e.cause);
-  // }
+  // runApp(App());
+  final A a = B();
+  final A a1 = C();
+  print(a.getID());
+  print(a1.getID());
 }
 
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme:
-          ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
-      home: Scaffold(
-          body: CustomPaint(
-        painter: Scene(),
-        child: Container(),
-      )),
-    );
-  }
-}
+// class App extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         theme: getThemeData(),
+//         home: Scaffold(body: GraphWidget(child: Container())));
+//   }
+
+//   ThemeData getThemeData() {
+//     return ThemeData(
+//       brightness: Brightness.dark,
+//       primaryColor: Colors.blueGrey,
+//     );
+//   }
+// }

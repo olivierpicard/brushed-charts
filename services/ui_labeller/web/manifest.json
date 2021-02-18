@@ -1,6 +1,6 @@
 {
-    "name": "labeling_helper",
-    "short_name": "labeling_helper",
+    "name": "ui_labeller",
+    "short_name": "ui_labeller",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
