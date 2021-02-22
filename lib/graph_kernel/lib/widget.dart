@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'scene.dart';
 
-class GraphWidget extends StatelessWidget {
+class SceneWidget extends StatelessWidget {
   final Widget child;
 
-  GraphWidget({this.child});
+  SceneWidget({this.child});
 
   @override
   Widget build(BuildContext context) {

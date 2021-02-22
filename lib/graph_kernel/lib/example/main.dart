@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: getThemeData(),
-        home: Scaffold(body: GraphWidget(child: Container())));
+        home: Scaffold(body: SceneWidget(child: Container())));
   }
 
   ThemeData getThemeData() {
