@@ -1,19 +1,9 @@
-import 'event/sceneEvent.dart';
+typedef EventHandler = void Function(dynamic);
 
 class EventRegistry {
-  final _register = Map<String, Function>();
+  final _register = Map<Type, EventHandler>();
 
-  add(String eventID, Function f) => _register[eventID] = f;
-  remove(String eventID) => _register.remove(eventID);
-
-  Function getCallback(String eventID) {
-    Function f;
-    try {
-      f = _register[eventID];
-    } catch (e) {
-      print("No $eventID event found");
-    }
-
-    return f;
-  }
+  void add(Type eventType, EventHandler f) => _register[eventType] = f;
+  void remove(Type eventType) => _register.remove(eventType);
+  EventHandler? getCallback(Type eventType) => _register[eventType];
 }

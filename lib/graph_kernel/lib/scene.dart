@@ -1,13 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:graph_kernel/cursor.dart';
-import 'package:graph_kernel/event/drawEvent.dart';
-import 'package:graph_kernel/sceneObject.dart';
+import 'cursor.dart';
+import 'drawEvent.dart';
+import 'sceneObject.dart';
 
 class Scene implements CustomPainter {
   final children = <SceneObject>[];
-  SceneObject _objectToRepaint;
-
-  Scene({Container child});
+  SceneObject? _objectToRepaint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -17,6 +16,12 @@ class Scene implements CustomPainter {
     for (final child in children) {
       child.propagate(drawEvent);
     }
+
+    var painter = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
+    var rect = Offset.zero & size;
+    canvas.drawRect(rect, painter);
   }
 
   @override
@@ -29,7 +34,7 @@ class Scene implements CustomPainter {
   setState(SceneObject object) => _objectToRepaint = object;
 
   @override
-  bool hitTest(Offset position) => null;
+  bool? hitTest(Offset position) => null;
   @override
   void addListener(listener) => null;
   @override

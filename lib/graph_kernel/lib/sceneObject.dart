@@ -1,4 +1,3 @@
-import 'event/sceneEvent.dart';
 import 'eventRegistry.dart';
 import 'scene.dart';
 
@@ -9,13 +8,13 @@ abstract class SceneObject {
 
   SceneObject(this.scene);
 
-  handleEvent(SceneEvent event) {
+  handleEvent(dynamic event) {
     final func = eventRegistry.getCallback(event.getID());
     final isEventSupported = (func != null);
     if (!isEventSupported) propagate(event);
   }
 
-  propagate(SceneEvent event) {
+  propagate(dynamic event) {
     for (final child in children) {
       child.handleEvent(event);
     }

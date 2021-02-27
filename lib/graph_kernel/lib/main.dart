@@ -8,5 +8,4 @@ export 'eventRegistry.dart';
 export 'flexSize.dart';
 export 'scene.dart';
 export 'sceneObject.dart';
-export 'event/drawEvent.dart';
-export 'event/sceneEvent.dart';
+export 'drawEvent.dart';

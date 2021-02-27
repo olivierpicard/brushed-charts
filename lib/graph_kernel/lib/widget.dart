@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'scene.dart';
 
 class SceneWidget extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
   SceneWidget({this.child});
 

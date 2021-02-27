@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 class FlexSize {
-  Size percent = Size.zero;
-  Size pixel = Size.zero;
+  var percent;
+  var pixel;
 
-  FlexSize({this.pixel, this.percent});
+  FlexSize({this.pixel = Size.zero, this.percent = Size.zero});
 
   Size geSize(Size canvasSize) {
     final width = _percentToPixelWidth(canvasSize) + pixel.width;
