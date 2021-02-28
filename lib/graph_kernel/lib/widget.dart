@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'graphKernel.dart';
+import 'kernel.dart';
 
 class Graph extends StatelessWidget {
   final Widget child;

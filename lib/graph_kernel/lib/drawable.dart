@@ -1,9 +1,9 @@
-import 'graphKernel.dart';
-import 'package:graph_kernel/sceneObject.dart';
+import 'kernel.dart';
+import 'object.dart';
 import 'drawEvent.dart';
 
 abstract class Drawable extends GraphObject {
-  Drawable(GraphKernel scene) : super(scene) {
+  Drawable(GraphKernel kernel) : super(kernel) {
     eventRegistry.add(DrawEvent, draw);
   }
 

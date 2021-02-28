@@ -1,10 +1,10 @@
 library graph_kernel;
 
-export 'graphKernel.dart';
+export 'kernel.dart';
 export 'widget.dart';
 export 'cursor.dart';
 export 'drawable.dart';
 export 'eventRegistry.dart';
 export 'flexSize.dart';
-export 'sceneObject.dart';
+export 'object.dart';
 export 'drawEvent.dart';

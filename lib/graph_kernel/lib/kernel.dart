@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'cursor.dart';
 import 'drawEvent.dart';
-import 'sceneObject.dart';
+import 'object.dart';
 
 class GraphKernel implements CustomPainter {
   final children = <GraphObject>[];
