@@ -1,7 +1,9 @@
+import 'propagater.dart';
+
 import 'eventRegistry.dart';
 import 'kernel.dart';
 
-abstract class GraphObject {
+abstract class GraphObject implements Propagater {
   final GraphKernel kernel;
   final children = <GraphObject>[];
   final eventRegistry = EventRegistry();

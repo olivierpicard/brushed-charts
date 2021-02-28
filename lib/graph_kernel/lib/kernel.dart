@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:graph_kernel/propagater.dart';
 import 'cursor.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 
-class GraphKernel implements CustomPainter {
+class GraphKernel implements CustomPainter, Propagater {
   final children = <GraphObject>[];
   GraphObject? _objectToRepaint;
 
@@ -12,16 +13,20 @@ class GraphKernel implements CustomPainter {
   void paint(Canvas canvas, Size size) {
     final cursor = new Cursor(Offset.zero, size);
     final drawEvent = new DrawEvent(cursor, canvas);
-
-    for (final child in children) {
-      child.propagate(drawEvent);
-    }
+    propagate(drawEvent);
 
     var painter = Paint()
       ..color = Colors.green
       ..style = PaintingStyle.fill;
     var rect = Offset.zero & size;
     canvas.drawRect(rect, painter);
+  }
+
+  @override
+  void propagate(event) {
+    for (final child in children) {
+      child.propagate(event);
+    }
   }
 
   @override
