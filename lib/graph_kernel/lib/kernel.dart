@@ -24,6 +24,7 @@ class GraphKernel implements CustomPainter, Propagator {
 
   @override
   void propagate(event) {
+    print(event.runtimeType);
     for (final child in children) {
       child.propagate(event);
     }

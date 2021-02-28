@@ -10,20 +10,17 @@ class GraphPointer extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Listener(
-      onPointerSignal: onScrollableEvent,
-      child: MouseRegion(
-        onHover: (hover) => print("hover : ${hover.localPosition}"),
-        child: GestureDetector(
-          onTapUp: (tap) => print("tap : ${tap.localPosition}"),
-          onPanUpdate: (pan) => print("pan: ${pan.localPosition}"),
-          child: this.child,
-        ),
-      ),
-    );
+        onPointerSignal: onScrollableEvent,
+        child: MouseRegion(
+            onHover: kernel.propagate,
+            child: GestureDetector(
+                onTapUp: kernel.propagate,
+                onPanUpdate: kernel.propagate,
+                child: this.child)));
   }
 
   onScrollableEvent(PointerSignalEvent signal) {
     if (signal is! PointerScrollEvent) return;
-    print("scroll: ${signal.scrollDelta}");
+    kernel.propagate(signal);
   }
 }
