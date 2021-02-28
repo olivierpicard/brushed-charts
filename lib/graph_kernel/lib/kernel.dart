@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:graph_kernel/propagater.dart';
+import 'propagator.dart';
 import 'cursor.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 
-class GraphKernel implements CustomPainter, Propagater {
+class GraphKernel implements CustomPainter, Propagator {
   final children = <GraphObject>[];
   GraphObject? _objectToRepaint;
 

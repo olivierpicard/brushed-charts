@@ -1,3 +1,3 @@
-abstract class Propagater {
+abstract class Propagator {
   void propagate(dynamic event);
 }
