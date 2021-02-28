@@ -1,38 +1,29 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graph_kernel/main.dart';
-import 'package:pointer_interpreter/eventEmitter.dart';
 
-class InteractionWidget extends StatelessWidget {
-  final Widget child;
-  final SceneWidget sceneWidget;
-  final eventEmitter = EventEmitter();
+class GraphPointer extends StatelessWidget {
+  final Widget? child;
+  final GraphKernel kernel;
 
-  InteractionWidget({this.child}) : sceneWidget = SceneWidget(child: child);
+  GraphPointer({required this.kernel, this.child});
 
   Widget build(BuildContext context) {
-    return makeListenerWidget();
-  }
-
-  Listener makeListenerWidget() {
     return Listener(
       onPointerSignal: onScrollableEvent,
-      child: makeGestureWidget(),
+      child: MouseRegion(
+        onHover: (hover) => print("hover : ${hover.localPosition}"),
+        child: GestureDetector(
+          onTapUp: (tap) => print("tap : ${tap.localPosition}"),
+          onPanUpdate: (pan) => print("pan: ${pan.localPosition}"),
+          child: this.child,
+        ),
+      ),
     );
   }
 
   onScrollableEvent(PointerSignalEvent signal) {
     if (signal is! PointerScrollEvent) return;
-    final scrollEvent = signal as PointerScrollEvent;
-    print("scroll: ${scrollEvent.scrollDelta}");
-  }
-
-  GestureDetector makeGestureWidget() {
-    return GestureDetector(
-      onTapUp: (tapUpDetails) => print("tap: ${tapUpDetails.localPosition}"),
-      onPanUpdate: (dragUpdateDetails) =>
-          print("pan updates: ${dragUpdateDetails.delta}"),
-      child: sceneWidget,
-    );
+    print("scroll: ${signal.scrollDelta}");
   }
 }

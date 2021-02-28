@@ -1,0 +1,3 @@
+class Propagator {
+  // Propagator()
+}

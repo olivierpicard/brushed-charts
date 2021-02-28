@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../graphKernel.dart';
 import '../widget.dart';
 
 main(List<String> args) async {
@@ -10,7 +11,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: getThemeData(),
-        home: Scaffold(body: SceneWidget(child: Container())));
+        home: Scaffold(body: Graph(kernel: GraphKernel())));
   }
 
   ThemeData getThemeData() {

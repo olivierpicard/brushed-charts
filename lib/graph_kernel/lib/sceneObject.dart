@@ -1,12 +1,12 @@
 import 'eventRegistry.dart';
-import 'scene.dart';
+import 'graphKernel.dart';
 
-abstract class SceneObject {
-  final Scene scene;
-  final children = <SceneObject>[];
+abstract class GraphObject {
+  final GraphKernel scene;
+  final children = <GraphObject>[];
   final eventRegistry = EventRegistry();
 
-  SceneObject(this.scene);
+  GraphObject(this.scene);
 
   handleEvent(dynamic event) {
     final func = eventRegistry.getCallback(event.getID());
@@ -20,5 +20,5 @@ abstract class SceneObject {
     }
   }
 
-  setState(SceneObject object) => scene.setState(object);
+  setState(GraphObject object) => scene.setState(object);
 }

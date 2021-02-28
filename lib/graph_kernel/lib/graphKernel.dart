@@ -4,9 +4,9 @@ import 'cursor.dart';
 import 'drawEvent.dart';
 import 'sceneObject.dart';
 
-class Scene implements CustomPainter {
-  final children = <SceneObject>[];
-  SceneObject? _objectToRepaint;
+class GraphKernel implements CustomPainter {
+  final children = <GraphObject>[];
+  GraphObject? _objectToRepaint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -31,7 +31,7 @@ class Scene implements CustomPainter {
     return true;
   }
 
-  setState(SceneObject object) => _objectToRepaint = object;
+  setState(GraphObject object) => _objectToRepaint = object;
 
   @override
   bool? hitTest(Offset position) => null;

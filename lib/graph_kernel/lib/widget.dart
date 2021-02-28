@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'scene.dart';
+import 'graphKernel.dart';
 
-class SceneWidget extends StatelessWidget {
-  final Widget? child;
+class Graph extends StatelessWidget {
+  final Widget child;
+  final GraphKernel kernel;
 
-  SceneWidget({this.child});
+  Graph({required this.kernel, Widget? child})
+      : this.child = child ?? Container();
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: Scene(),
+      painter: kernel,
       child: this.child,
     );
   }
