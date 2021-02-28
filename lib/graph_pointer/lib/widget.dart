@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:graph_kernel/main.dart';
 
 class GraphPointer extends StatelessWidget {
-  final Widget? child;
+  final Widget child;
   final GraphKernel kernel;
 
-  GraphPointer({required this.kernel, this.child});
+  GraphPointer({required this.kernel, required this.child});
 
   Widget build(BuildContext context) {
     return Listener(
