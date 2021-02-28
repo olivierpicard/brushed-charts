@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graph_kernel/main.dart';
+import 'package:kernel/main.dart';
 import '../widget.dart';
 
 main(List<String> args) async {

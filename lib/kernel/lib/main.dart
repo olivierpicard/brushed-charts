@@ -1,4 +1,4 @@
-library graph_kernel;
+library kernel;
 
 export 'kernel.dart';
 export 'widget.dart';

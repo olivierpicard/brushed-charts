@@ -1,4 +1,4 @@
-name: graph_kernel
+name: pointer
 description: A new Flutter package project.
 version: 0.0.1
 author:
@@ -8,9 +8,14 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.17.0"
 
+publish_to: none
+
 dependencies:
   flutter:
     sdk: flutter
+  kernel:
+    path: ../kernel
+    
 
 dev_dependencies:
   flutter_test:

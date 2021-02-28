@@ -60,10 +60,10 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  graph_kernel:
+  kernel:
     dependency: "direct main"
     description:
-      path: "../graph_kernel"
+      path: "../kernel"
       relative: true
     source: path
     version: "0.0.1"

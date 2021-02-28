@@ -1,4 +1,4 @@
-name: graph_pointer
+name: staticLayout
 description: A new Flutter package project.
 version: 0.0.1
 author:
@@ -13,8 +13,8 @@ publish_to: none
 dependencies:
   flutter:
     sdk: flutter
-  graph_kernel:
-    path: ../graph_kernel
+  kernel:
+    path: ../kernel
     
 
 dev_dependencies:
