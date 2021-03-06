@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   kernel:
     path: ../kernel
+  tuple: ^2.0.0-nullsafety.0
     
 
 dev_dependencies:

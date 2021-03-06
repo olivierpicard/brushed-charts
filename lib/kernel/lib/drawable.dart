@@ -1,3 +1,5 @@
+import 'package:kernel/sizedObject.dart';
+
 import 'kernel.dart';
 import 'object.dart';
 import 'drawEvent.dart';

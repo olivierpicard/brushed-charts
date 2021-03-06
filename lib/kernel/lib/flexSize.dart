@@ -1,21 +1,20 @@
 import 'dart:ui';
 
+import 'package:kernel/sizedObject.dart';
+
 class FlexSize {
-  var percent;
-  var pixel;
+  Size virtual; // [0...1]
+  Size pixel;
 
-  FlexSize({this.pixel = Size.zero, this.percent = Size.zero});
+  FlexSize({this.pixel = Size.zero, this.virtual = Size.zero});
 
-  Size geSize(Size canvasSize) {
-    final width = _percentToPixelWidth(canvasSize) + pixel.width;
-    final height = _percentToPixelHeight(canvasSize) + pixel.height;
+  Size toPixels(Size zoneSize) {
+    final width = virtual.width * zoneSize.width + pixel.width;
+    final height = virtual.height * zoneSize.height + pixel.height;
 
     return Size(width, height);
   }
 
-  double _percentToPixelWidth(Size canvasSize) =>
-      (percent.width * canvasSize.width) / 100;
-
-  double _percentToPixelHeight(Size canvasSize) =>
-      (percent.height * canvasSize.height) / 100;
+  bool get isFinite => (virtual.isFinite && pixel.isFinite);
+  bool get isInfinite => !isFinite;
 }

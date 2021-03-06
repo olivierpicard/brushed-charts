@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kernel/drawZone.dart';
 import 'propagator.dart';
-import 'cursor.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 
-class GraphKernel implements CustomPainter, Propagator {
-  final children = <GraphObject>[];
+class GraphKernel with Propagator implements CustomPainter {
   GraphObject? _objectToRepaint;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cursor = new Cursor(Offset.zero, size);
-    final drawEvent = new DrawEvent(cursor, canvas);
+    final drawZone = new DrawZone(Offset.zero, size);
+    final drawEvent = new DrawEvent(this, canvas, drawZone);
     propagate(drawEvent);
 
     var painter = Paint()

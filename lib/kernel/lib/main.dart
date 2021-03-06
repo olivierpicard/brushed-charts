@@ -2,7 +2,7 @@ library kernel;
 
 export 'kernel.dart';
 export 'widget.dart';
-export 'cursor.dart';
+export 'drawZone.dart';
 export 'drawable.dart';
 export 'eventRegistry.dart';
 export 'flexSize.dart';

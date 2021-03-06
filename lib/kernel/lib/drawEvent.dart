@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'cursor.dart';
+import 'package:kernel/propagator.dart';
+import 'drawZone.dart';
 
 class DrawEvent {
-  final Cursor cursor;
+  final Propagator parent;
   final Canvas canvas;
+  final DrawZone drawZone;
 
-  DrawEvent(this.cursor, this.canvas);
+  DrawEvent(this.parent, this.canvas, this.drawZone);
 }
