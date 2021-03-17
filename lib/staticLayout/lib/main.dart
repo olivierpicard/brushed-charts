@@ -1,3 +1,3 @@
 library pointer_interpreter;
 
-export './widget.dart';
+export './vAlign.dart';

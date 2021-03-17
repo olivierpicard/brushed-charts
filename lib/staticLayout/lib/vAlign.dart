@@ -1,17 +1,17 @@
-import 'dart:ui';
-
-import 'package:kernel/cursor.dart';
 import 'package:kernel/drawEvent.dart';
 import 'package:kernel/kernel.dart';
-import 'package:kernel/sizedObject.dart';
-import 'package:staticLayout/layout.dart';
+import 'package:staticLayout/verticalLayout.dart';
 
-class VAlign extends Layout {
+class VAlign extends VerticalLayout {
   VAlign(GraphKernel kernel) : super(kernel);
 
   @override
   void draw(covariant DrawEvent drawEvent) {
-    final children = this.children as List<SizedObject>;
-    for (final child in children) {}
+    super.draw(drawEvent);
+    DrawEvent? lastDrawEvent;
+    for (final child in children) {
+      lastDrawEvent = makeDrawEvent(lastDrawEvent, child);
+      child.propagate(drawEvent);
+    }
   }
 }

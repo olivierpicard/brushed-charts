@@ -8,4 +8,7 @@ class DrawEvent {
   final DrawZone drawZone;
 
   DrawEvent(this.parent, this.canvas, this.drawZone);
+
+  static DrawEvent copy(DrawEvent event) =>
+      DrawEvent(event.parent, event.canvas, event.drawZone);
 }
