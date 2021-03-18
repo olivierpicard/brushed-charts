@@ -12,6 +12,14 @@ abstract class DirectionalLayout extends SizedObject {
 
   Offset makeZonePosition(DrawEvent? lastEvent);
 
+  void draw(covariant DrawEvent drawEvent) {
+    DrawEvent? lastEvent;
+    for (final child in children) {
+      lastEvent = makeDrawEvent(lastEvent, child);
+      child.propagate(lastEvent);
+    }
+  }
+
   DrawEvent makeDrawEvent(DrawEvent? lastDrawEvent, SizedObject child) {
     final zone = makeDrawZone(lastDrawEvent, child);
     final event = DrawEvent(this, baseDrawEvent!.canvas, zone);

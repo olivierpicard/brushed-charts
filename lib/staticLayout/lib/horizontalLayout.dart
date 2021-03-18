@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:kernel/kernel.dart';
 import 'package:kernel/main.dart';
-import 'package:kernel/sizedObject.dart';
 import 'directionallayout.dart';
 import 'util/hSizeResolver.dart';
 
@@ -12,6 +11,7 @@ abstract class HorizontalLayout extends DirectionalLayout {
   @override
   void draw(covariant DrawEvent drawEvent) {
     sizeResolver = HSizeResolver(children, drawEvent.drawZone.size);
+    super.draw(drawEvent);
   }
 
   Offset makeZonePosition(DrawEvent? lastEvent) {

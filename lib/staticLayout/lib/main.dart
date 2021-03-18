@@ -1,3 +1,4 @@
 library pointer_interpreter;
 
-export './vAlign.dart';
+export "verticalLayout.dart";
+export "horizontalLayout.dart";

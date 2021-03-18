@@ -11,11 +11,7 @@ abstract class VerticalLayout extends DirectionalLayout {
   @override
   void draw(covariant DrawEvent drawEvent) {
     sizeResolver = VSizeResolver(children, drawEvent.drawZone.size);
-    DrawEvent? lastEvent;
-    for (final child in children) {
-      lastEvent = makeDrawEvent(lastEvent, child);
-      child.propagate(lastEvent);
-    }
+    super.draw(drawEvent);
   }
 
   Offset makeZonePosition(DrawEvent? lastEvent) {
