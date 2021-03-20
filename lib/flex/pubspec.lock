@@ -75,7 +75,7 @@ packages:
     source: hosted
     version: "0.12.10-nullsafety.3"
   meta:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
@@ -88,6 +88,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.3"
+  propagator:
+    dependency: transitive
+    description:
+      path: "../propagator"
+      relative: true
+    source: path
+    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -4,7 +4,7 @@ import 'package:kernel/drawEvent.dart';
 import 'package:kernel/drawZone.dart';
 import 'package:flex/object.dart';
 import 'package:kernel/misc/Init.dart';
-import 'package:kernel/multiPropagator.dart';
+import 'package:kernel/propagator/multi.dart';
 
 abstract class DirectionalLayout extends FlexObject with MultiPropagator {
   late FlexResolver resolver;

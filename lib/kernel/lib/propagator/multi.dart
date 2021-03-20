@@ -1,5 +1,5 @@
-import 'object.dart';
-import 'propagator.dart';
+import '../object.dart';
+import 'base.dart';
 
 mixin MultiPropagator implements Propagator {
   late List<GraphObject> children;

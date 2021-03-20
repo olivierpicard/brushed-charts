@@ -1,4 +1,5 @@
-import 'propagator.dart';
+import 'propagator/base.dart';
+
 import 'eventRegistry.dart';
 import 'kernel.dart';
 

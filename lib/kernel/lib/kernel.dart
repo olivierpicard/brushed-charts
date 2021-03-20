@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'propagator/single.dart';
 import 'drawZone.dart';
 import 'misc/Init.dart';
-import 'singlePropagator.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 

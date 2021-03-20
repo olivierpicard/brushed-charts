@@ -7,4 +7,3 @@ export 'drawEvent.dart';
 export 'drawZone.dart';
 export 'eventRegistry.dart';
 export 'object.dart';
-export 'propagator.dart';

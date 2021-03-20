@@ -1,5 +1,6 @@
-import '../singlePropagator.dart';
-import '../multiPropagator.dart';
+import '../propagator/single.dart';
+import '../propagator/multi.dart';
+
 import '../object.dart';
 import 'kernelLinker.dart';
 

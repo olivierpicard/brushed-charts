@@ -1,8 +1,7 @@
 import 'package:flex/object.dart';
 import 'package:flutter/material.dart';
-import 'package:kernel/kernel.dart';
 import 'package:kernel/main.dart';
-import 'package:kernel/singlePropagator.dart';
+import 'package:kernel/propagator/single.dart';
 
 class GraphBackground extends FlexObject with SinglePropagator {
   final Color color;

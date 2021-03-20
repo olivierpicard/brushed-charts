@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:kernel/propagator.dart';
+import 'package:kernel/propagator/base.dart';
 
 class GraphPointer extends StatelessWidget {
   final Widget child;

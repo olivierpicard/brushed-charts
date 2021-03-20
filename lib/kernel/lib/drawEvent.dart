@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:kernel/propagator.dart';
+import 'propagator/base.dart';
 import 'drawZone.dart';
 
 class DrawEvent {
