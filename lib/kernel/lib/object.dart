@@ -2,11 +2,9 @@ import 'propagator.dart';
 import 'eventRegistry.dart';
 import 'kernel.dart';
 
-abstract class GraphObject with Propagator {
-  final GraphKernel kernel;
+abstract class GraphObject implements Propagator {
+  GraphKernel? kernel;
   final eventRegistry = EventRegistry();
-
-  GraphObject(this.kernel);
 
   void handleEvent(dynamic event) {
     final callback = eventRegistry.getCallback(event.runtimeType);
@@ -17,5 +15,5 @@ abstract class GraphObject with Propagator {
       callback!(event);
   }
 
-  void setState(GraphObject object) => kernel.setState(object);
+  void setState(GraphObject object) => kernel?.setState(object);
 }

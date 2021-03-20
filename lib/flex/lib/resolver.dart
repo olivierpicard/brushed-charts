@@ -12,7 +12,7 @@ class FlexResolver {
   FlexResolver(this.children, this.zoneLength);
 
   double getLength(FlexObject child) {
-    final flexLen = child.flexLength;
+    final flexLen = child.length;
     if (!flexLen.isAuto) return flexLen.toPixel(zoneLength);
 
     return _getAutoLength(zoneLength);
@@ -29,7 +29,7 @@ class FlexResolver {
   int _countAutoChildren() {
     int counter = 0;
     for (final child in children) {
-      if (child.flexLength.isAuto) counter++;
+      if (child.length.isAuto) counter++;
     }
     return counter;
   }
@@ -37,8 +37,8 @@ class FlexResolver {
   double _occupiedScreen(double zoneLength) {
     double length = 0;
     for (final child in children) {
-      if (child.flexLength.isAuto) continue;
-      length += child.flexLength.toPixel(zoneLength);
+      if (child.length.isAuto) continue;
+      length += child.length.toPixel(zoneLength);
     }
     return length;
   }

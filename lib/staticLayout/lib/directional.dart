@@ -2,19 +2,22 @@ import 'package:flex/resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:kernel/drawEvent.dart';
 import 'package:kernel/drawZone.dart';
-import 'package:kernel/kernel.dart';
 import 'package:flex/object.dart';
+import 'package:kernel/misc/Init.dart';
+import 'package:kernel/multiPropagator.dart';
 
-abstract class DirectionalLayout extends FlexObject {
-  final List<FlexObject> children = <FlexObject>[];
+abstract class DirectionalLayout extends FlexObject with MultiPropagator {
   late FlexResolver resolver;
 
-  DirectionalLayout(GraphKernel kernel) : super(kernel);
+  DirectionalLayout(List<FlexObject> children) {
+    Init.children(this, children);
+  }
 
   Offset makeZonePosition(DrawEvent? lastEvent);
   Size defineObjectSize(double length);
 
   void draw(covariant DrawEvent drawEvent) {
+    final children = this.children as List<FlexObject>;
     super.draw(drawEvent);
     DrawEvent? lastEvent;
     for (final child in children) {
