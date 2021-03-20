@@ -1,4 +1,4 @@
-name: staticLayout
+name: flex
 description: A new Flutter package project.
 version: 0.0.1
 author:
@@ -16,9 +16,6 @@ dependencies:
     sdk: flutter
   kernel:
     path: ../kernel
-  flex:
-    path: ../flex
-
     
 
 dev_dependencies:

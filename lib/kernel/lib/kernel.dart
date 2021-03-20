@@ -13,20 +13,6 @@ class GraphKernel with Propagator implements CustomPainter {
     final drawZone = new DrawZone(Offset.zero, size);
     final drawEvent = new DrawEvent(this, canvas, drawZone);
     propagate(drawEvent);
-
-    var painter = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.fill;
-    var rect = Offset.zero & size;
-    canvas.drawRect(rect, painter);
-  }
-
-  @override
-  void propagate(event) {
-    print(event.runtimeType);
-    for (final child in children) {
-      child.propagate(event);
-    }
   }
 
   @override

@@ -1,9 +1,9 @@
+import 'package:flex/object.dart';
 import 'package:flutter/material.dart';
 import 'package:kernel/kernel.dart';
 import 'package:kernel/main.dart';
-import 'package:kernel/sizedObject.dart';
 
-class GraphBackground extends SizedObject {
+class GraphBackground extends FlexObject {
   final Color color;
   GraphBackground(GraphKernel kernel, this.color) : super(kernel);
 
@@ -13,7 +13,6 @@ class GraphBackground extends SizedObject {
     final position = drawEvent.drawZone.position;
     final paint = Paint()..color = color;
     final rect = position & size;
-
     canvas.drawRect(rect, paint);
   }
 }

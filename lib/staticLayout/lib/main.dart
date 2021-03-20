@@ -1,4 +1,4 @@
 library pointer_interpreter;
 
-export "verticalLayout.dart";
-export "horizontalLayout.dart";
+export "vertical.dart";
+export "horizontal.dart";

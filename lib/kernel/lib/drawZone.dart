@@ -10,6 +10,7 @@ class DrawZone {
 
   DrawZone(this.position, this.size);
 
-  Offset endPosition() =>
-      Offset(position.dx + size.width, position.dy + size.height);
+  Offset endPosition() {
+    return Offset(position.dx + size.width, position.dy + size.height);
+  }
 }

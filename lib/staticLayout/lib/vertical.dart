@@ -1,16 +1,16 @@
 import 'dart:ui';
 
+import 'package:flex/resolver.dart';
+import 'package:kernel/drawEvent.dart';
 import 'package:kernel/kernel.dart';
-import 'package:kernel/main.dart';
-import 'directionallayout.dart';
-import 'util/vSizeResolver.dart';
+import 'directional.dart';
 
-abstract class VerticalLayout extends DirectionalLayout {
+class VerticalLayout extends DirectionalLayout {
   VerticalLayout(GraphKernel kernel) : super(kernel);
 
   @override
   void draw(covariant DrawEvent drawEvent) {
-    sizeResolver = VSizeResolver(children, drawEvent.drawZone.size);
+    super.resolver = FlexResolver(children, drawEvent.drawZone.size.height);
     super.draw(drawEvent);
   }
 
@@ -21,4 +21,8 @@ abstract class VerticalLayout extends DirectionalLayout {
 
     return Offset(x, y);
   }
+
+  @override
+  Size defineObjectSize(double length) =>
+      Size(baseDrawEvent!.drawZone.size.width, length);
 }

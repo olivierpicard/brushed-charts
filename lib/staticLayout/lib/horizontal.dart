@@ -1,16 +1,16 @@
 import 'dart:ui';
 
+import 'package:flex/resolver.dart';
+import 'package:kernel/drawEvent.dart';
 import 'package:kernel/kernel.dart';
-import 'package:kernel/main.dart';
-import 'directionallayout.dart';
-import 'util/hSizeResolver.dart';
+import 'directional.dart';
 
-abstract class HorizontalLayout extends DirectionalLayout {
+class HorizontalLayout extends DirectionalLayout {
   HorizontalLayout(GraphKernel kernel) : super(kernel);
 
   @override
   void draw(covariant DrawEvent drawEvent) {
-    sizeResolver = HSizeResolver(children, drawEvent.drawZone.size);
+    resolver = FlexResolver(children, drawEvent.drawZone.size.width);
     super.draw(drawEvent);
   }
 
@@ -21,4 +21,8 @@ abstract class HorizontalLayout extends DirectionalLayout {
 
     return Offset(x, y);
   }
+
+  @override
+  Size defineObjectSize(double length) =>
+      Size(length, baseDrawEvent!.drawZone.size.height);
 }

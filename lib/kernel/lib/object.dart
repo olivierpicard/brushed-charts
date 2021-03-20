@@ -9,9 +9,12 @@ abstract class GraphObject with Propagator {
   GraphObject(this.kernel);
 
   void handleEvent(dynamic event) {
-    final func = eventRegistry.getCallback(event.getID());
-    final isEventSupported = (func != null);
-    if (!isEventSupported) propagate(event);
+    final callback = eventRegistry.getCallback(event.runtimeType);
+    final isEventSupported = (callback != null);
+    if (!isEventSupported)
+      propagate(event);
+    else
+      callback!(event);
   }
 
   void setState(GraphObject object) => kernel.setState(object);
