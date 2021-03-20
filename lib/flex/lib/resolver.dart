@@ -1,8 +1,3 @@
-import 'dart:ui';
-
-import 'package:flex/length.dart';
-import 'package:flutter/material.dart';
-
 import 'object.dart';
 
 class FlexResolver {
@@ -19,27 +14,20 @@ class FlexResolver {
   }
 
   double _getAutoLength(double zoneLength) {
-    int countAuto = _countAutoChildren();
-    double length = _occupiedScreen(zoneLength);
-    final autoLength = (zoneLength - length) / countAuto;
-
+    int counter = 0;
+    double length = 0;
+    for (final child in children) {
+      if (child.length.isAuto) {
+        counter++;
+      } else {
+        length += child.length.toPixel(zoneLength);
+      }
+    }
+    final autoLength = _process(zoneLength, counter, length);
     return autoLength;
   }
 
-  int _countAutoChildren() {
-    int counter = 0;
-    for (final child in children) {
-      if (child.length.isAuto) counter++;
-    }
-    return counter;
-  }
-
-  double _occupiedScreen(double zoneLength) {
-    double length = 0;
-    for (final child in children) {
-      if (child.length.isAuto) continue;
-      length += child.length.toPixel(zoneLength);
-    }
-    return length;
+  double _process(double zoneLength, int countAuto, double occupiedLength) {
+    return (zoneLength - occupiedLength) / countAuto;
   }
 }
