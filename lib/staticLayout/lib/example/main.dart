@@ -45,15 +45,26 @@ class App extends StatelessWidget {
     final background2 = GraphBackground(kernel, Colors.red);
     final background3 = GraphBackground(kernel, Colors.yellow);
     final background4 = GraphBackground(kernel, Colors.green);
+    final background5 = GraphBackground(kernel, Colors.deepOrange);
+    final background6 = GraphBackground(kernel, Colors.blueGrey);
+
     background1.flexLength = FlexLength("70px");
     background2.flexLength = FlexLength(FlexLength.AUTO);
     background3.flexLength = FlexLength("100px");
+
     background4.flexLength = FlexLength("auto");
+    background5.flexLength = FlexLength("auto");
+    background6.flexLength = FlexLength("70%");
+
+    hlayout.children.add(background4);
+    hlayout.children.add(background5);
+    hlayout.children.add(background6);
 
     vlayout.children.add(background1);
     vlayout.children.add(background2);
     vlayout.children.add(background3);
-    vlayout.children.add(background4);
+    vlayout.children.add(hlayout);
+
     kernel.children.add(vlayout);
     return kernel;
   }

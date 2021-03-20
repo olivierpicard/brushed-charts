@@ -7,7 +7,7 @@ import 'package:flex/object.dart';
 
 abstract class DirectionalLayout extends FlexObject {
   final List<FlexObject> children = <FlexObject>[];
-  late final FlexResolver resolver;
+  late FlexResolver resolver;
 
   DirectionalLayout(GraphKernel kernel) : super(kernel);
 
