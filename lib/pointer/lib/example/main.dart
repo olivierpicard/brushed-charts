@@ -18,7 +18,9 @@ class App extends StatelessWidget {
             Container(color: Colors.blue, height: 200, width: 200),
             Expanded(
                 child: GraphPointer(
-                    propagator: kernel, child: Graph(kernel: kernel)))
+              propagator: kernel,
+              child: Graph(kernel: kernel),
+            ))
           ],
         ),
       ),

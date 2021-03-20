@@ -5,7 +5,7 @@ import 'drawEvent.dart';
 abstract class Drawable extends GraphObject {
   DrawEvent? baseDrawEvent;
 
-  Drawable(GraphKernel kernel) : super(kernel) {
+  Drawable() {
     eventRegistry.add(DrawEvent, draw);
   }
 

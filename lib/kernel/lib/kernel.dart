@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kernel/drawZone.dart';
-import 'propagator.dart';
+import 'drawZone.dart';
+import 'misc/Init.dart';
+import 'singlePropagator.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 
-class GraphKernel with Propagator implements CustomPainter {
+class GraphKernel extends GraphObject
+    with SinglePropagator
+    implements CustomPainter {
   GraphObject? _objectToRepaint;
+
+  GraphKernel({GraphObject? child}) {
+    Init.child(this, child);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
