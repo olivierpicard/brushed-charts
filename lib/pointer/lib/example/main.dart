@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kernel/main.dart';
+import 'package:kernel/kernel.dart';
+import 'package:kernel/widget.dart';
 import '../widget.dart';
 
 main(List<String> args) async {

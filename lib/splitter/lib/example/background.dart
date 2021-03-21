@@ -5,6 +5,7 @@ import 'package:kernel/propagator/single.dart';
 
 class GraphBackground extends FlexObject with SinglePropagator {
   final Color color;
+
   GraphBackground({required this.color, String length = "auto"})
       : super(length: length);
 

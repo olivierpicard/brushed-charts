@@ -1,4 +1,4 @@
-name: staticLayout
+name: splitter
 description: A new Flutter package project.
 version: 0.0.1
 author:
@@ -17,6 +17,10 @@ dependencies:
     path: ../kernel
   flex:
     path: ../flex
+  staticLayout:
+    path: ../staticLayout
+  pointer:
+    path: ../pointer
 
     
 

@@ -5,6 +5,7 @@ class FlexLength {
   static const AUTO = "auto";
   late final double value;
   late final Unit unit;
+  double bias = 0;
 
   FlexLength(String definition) {
     _tryInitPixel(definition);
@@ -46,12 +47,17 @@ class FlexLength {
   }
 
   double toPixel(double zoneLength) {
-    if (unit == Unit.AUTO)
-      return double.nan;
-    else if (unit == Unit.PX) return value;
-    final percent = value * zoneLength / 100;
+    final double pixels;
 
-    return percent;
+    if (unit == Unit.AUTO) {
+      pixels = double.nan;
+    } else if (unit == Unit.PX) {
+      pixels = value + bias;
+    } else {
+      pixels = (value * zoneLength / 100) + bias;
+    }
+
+    return pixels;
   }
 
   bool get isAuto => (unit == Unit.AUTO);
