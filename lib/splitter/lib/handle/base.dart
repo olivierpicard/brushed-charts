@@ -4,17 +4,21 @@ import 'package:flex/object.dart';
 import 'package:flutter/material.dart';
 import 'package:kernel/drawEvent.dart';
 import 'package:kernel/propagator/endline.dart';
+import 'package:pointer/hittable.dart';
 
-class HandleSplitter extends FlexObject with EndlinePropagator {
+abstract class Handle extends FlexObject with EndlinePropagator, Hittable {
   static const double THICKNESS = 10;
   static const COLOR = Colors.grey;
   final FlexObject? previous, next;
 
-  HandleSplitter(this.previous, this.next) {
+  double getDeltaDrag(DragUpdateDetails event);
+
+  Handle(this.previous, this.next) {
     eventRegistry.add(DragUpdateDetails, onDrag);
   }
 
   void draw(covariant DrawEvent drawEvent) {
+    super.draw(drawEvent);
     final canvas = drawEvent.canvas;
     final size = drawEvent.drawZone.size;
     final position = drawEvent.drawZone.position;
@@ -25,9 +29,11 @@ class HandleSplitter extends FlexObject with EndlinePropagator {
 
   void onDrag(dynamic event) {
     DragUpdateDetails dragUpdate = event;
-    final deltaDrag = dragUpdate.delta.dy;
-    previous?.length.bias -= deltaDrag;
-    next?.length.bias += deltaDrag;
+    final position = dragUpdate.localPosition;
+    if (!isHit(position)) return;
+    final deltaDrag = getDeltaDrag(dragUpdate);
+    previous?.length.bias += deltaDrag;
+    next?.length.bias -= deltaDrag;
     setState(this);
   }
 }

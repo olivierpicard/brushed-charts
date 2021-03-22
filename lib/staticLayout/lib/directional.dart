@@ -35,10 +35,12 @@ abstract class DirectionalLayout extends FlexObject with MultiPropagator {
 
   DrawZone makeDrawZone(DrawEvent? lastDrawEvent, FlexObject child) {
     final position = makeZonePosition(lastDrawEvent);
-    final length = resolver.getLength(child);
+    final length = getChildLength(child);
     final size = defineObjectSize(length);
     final zone = DrawZone(position, size);
 
     return zone;
   }
+
+  double getChildLength(FlexObject child) => resolver.getLength(child);
 }

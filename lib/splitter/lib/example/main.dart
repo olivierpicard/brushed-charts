@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kernel/kernel.dart';
 import 'package:kernel/widget.dart';
 import 'package:pointer/widget.dart';
+import 'package:splitter/horizontal.dart';
 import 'background.dart';
 import 'package:staticLayout/horizontal.dart';
 
@@ -48,8 +49,12 @@ class App extends StatelessWidget {
       GraphBackground(color: Colors.yellow, length: "100px"),
       HorizontalLayout(children: [
         GraphBackground(color: Colors.deepPurple),
-        GraphBackground(color: Colors.deepOrange),
-        GraphBackground(color: Colors.blueGrey, length: "70%"),
+        HorizontalSplitter(
+          children: [
+            GraphBackground(color: Colors.deepOrange),
+            GraphBackground(color: Colors.blueGrey, length: "70%"),
+          ],
+        ),
       ])
     ]));
   }
