@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kernel/propagator/base.dart';
-import 'event/tapCancel.dart';
 
 class GraphPointer extends StatelessWidget {
   final Widget child;
@@ -17,7 +16,8 @@ class GraphPointer extends StatelessWidget {
                 onPanUpdate: propagator.propagate,
                 onTapUp: propagator.propagate,
                 onTapDown: propagator.propagate,
-                // onTapCancel: () => propagator.propagate(TapCancelEvent()),
+                onPanEnd: propagator.propagate,
+                onPanDown: propagator.propagate,
                 child: this.child)));
   }
 
