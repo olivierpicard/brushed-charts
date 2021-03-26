@@ -4,9 +4,11 @@ import 'package:flex/object.dart';
 import 'package:flutter/material.dart';
 import 'package:kernel/drawEvent.dart';
 import 'package:kernel/propagator/endline.dart';
-import 'package:pointer/hittable.dart';
+import 'package:pointer/helper/drag.dart';
+import 'package:pointer/helper/hit.dart';
 
-abstract class Handle extends FlexObject with EndlinePropagator, Hittable {
+abstract class Handle extends FlexObject
+    with EndlinePropagator, HitHelper, DragHelper {
   static const double THICKNESS = 10;
   static const COLOR = Colors.grey;
   final FlexObject? previous, next;
@@ -14,7 +16,7 @@ abstract class Handle extends FlexObject with EndlinePropagator, Hittable {
   double getDeltaDrag(DragUpdateDetails event);
 
   Handle(this.previous, this.next) {
-    eventRegistry.add(DragUpdateDetails, onDrag);
+    addEventListeners();
   }
 
   void draw(covariant DrawEvent drawEvent) {
@@ -27,13 +29,10 @@ abstract class Handle extends FlexObject with EndlinePropagator, Hittable {
     canvas.drawRect(rect, paint);
   }
 
-  void onDrag(dynamic event) {
-    DragUpdateDetails dragUpdate = event;
-    final position = dragUpdate.localPosition;
-    if (!isHit(position)) return;
-    final deltaDrag = getDeltaDrag(dragUpdate);
+  void onDrag(DragUpdateDetails event) {
+    final deltaDrag = getDeltaDrag(event);
     previous?.length.bias += deltaDrag;
-    next?.length.bias -= deltaDrag;
+    next!.length.bias -= deltaDrag;
     setState(this);
   }
 }

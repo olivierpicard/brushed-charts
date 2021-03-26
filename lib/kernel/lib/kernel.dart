@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/rendering/custom_paint.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kernel/linkEvent.dart';
 import 'propagator/single.dart';

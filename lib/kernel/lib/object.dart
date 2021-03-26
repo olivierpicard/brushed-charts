@@ -25,7 +25,6 @@ abstract class GraphObject implements Propagator {
     if (event is KernelLinkEvent) {
       kernel = event.kernel;
     }
-    propagate(event);
   }
 
   void setState(GraphObject object) => kernel!.setState(object);

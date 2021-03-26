@@ -61,8 +61,9 @@ mixin Splitter on DirectionalLayout {
   }
 
   double getRegularLength(FlexObject child) {
+    final bias = child.length.bias;
     final netLength = rawLength - Handle.THICKNESS;
-    final biasedLength = netLength + length.bias;
+    final biasedLength = netLength + bias;
 
     return biasedLength;
   }
