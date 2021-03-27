@@ -10,6 +10,7 @@ class GraphBackground extends FlexObject with SinglePropagator {
       : super(length: length);
 
   void draw(covariant DrawEvent drawEvent) {
+    super.draw(drawEvent);
     final canvas = drawEvent.canvas;
     final size = drawEvent.drawZone.size;
     final position = drawEvent.drawZone.position;
