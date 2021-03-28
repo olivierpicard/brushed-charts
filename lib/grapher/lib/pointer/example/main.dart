@@ -10,7 +10,6 @@ main(List<String> args) async {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final kernel = GraphKernel();
     return MaterialApp(
       theme: getThemeData(),
       home: Scaffold(
@@ -19,8 +18,7 @@ class App extends StatelessWidget {
             Container(color: Colors.blue, height: 200, width: 200),
             Expanded(
                 child: GraphPointer(
-              propagator: kernel,
-              child: Graph(kernel: kernel),
+              kernel: GraphKernel(),
             ))
           ],
         ),

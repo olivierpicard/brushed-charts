@@ -1,28 +1,29 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '/kernel/propagator/base.dart';
+import 'package:grapher/kernel/widget.dart';
+import '/kernel/kernel.dart';
 
 class GraphPointer extends StatelessWidget {
-  final Widget child;
-  final Propagator propagator;
-  GraphPointer({required this.propagator, required this.child});
+  final Widget? child;
+  final GraphKernel kernel;
+  GraphPointer({required this.kernel, this.child});
 
   Widget build(BuildContext context) {
     return Listener(
         onPointerSignal: onScrollableEvent,
         child: MouseRegion(
-            onHover: propagator.propagate,
+            onHover: kernel.propagate,
             child: GestureDetector(
-                onPanUpdate: propagator.propagate,
-                onTapUp: propagator.propagate,
-                onTapDown: propagator.propagate,
-                onPanEnd: propagator.propagate,
-                onPanDown: propagator.propagate,
-                child: this.child)));
+                onPanUpdate: kernel.propagate,
+                onTapUp: kernel.propagate,
+                onTapDown: kernel.propagate,
+                onPanEnd: kernel.propagate,
+                onPanDown: kernel.propagate,
+                child: Graph(kernel: kernel, child: child))));
   }
 
   onScrollableEvent(PointerSignalEvent signal) {
     if (signal is! PointerScrollEvent) return;
-    propagator.propagate(signal);
+    kernel.propagate(signal);
   }
 }

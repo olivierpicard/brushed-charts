@@ -25,12 +25,8 @@ class App extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-                child: GraphPointer(
-              propagator: kernel,
-              child: Graph(
-                kernel: kernel,
-              ),
-            ))
+              child: GraphPointer(kernel: kernel),
+            )
           ],
         ),
       ),
