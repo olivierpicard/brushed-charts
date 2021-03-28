@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:kernel/kernel.dart';
 import 'package:kernel/widget.dart';
 import 'package:staticLayout/example/background.dart';
+import 'package:staticLayout/example/circleLeft.dart';
+import 'package:staticLayout/example/circleRight.dart';
 import 'package:staticLayout/horizontal.dart';
+import 'package:staticLayout/stack.dart';
 
 import '../vertical.dart';
 
@@ -42,7 +45,11 @@ class App extends StatelessWidget {
         child: VerticalLayout(children: [
       GraphBackground(color: Colors.cyan, length: "70px"),
       GraphBackground(color: Colors.red),
-      GraphBackground(color: Colors.yellow, length: "100px"),
+      StackLayout(children: [
+        GraphBackground(color: Colors.yellow, length: "100px"),
+        CircleRight(),
+        CircleLeft(),
+      ]),
       HorizontalLayout(children: [
         GraphBackground(color: Colors.deepPurple),
         GraphBackground(color: Colors.deepOrange),

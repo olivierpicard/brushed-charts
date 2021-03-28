@@ -13,4 +13,6 @@ class DrawZone {
   Offset endPosition() {
     return Offset(position.dx + size.width, position.dy + size.height);
   }
+
+  Rect get toRect => position & size;
 }
