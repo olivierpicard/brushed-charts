@@ -1,6 +1,0 @@
-class OHLCStruct {
-  open: double
-  high: double
-  low: double
-  close: double
-}

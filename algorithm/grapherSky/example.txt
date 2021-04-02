@@ -1,0 +1,74 @@
+
+
+GraphPointer(
+  child: StackLayout(
+    children: [
+      DataView(
+        geometryFactory: Candlesticks.factory,
+        model: Model(
+          json: <Stream>(JSONObject)
+        ),
+      ),
+      Line(
+        model: Model(
+          json: <Stream>(JSONObject)
+        )
+      ),
+    ]
+  )
+)
+
+Model {
+  input: JSON
+  window
+}
+
+
+DataView {
+  factory: Function
+  model
+  window
+
+  draw(event) {
+    children.empty()
+    for(jsonData in windows.ietrator) {
+      geometry = factory(jsonData)
+      children.add(geometry)
+      geometryEvent = makeEvent(event, data)
+      geometry.draw(geometryEvent)
+    } 
+  }
+
+  makeEvent(event, data) {
+    
+  }
+}
+
+Candlestick {
+  date: double
+  open, high, low, close: double
+  draw(event) {
+    openPosition = Offset(date, open)
+    closePosition = Offset(date, close)
+    sidePosition = event.distance
+    event.dataCanvas.drawRect(openPosition)
+  }
+
+  isHit() {
+   // calculation 
+  }
+}
+
+VirtualCanvas {
+  center: double
+  canvas
+  drawRect(top, bottom, width) {
+    pixelTop = coordSys.yAxis.toPixel(top);
+    pixelBottom = coordSys.yAxis.toPixel(bottom);
+    pixelLeft = center - width / 2
+    pixelRight = center + width / 2
+    canvas.drawRRect(pixelLeft, pixelRight, pixelTop, pixelBottom)
+  }
+}
+
+
