@@ -23,6 +23,6 @@ module.exports.typeDefs = gql`
   }
   
   type Query {
-    getCandles(dateFrom: String, dateTo: String, instrument: String, granularity: String): [CandlesMetadata!]!
+    getCandles(dateFrom: String, dateTo: String, instrument: String, granularity: String, source: String): [CandlesMetadata!]!
   }
 `;

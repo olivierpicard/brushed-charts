@@ -2,14 +2,15 @@ const { BigQuery, BigQueryTimestamp } = require('@google-cloud/bigquery');
 const BIGQUERY_TABLE_PATH_PRICE_SHORTTERM = process.env['OANDA_BIGQUERY_PATH_TABLE_SHORTTERM']
 const BIGQUERY_TABLE_PATH_PRICE_ARCHIVE = process.env['OANDA_BIGQUERY_PATH_TABLE_ARCHIVE']
 
-var dateFrom, dateTo, granularity, instrument
+var dateFrom, dateTo, granularity, instrument, source
 
 
 module.exports.getBigqueryCandles = async (args) => {
   dateFrom = args['dateFrom']
   dateTo = args['dateTo']
   granularity = args['granularity']
-  instrument = args['instrument'] 
+  instrument = args['instrument']
+  source = args['source'] // e.g: brushed-charts.oanda_test.price_shortterm
 
   query = make_query()
   result = await fetch(query)
@@ -40,7 +41,8 @@ function get_appropriate_table_name_baseon_date() {
   const now = new Date()
   const datetimeFrom = new Date(Date.parse(dateFrom))
   const diff = Math.abs(now - datetimeFrom)
-
+  
+  if (source) return source
   if (diff >= DAYS_130)
     return BIGQUERY_TABLE_PATH_PRICE_ARCHIVE
   
