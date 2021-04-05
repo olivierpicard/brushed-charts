@@ -25,4 +25,5 @@ class Timeseries2D extends Data2D {
   }
 
   double get timestamp => x.millisecondsSinceEpoch as double;
+  double toDouble() => timestamp;
 }

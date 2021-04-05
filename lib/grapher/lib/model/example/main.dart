@@ -17,5 +17,5 @@ void main(List<String> args) async {
               stream: JsonFilter.extract(
                   stream: streamer(json), options: "data.getCandles"))));
   await Future.delayed(Duration(seconds: 1));
-  model.linkedData.forEach((entry) => print(entry.x));
+  model.data.forEach((entry) => print(entry.x));
 }

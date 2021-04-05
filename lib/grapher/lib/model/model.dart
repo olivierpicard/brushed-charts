@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
-
-import 'package:grapher/kernel/object.dart';
-import 'package:grapher/kernel/propagator/endline.dart';
-
 import 'data2D.dart';
 
-class Model extends GraphObject with EndlinePropagator {
-  final linkedData = LinkedList<Data2D>();
+class Model {
+  final data = LinkedList<Data2D>();
 
   Model({required Stream<Data2D> stream}) {
     stream.listen((data2D) => insert(data2D));
@@ -17,12 +13,12 @@ class Model extends GraphObject with EndlinePropagator {
     try {
       reverseIterativeInsert(dataToInsert);
     } on StateError catch (_) {
-      linkedData.add(dataToInsert);
+      data.add(dataToInsert);
     }
   }
 
   void reverseIterativeInsert(Data2D dataToInsert) {
-    Data2D? node = linkedData.last;
+    Data2D? node = data.last;
     while (node != null) {
       final inserted = node.tryToInsert(dataToInsert);
       if (inserted) break;
