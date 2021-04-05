@@ -2,7 +2,7 @@
 GraphPointer(
   child: StackLayout(
     children: [
-      Controller(
+      Drawer(
         viewFactory: <Function>
         model: Model(
           source: Filter.to2DPlan(
@@ -14,6 +14,7 @@ GraphPointer(
             )
           )
         )
+        child: DataEventListener()
       )
     ]
   )
