@@ -1,15 +1,22 @@
-import 'dart:async';
 import 'dart:collection';
-import 'data2D.dart';
+import 'package:grapher/kernel/misc/Init.dart';
+import 'package:grapher/kernel/object.dart';
+import 'package:grapher/kernel/propagator/single.dart';
 
-class Model {
+import 'data2D.dart';
+import 'incoming-data.dart';
+
+class Model extends GraphObject with SinglePropagator {
   final data = LinkedList<Data2D>();
 
-  Model({required Stream<Data2D> stream}) {
-    stream.listen((data2D) => insert(data2D));
+  Model({GraphObject? child}) {
+    Init.child(this, child);
+    eventRegistry.add(IncomingData, (data) => insert(data as IncomingData));
   }
 
-  void insert(Data2D dataToInsert) {
+  void insert(IncomingData input) {
+    if (input.content is! Data2D) return;
+    final dataToInsert = input.content;
     try {
       reverseIterativeInsert(dataToInsert);
     } on StateError catch (_) {

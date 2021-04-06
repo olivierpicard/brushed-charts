@@ -1,0 +1,23 @@
+
+GraphPointer(
+  JsonDiffusion(
+    stream: <Stream<Map>>
+    child: StackLayout(
+      children: [
+        JsonFilter.extract(
+          option: "data.getCanles",
+          child: JsonFilter.explode(
+            child: JsonFilter.toTimeSeries2D(
+              child: Model(
+                child: DataLayer(
+                  factory: <void Function()>
+                  child: null
+                )
+              )
+            )
+          )
+        )
+      ]
+    )
+  )
+)
