@@ -4,12 +4,14 @@ import { Chart } from './chart.js'
 class Main {
   constructor() {
     this.chart = new Chart()
-    GraphQL.GetCandles({
+    this.chart.addCandlestick();
+    /* GraphQL.GetCandles({
       dateFrom: "2021-01-28 10:00:00",
       dateTo: "2021-01-28 10:01:00",
       instrument: "EUR_USD",
       granularity: "S5"
-    }).then((result) => this.handleCandleResult(result)).catch( reason => console.log(reason))
+    }).then((result) => this.handleCandleResult(result)).catch( reason => console.log(reason)) */
+
   }
 
 
