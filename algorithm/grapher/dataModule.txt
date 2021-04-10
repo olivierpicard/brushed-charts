@@ -1,4 +1,3 @@
-
 GraphPointer(
   JsonDiffusion(
     stream: <Stream<Map>>
@@ -9,7 +8,7 @@ GraphPointer(
           child: JsonFilter.explode(
             child: JsonFilter.toTimeSeries2D(
               child: Model(
-                child: DataLayer(
+                child: Drawer(
                   factory: <void Function()>
                   child: null
                 )
@@ -21,3 +20,42 @@ GraphPointer(
     )
   )
 )
+
+Drawer extends Drawable (
+  const X_SEGMENT_LENGTH = 10;
+  final model
+  factory: Function
+  Drawer() {
+    eventRegistry.add(ModelEvent => initModel)
+  }
+  
+  void Draw(drawEvent event) {
+    getLast from model
+    xOffset = X_SEGMENT_LENGTH / 2
+    children.empty()
+    while(last.previous != null) {
+      canvas.scale(Offset(1, getYScale()));
+      drawSegment = DrawSegment(X_SEGMENT_LENGTH, xCursor, event)
+      final geometry = factory
+      geometry.handle(drawSegment)
+      children.add(geometry);
+      last = last.previous
+    }
+  }
+)
+
+Window extends Drawable {
+  model
+  Window() {
+      eventRegistry.add(Model, onModel)
+  }
+
+  onModel(ModelEvent event) {
+    model = event.model;
+    
+  }
+
+  void draw(DrawEvent event) {
+    super.draw(event);
+  }
+}

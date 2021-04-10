@@ -1,7 +1,0 @@
-class Model {
-  objects: [PlanObject]
-  
-  freshData(PlanObject) {
-
-  }
-}

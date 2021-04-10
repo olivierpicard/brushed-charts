@@ -1,7 +1,0 @@
-class Layer extends SizedObject {
-  
-  draw(drawEvent) {
-    resolveSize(drawEvent)
-  }
-
-}
