@@ -4,14 +4,20 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 
 import 'data2D.dart';
-import 'incoming-data.dart';
+import 'event/incoming-data.dart';
 
 class Model extends GraphObject with SinglePropagator {
   final data = LinkedList<Data2D>();
 
   Model({GraphObject? child}) {
     Init.child(this, child);
-    eventRegistry.add(IncomingData, (data) => insert(data as IncomingData));
+    eventRegistry.add(
+        IncomingData, (data) => onIncommingData(data as IncomingData));
+  }
+
+  void onIncommingData(IncomingData input) {
+    insert(input);
+    propagate(IncomingData(this.data));
   }
 
   void insert(IncomingData input) {

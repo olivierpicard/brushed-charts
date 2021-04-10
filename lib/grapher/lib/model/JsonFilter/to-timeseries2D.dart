@@ -1,5 +1,5 @@
 import 'package:grapher/kernel/object.dart';
-import '../incoming-data.dart';
+import '../event/incoming-data.dart';
 import '../timeseries2D.dart';
 import 'base.dart';
 
