@@ -1,7 +1,7 @@
+import 'incoming-data.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'event/incoming-data.dart';
 
 class DataInjector extends GraphObject with SinglePropagator {
   DataInjector({required Stream stream, GraphObject? child}) {

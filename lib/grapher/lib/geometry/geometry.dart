@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
-import 'package:grapher/model/data2D.dart';
 import 'draw-unit-event.dart';
 
 typedef GeometryInstanciator = Geometry Function(Data2D);

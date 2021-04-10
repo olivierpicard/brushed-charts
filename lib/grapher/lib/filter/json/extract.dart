@@ -1,10 +1,9 @@
-import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
-import '../event/incoming-data.dart';
 
-import 'base.dart';
+import '../base.dart';
+import '../incoming-data.dart';
 
-class Extract extends Filter {
+class Extract extends DataTransit {
   final String options;
   Extract({required this.options, GraphObject? child}) : super(child);
 

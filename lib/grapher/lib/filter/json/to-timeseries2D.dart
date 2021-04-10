@@ -1,9 +1,10 @@
+import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/kernel/object.dart';
-import '../event/incoming-data.dart';
-import '../timeseries2D.dart';
-import 'base.dart';
 
-class ToTimeseries2D extends Filter {
+import '../base.dart';
+import '../incoming-data.dart';
+
+class ToTimeseries2D extends DataTransit {
   final String xLabel;
   final String yLabel;
   ToTimeseries2D(

@@ -1,9 +1,9 @@
 import 'package:grapher/kernel/object.dart';
-import '../event/incoming-data.dart';
 
-import 'base.dart';
+import '../base.dart';
+import '../incoming-data.dart';
 
-class Explode extends Filter {
+class Explode extends DataTransit {
   Explode({GraphObject? child}) : super(child);
 
   @override

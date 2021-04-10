@@ -1,7 +1,6 @@
+import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/geometry/geometry.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
-import 'package:grapher/model/data2D.dart';
-import 'package:grapher/model/timeseries2D.dart';
 
 class Candlestick extends Geometry with EndlinePropagator {
   Candlestick({required Data2D data}) : super(data: data);
