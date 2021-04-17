@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '/kernel/kernel.dart';
-import '/kernel/widget.dart';
 import '/pointer/widget.dart';
 import '/splitter/horizontal.dart';
 import '/staticLayout/stack.dart';

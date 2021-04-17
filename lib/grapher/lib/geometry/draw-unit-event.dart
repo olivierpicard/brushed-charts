@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:grapher/kernel/drawEvent.dart';
 
 class DrawUnitEvent extends DrawEvent {

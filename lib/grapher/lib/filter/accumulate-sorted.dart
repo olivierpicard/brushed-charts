@@ -4,7 +4,7 @@ import 'base.dart';
 import 'dataStruct/data2D.dart';
 import 'incoming-data.dart';
 
-class SortAccumulation extends DataTransit {
+class SortAccumulation extends Filter {
   final sortedData = LinkedList<Data2D>();
   SortAccumulation({GraphObject? child}) : super(child);
 

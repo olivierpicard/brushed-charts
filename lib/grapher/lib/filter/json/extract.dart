@@ -3,7 +3,7 @@ import 'package:grapher/kernel/object.dart';
 import '../base.dart';
 import '../incoming-data.dart';
 
-class Extract extends DataTransit {
+class Extract extends Filter {
   final String options;
   Extract({required this.options, GraphObject? child}) : super(child);
 

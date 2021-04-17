@@ -4,8 +4,8 @@ import 'package:grapher/kernel/propagator/single.dart';
 
 import 'incoming-data.dart';
 
-abstract class DataTransit extends GraphObject with SinglePropagator {
-  DataTransit(GraphObject? child) {
+abstract class Filter extends GraphObject with SinglePropagator {
+  Filter(GraphObject? child) {
     Init.child(this, child);
     eventRegistry.add(
         IncomingData, (event) => onIncomingData(event as IncomingData));

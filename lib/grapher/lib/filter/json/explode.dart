@@ -3,7 +3,7 @@ import 'package:grapher/kernel/object.dart';
 import '../base.dart';
 import '../incoming-data.dart';
 
-class Explode extends DataTransit {
+class Explode extends Filter {
   Explode({GraphObject? child}) : super(child);
 
   @override

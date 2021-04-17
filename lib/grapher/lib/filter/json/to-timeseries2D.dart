@@ -4,7 +4,7 @@ import 'package:grapher/kernel/object.dart';
 import '../base.dart';
 import '../incoming-data.dart';
 
-class ToTimeseries2D extends DataTransit {
+class ToTimeseries2D extends Filter {
   final String xLabel;
   final String yLabel;
   ToTimeseries2D(
