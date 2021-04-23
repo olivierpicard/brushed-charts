@@ -16,7 +16,7 @@ TOKEN = os.getenv('OANDA_API_TOKEN')
 API_URL = os.getenv('OANDA_API_URL')
 URL_LATEST_CANDLE = API_URL + "/v3/accounts/" + ACCOUNT_ID + "/candles/latest"
 GRANULARITIES = ["S5", "M1", "H1", "D"]
-REFRESH_RATE = 5
+REFRESH_RATE = 2
 
 
 def execute():
