@@ -6,6 +6,8 @@ services:
     restart: on-failure
     container_name: mongodb
     hostname: mongodb
+    ports:
+      - 127.0.0.1:27017:27017
     volumes: 
       - /var/volumes/mongo-data/${PROFIL}:/data/db
     logging: 
@@ -36,6 +38,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 100M
 
 
   oanda_fetcher:
@@ -114,41 +120,18 @@ services:
         max-size: "5m"
         max-file: "10"
 
-        
-  presence_shortterm_bigquery:
+
+  presence_bigquery_oanda_price:
     build: ./services/presence_bigquery
     image: eu.gcr.io/brushed-charts/presence_bigquery:${PROFIL}-latest
     restart: on-failure
-    container_name: presence_shortterm_bigquery
+    container_name: presence_bigquery_oanda_price
     environment: 
-      - BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE=brushed-charts.oanda_${PROFIL}.price_shortterm
+      - BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE=brushed-charts.${PROFIL}.oanda_prices
     env_file: 
       - ./env/services.env
       - ./env/services.${PROFIL}.env
-      - ./env/presence_shortterm.env
-      - ./env/secrets.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-
-
-  presence_archive_bigquery:
-    build: ./services/presence_bigquery
-    image: eu.gcr.io/brushed-charts/presence_bigquery:${PROFIL}-latest
-    restart: on-failure
-    container_name: presence_archive_bigquery
-    environment: 
-      - BIGQUERY_TABLE_PATH_TO_MONITOR_PRESENCE=brushed-charts.oanda_${PROFIL}.price_archive
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-      - ./env/presence_archive.env
+      - ./env/presence.env
       - ./env/secrets.env
     volumes: 
       - type: bind
