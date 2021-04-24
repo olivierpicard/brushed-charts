@@ -41,14 +41,13 @@ def execute():
     candles = history.get_candles_from_window(time_window)
     raise_if_candles_empty(candles)
     send_to_bigquery(candles)
-    # lastupdate_log.save_last_reading_date(upper_window)
+    lastupdate_log.save_last_reading_date(upper_window)
 
 
 def try_to_execute():
     try:
         execute()
     except EmptyCandles:
-        print("empty")
         pass
     except Exception:
         traceback.print_exc()
