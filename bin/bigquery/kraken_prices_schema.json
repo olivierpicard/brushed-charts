@@ -1,0 +1,54 @@
+[
+    {
+        "name": "date",
+        "type": "TIMESTAMP",
+        "mode": "REQUIRED"
+    },
+    {
+      "name": "instrument",
+      "type": "STRING",
+      "mode": "REQUIRED"
+    },
+    {
+        "name": "granularity",
+        "type": "STRING",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "price",
+        "type": "RECORD",
+        "fields": [
+            {
+                "name": "open",
+                "type": "FLOAT",
+                "mode": "REQUIRED"
+            },
+            {
+                "name": "high",
+                "type": "FLOAT",
+                "mode": "REQUIRED"
+            },
+            {
+                "name": "low",
+                "type": "FLOAT",
+                "mode": "REQUIRED"
+            },
+            {
+                "name": "close",
+                "type": "FLOAT",
+                "mode": "REQUIRED"
+            }
+        ],
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "volume",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+      "name": "volume_count",
+      "type": "INTEGER",
+      "mode": "REQUIRED"
+  }
+]
