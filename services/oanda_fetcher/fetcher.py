@@ -61,7 +61,7 @@ class Fetcher(object):
 
 
     def assemble_options(self, granularity: str, instrument: str) -> str:
-        return instrument + ":" + granularity + ":BA"
+        return instrument + ":" + granularity + ":BAM"
 
 
     def concat_parameters(self, parameters: List[str]):

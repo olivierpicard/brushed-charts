@@ -10,8 +10,7 @@ from google.cloud import bigquery, error_reporting
 
 
 REFRESH_RATE = 30  # In seconds
-PATH_TABLE_SHORTTERM = os.getenv("OANDA_BIGQUERY_PATH_TABLE_SHORTTERM")
-PATH_TABLE_ARCHIVE = os.getenv("OANDA_BIGQUERY_PATH_TABLE_ARCHIVE")
+PATH_PRICE_TABLE = os.getenv("OANDA_BIGQUERY_PATH_PRICE_TABLE")
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 
 class EmptyCandles(Exception): pass
@@ -24,8 +23,7 @@ def raise_if_candles_empty(candles: List):
 
 def send_to_bigquery(candles: List):
     client = bigquery.Client()
-    client.insert_rows_json(PATH_TABLE_SHORTTERM, candles)
-    client.insert_rows_json(PATH_TABLE_ARCHIVE, candles)
+    client.insert_rows_json(PATH_PRICE_TABLE, candles)
     client.close()
 
 
@@ -43,13 +41,14 @@ def execute():
     candles = history.get_candles_from_window(time_window)
     raise_if_candles_empty(candles)
     send_to_bigquery(candles)
-    lastupdate_log.save_last_reading_date(upper_window)
+    # lastupdate_log.save_last_reading_date(upper_window)
 
 
 def try_to_execute():
     try:
         execute()
     except EmptyCandles:
+        print("empty")
         pass
     except Exception:
         traceback.print_exc()

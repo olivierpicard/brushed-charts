@@ -23,9 +23,11 @@ def flatten_single(candle: Dict) -> List:
         temp_flat['volume'] = _candle['volume']
         temp_flat["time"] = _candle['time']
         temp_flat['bid'] = _candle['bid']
+        temp_flat['mid'] = _candle['mid']
         temp_flat['ask'] = _candle['ask']
         temp_flat['complete'] = _candle['complete']
         parse_OHLC(temp_flat['bid'])
+        parse_OHLC(temp_flat['mid'])
         parse_OHLC(temp_flat['ask'])
         flattened_candle.append(temp_flat)
     

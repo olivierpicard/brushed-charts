@@ -1,6 +1,6 @@
 import pymongo
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict
 
 
@@ -8,7 +8,7 @@ HOST = os.getenv("MONGODB_HOST")
 PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_BIGQUERY_SAVE_DATE_COLLECTION")
-NO_DATE = datetime.fromtimestamp(0)
+FOUR_HOUR_EARLIER = datetime.utcnow() - timedelta(hours=4)
 
 
 def read() -> datetime:
@@ -16,7 +16,7 @@ def read() -> datetime:
     database = client.get_database(DATABASE)
     collection = database.get_collection(COLLECTION)
     document = collection.find_one()
-    last_update = NO_DATE
+    last_update = FOUR_HOUR_EARLIER
     if document != None:
         last_update = document['last_update']
     disconnect(client)

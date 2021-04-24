@@ -15,8 +15,30 @@
         "mode": "REQUIRED"
     },
     {
-      "name": "provider",
-      "type": "STRING",
+      "name": "mid",
+      "type": "RECORD",
+      "fields": [
+          {
+              "name": "open",
+              "type": "FLOAT",
+              "mode": "REQUIRED"
+          },
+          {
+              "name": "high",
+              "type": "FLOAT",
+              "mode": "REQUIRED"
+          },
+          {
+              "name": "low",
+              "type": "FLOAT",
+              "mode": "REQUIRED"
+          },
+          {
+              "name": "close",
+              "type": "FLOAT",
+              "mode": "REQUIRED"
+          }
+      ],
       "mode": "REQUIRED"
     },
     {
