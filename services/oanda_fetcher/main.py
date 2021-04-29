@@ -31,7 +31,7 @@ def try_to_execute():
         execute()
     except Exception:
         traceback.print_exc()
-        error_reporting.Client(service="oanda_fetcher."+ENVIRONMENT).report_exception()
+        error_reporting.Client(service="oanda_fetcher."+ENVIRONMENT).report()
 
 
 if __name__ == "__main__":
