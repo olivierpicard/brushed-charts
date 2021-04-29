@@ -47,8 +47,13 @@
         "mode": "REQUIRED"
     },
     {
-      "name": "volume_count",
+      "name": "vwap",
+      "type": "FLOAT",
+      "mode": "REQUIRED"
+    },  
+    {
+      "name": "trade_count",
       "type": "INTEGER",
       "mode": "REQUIRED"
-  }
+    }
 ]
