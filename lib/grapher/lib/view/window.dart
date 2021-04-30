@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:ui';
 
 import 'package:flutter/src/gestures/drag_details.dart';
 import 'package:grapher/filter/dataStruct/data2D.dart';
