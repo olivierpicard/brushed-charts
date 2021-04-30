@@ -1,6 +1,5 @@
 from typing import Dict, List
 import requests
-import json
 
 
 class Fetcher(object):
@@ -43,7 +42,7 @@ class Fetcher(object):
         return header
 
 
-    def build_url_with_parameters(self, instruments: List[str]) -> str :
+    def build_url_with_parameters(self, instruments: List[str]) -> str:
         parameter_list = self.make_parameter_list(instruments)
         assembled_parameters_str = self.concat_parameters(parameter_list)
         full_url = self.url_path + "?candleSpecifications=" + assembled_parameters_str

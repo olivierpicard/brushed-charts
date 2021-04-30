@@ -1,12 +1,9 @@
 import os
 import pymongo
-from datetime import datetime
-from typing import List
-from bson import objectid
 
 
-HOST=os.getenv("MONGODB_HOST")
-PORT=os.getenv("MONGODB_PORT")
+HOST = os.getenv("MONGODB_HOST")
+PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_HISTORY_COLLECTION")
 

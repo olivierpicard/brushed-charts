@@ -2,7 +2,7 @@ from typing import List, Dict
 
 
 def flatten_all(latest_candles: List) -> List[Dict]:
-    #type: list(dict)
+    # type: list(dict)
     flattened_candles: List[Dict] = list()
     for candle in latest_candles:
         parsed_candle = flatten_single(candle)
@@ -48,11 +48,11 @@ def parse_OHLC(ohlc: Dict):
 def remove_incomplete_candle(flat_candle: List[Dict]) -> List:
     complete_candles: List[Dict] = list()
     for candle in flat_candle:
-        if candle['complete'] == False:
+        if not candle['complete']:
             continue
         del candle['complete']
         complete_candles.append(candle)
-    
+
     return complete_candles
 
 
