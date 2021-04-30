@@ -18,6 +18,7 @@ class ErrorReport(object):
     def report(self):
         while True:
             error = self.pipe.error.get()
+            print(error)
             error_reporting.Client(
                 service=f"{SERVICE_NAME}.{ENVIRONMENT}"
             ).report(message=error)

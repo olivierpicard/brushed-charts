@@ -4,16 +4,46 @@ from kraken_socket.pipe import Pipe
 import threading
 import time
 import traceback
-import parser
+import message_analyzer
 
-TIMEOUT = 2
+TIMEOUT = 5
 URL = "wss://ws.kraken.com/"
+QUERY = '''{
+    "event":"subscribe",
+    "subscription":{"name":"ohlc"},
+    "pair":[
+        "BTC/USD",
+        "BTC/EUR",
+        "ETH/EUR",
+        "ETH/USD",
+        "USDT/EUR",
+        "XRP/EUR",
+        "DOGE/EUR",
+        "DOT/EUR",
+        "UNI/EUR",
+        "BCH/EUR",
+        "USDC/EUR",
+        "FIL/EUR",
+        "TRX/EUR",
+        "COMP/EUR",
+        "DASH/EUR",
+        "ZEC/EUR",
+        "SNX/EUR",
+        "ETH2/EUR",
+        "ADA/EUR",
+        "ADA/USD",
+        "LTC/EUR",
+        "XLM/EUR",
+        "ETC/EUR",
+        "EOS/EUR",
+        "DAI/EUR"
+    ]
+}'''
 
 
 class Subscription(object):
-    def __init__(self, query: str, pipe: Pipe):
+    def __init__(self, pipe: Pipe):
         self.pipe = pipe
-        self.query = query
         self.delay = Delay()
 
     def start(self):
@@ -34,7 +64,7 @@ class Subscription(object):
     def connect(self):
         websocket = create_connection(URL)
         websocket.settimeout(TIMEOUT)
-        websocket.send(self.query)
+        websocket.send(QUERY)
         while True:
             self.read_message(websocket)
 
@@ -44,6 +74,5 @@ class Subscription(object):
         self.pipe.message.put(message)
 
     def raise_for_error_message(self, message):
-        if parser.is_error(message):
-
+        if message_analyzer.is_error(message):
             raise Exception(message)
