@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 
 GRANULARITY = os.getenv("KRAKEN_OHLC_GRANULARITY")
 
@@ -27,7 +29,7 @@ def ohlc_to_array(message: str) -> list:
 
 def attribute_name(data_array: list) -> dict:
     column = {}
-    column['time'] = int(float(data_array[2]))
+    column['datetime'] = timestamp_to_iso_datetime(data_array[2])
     column['asset_pair'] = data_array[11]
     column['granularity'] = GRANULARITY
     column['open'] = float(data_array[3])
@@ -39,3 +41,11 @@ def attribute_name(data_array: list) -> dict:
     column['trade_count'] = int(data_array[9])
 
     return column
+
+
+def timestamp_to_iso_datetime(str_timestamp: str) -> str:
+    timestamp = int(float(str_timestamp))
+    utc_datetime = datetime.utcfromtimestamp(timestamp)
+    iso_datetime = utc_datetime.isoformat()
+
+    return iso_datetime

@@ -4,7 +4,7 @@ import os
 HOST = os.getenv("MONGODB_HOST")
 PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_KRAKEN_DBNAME")
-COLLECTION = os.getenv("MONGODB_KRAKEN_CANDLESTICK_COLLECTION")
+COLLECTION = os.getenv("MONGODB_KRAKEN_OHLC_COLLECTION")
 
 
 def save(candle: dict):
@@ -23,7 +23,7 @@ def connect_to_database() -> pymongo.database.Database:
 
 def create_index(collection: pymongo.collection.Collection):
     collection.create_index(
-        [("time", -1), ("asset_pair", 1), ("granularity", 1)],
+        [("datetime", -1), ("asset_pair", 1), ("granularity", 1)],
         unique=True)
 
 
@@ -37,7 +37,7 @@ def get_collection(client: pymongo.MongoClient) -> pymongo.collection.Collection
 def upsert(candle: dict, collection: pymongo.collection.Collection):
     collection.update_one(
         {
-            "time": candle['time'],
+            "datetime": candle['datetime'],
             "asset_pair": candle['asset_pair'],
             "granularity": candle['granularity']
         },
