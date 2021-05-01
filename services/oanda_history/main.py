@@ -11,6 +11,7 @@ from typing import List, Dict
 REFRESH_RATE = 5  # In seconds
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 
+
 class EmptyCandles(Exception): pass
 
 
@@ -24,7 +25,7 @@ def add_to_history():
 
 
 def raise_for_empty_candles(candles: List[Dict]):
-    if candles == None or len(candles) == 0:
+    if candles is None or len(candles) == 0:
         raise EmptyCandles
 
 

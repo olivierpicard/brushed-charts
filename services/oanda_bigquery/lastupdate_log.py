@@ -1,7 +1,6 @@
 import pymongo
 import os
 from datetime import datetime, timedelta
-from typing import List, Dict
 
 
 HOST = os.getenv("MONGODB_HOST")
@@ -17,7 +16,7 @@ def read() -> datetime:
     collection = database.get_collection(COLLECTION)
     document = collection.find_one()
     last_update = FOUR_HOUR_EARLIER
-    if document != None:
+    if document is not None:
         last_update = document['last_update']
     disconnect(client)
 
@@ -28,11 +27,11 @@ def save_last_reading_date(date: datetime):
     client = connect()
     reset_collection(client)
     update(client, date)
-    
-    
+
+
 def connect() -> pymongo.MongoClient:
     client = pymongo.MongoClient(host=HOST, port=int(PORT))
-    
+
     return client
 
 
