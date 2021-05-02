@@ -2,6 +2,8 @@ from kraken_socket.pipe import Pipe
 import threading
 from google.cloud import error_reporting
 import os
+import sys 
+
 
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 SERVICE_NAME = "kraken_ohlc_fetcher"
@@ -18,7 +20,7 @@ class ErrorReport(object):
     def report(self):
         while True:
             error = self.pipe.error.get()
-            print(error)
+            print(error, file=sys.stderr)
             error_reporting.Client(
                 service=f"{SERVICE_NAME}.{ENVIRONMENT}"
             ).report(message=error)

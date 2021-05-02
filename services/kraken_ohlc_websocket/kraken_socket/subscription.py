@@ -8,43 +8,26 @@ import message_analyzer
 
 TIMEOUT = 5
 URL = "wss://ws.kraken.com/"
-QUERY = '''{
-    "event":"subscribe",
-    "subscription":{"name":"ohlc"},
-    "pair":[
-        "BTC/USD",
-        "BTC/EUR",
-        "ETH/EUR",
-        "ETH/USD",
-        "USDT/EUR",
-        "XRP/EUR",
-        "DOGE/EUR",
-        "DOT/EUR",
-        "UNI/EUR",
-        "BCH/EUR",
-        "USDC/EUR",
-        "FIL/EUR",
-        "TRX/EUR",
-        "COMP/EUR",
-        "DASH/EUR",
-        "ZEC/EUR",
-        "SNX/EUR",
-        "ETH2/EUR",
-        "ADA/EUR",
-        "ADA/USD",
-        "LTC/EUR",
-        "XLM/EUR",
-        "ETC/EUR",
-        "EOS/EUR",
-        "DAI/EUR"
-    ]
-}'''
 
 
 class Subscription(object):
-    def __init__(self, pipe: Pipe):
+    def __init__(self, pipe: Pipe, pairs: list[str]):
         self.pipe = pipe
+        self.pairs = pairs
+        self.query = self.build_query()
+        print(self.query)
+        
         self.delay = Delay()
+
+    def build_query(self) -> str:
+        joined_pairs = ','.join(self.pairs).replace('\n', '')
+        query = f'''{{
+            "event": "subscribe",
+            "subscription": {{"name":"ohlc"}},
+            "pair": [{joined_pairs}]
+}}'''
+
+        return query
 
     def start(self):
         thread = threading.Thread(target=self.loop)
@@ -64,7 +47,7 @@ class Subscription(object):
     def connect(self):
         websocket = create_connection(URL)
         websocket.settimeout(TIMEOUT)
-        websocket.send(QUERY)
+        websocket.send(self.query)
         while True:
             self.read_message(websocket)
 

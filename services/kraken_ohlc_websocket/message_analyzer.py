@@ -9,13 +9,13 @@ def is_error(message: str) -> bool:
 
 
 def is_status_error(message: str) -> bool:
-    if 'status:' in message and 'status:online' not in message:
+    if 'status' in message and 'online' not in message:
         return True
     return False
 
 
 def is_error_event(message: str) -> bool:
-    if '"event": "error"' in message:
+    if 'error' in message:
         return True
     return False
 
