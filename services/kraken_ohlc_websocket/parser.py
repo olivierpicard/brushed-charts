@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import message_analyzer
 
 GRANULARITY = int(os.getenv("KRAKEN_OHLC_GRANULARITY"))  # minute
 
@@ -7,6 +8,7 @@ GRANULARITY = int(os.getenv("KRAKEN_OHLC_GRANULARITY"))  # minute
 def give_column_name(message: str) -> dict:
     message = keep_value_only(message)
     values_array = ohlc_to_array(message)
+    check_length(values_array)
     named_column = attribute_name(values_array)
 
     return named_column
@@ -19,6 +21,13 @@ def keep_value_only(message: str) -> str:
     clean_data = message
 
     return clean_data
+
+
+
+def check_length(data_array: list[str]):
+    length = len(data_array)
+    if length == 12: return
+    raise Exception(f'The length of the received data is {length}, expected 12')
 
 
 def ohlc_to_array(message: str) -> list:
