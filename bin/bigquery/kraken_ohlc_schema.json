@@ -11,7 +11,7 @@
     },
     {
         "name": "granularity",
-        "type": "STRING",
+        "type": "INTEGER",
         "mode": "REQUIRED"
     },
     {
