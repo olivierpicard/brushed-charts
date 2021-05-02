@@ -1,6 +1,5 @@
 from datetime import datetime
 import os
-import message_analyzer
 
 GRANULARITY = int(os.getenv("KRAKEN_OHLC_GRANULARITY"))  # minute
 
