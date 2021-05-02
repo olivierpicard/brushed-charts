@@ -9,7 +9,7 @@ def is_error(message: str) -> bool:
 
 
 def is_status_error(message: str) -> bool:
-    if 'status' in message and 'online' not in message:
+    if 'systemStatus' in message and 'online' not in message:
         return True
     return False
 
