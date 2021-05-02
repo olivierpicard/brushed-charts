@@ -1,7 +1,7 @@
 from datetime import datetime
+import os
 
-
-GRANULARITY = "1"  # minute
+GRANULARITY = int(os.getenv("KRAKEN_OHLC_GRANULARITY"))  # minute
 
 
 def give_column_name(message: str) -> dict:

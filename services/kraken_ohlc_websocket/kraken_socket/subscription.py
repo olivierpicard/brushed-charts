@@ -5,9 +5,12 @@ import threading
 import time
 import traceback
 import message_analyzer
+import os
+
 
 TIMEOUT = 5
 URL = "wss://ws.kraken.com/"
+GRANULARITY = int(os.getenv("KRAKEN_OHLC_GRANULARITY"))  # minutes
 
 
 class Subscription(object):
@@ -15,15 +18,13 @@ class Subscription(object):
         self.pipe = pipe
         self.pairs = pairs
         self.query = self.build_query()
-        print(self.query)
-        
         self.delay = Delay()
 
     def build_query(self) -> str:
         joined_pairs = ','.join(self.pairs).replace('\n', '')
         query = f'''{{
             "event": "subscribe",
-            "subscription": {{"name":"ohlc"}},
+            "subscription": {{"name":"ohlc", "interval": {GRANULARITY}}},
             "pair": [{joined_pairs}]
 }}'''
 
