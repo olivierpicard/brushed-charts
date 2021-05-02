@@ -18,7 +18,9 @@ services:
     deploy:
       resources:
         limits: 
-          memory: 300M
+          memory: 400M
+        reservations:
+          memory: 300M  
 
 
   oanda_bigquery:
@@ -149,6 +151,107 @@ services:
     image: eu.gcr.io/brushed-charts/oanda_graphql:${PROFIL}-latest
     restart: on-failure
     container_name: oanda_graphql
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
+    
+
+  kraken_ohlc_websocket_minute:
+    build: ./services/kraken_ohlc_websocket
+    image: eu.gcr.io/brushed-charts/kraken_ohlc_fetcher:${PROFIL}-latest
+    restart: on-failure
+    container_name: kraken_ohlc_websocket_minute
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    environment:  
+      - KRAKEN_OHLC_GRANULARITY=1  # MINUTES
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
+
+
+  kraken_ohlc_websocket_hour:
+    build: ./services/kraken_ohlc_websocket
+    image: eu.gcr.io/brushed-charts/kraken_ohlc_fetcher:${PROFIL}-latest
+    restart: on-failure
+    container_name: kraken_ohlc_websocket_hour
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    environment: 
+      - KRAKEN_OHLC_GRANULARITY=60  # MINUTES
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
+
+  
+  kraken_ohlc_websocket_day:
+    build: ./services/kraken_ohlc_websocket
+    image: eu.gcr.io/brushed-charts/kraken_ohlc_fetcher:${PROFIL}-latest
+    restart: on-failure
+    container_name: kraken_ohlc_websocket_day
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    environment: 
+      - KRAKEN_OHLC_GRANULARITY=1440  # MINUTES
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
+
+
+  kraken_ohlc_bigquery:
+    build: ./services/kraken_ohlc_bigquery
+    image: eu.gcr.io/brushed-charts/kraken_ohlc_bigquery:${PROFIL}-latest
+    restart: on-failure
+    container_name: kraken_ohlc_bigquery
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
+
+
+  kraken_ohlc_clean:
+    build: ./services/kraken_ohlc_clean
+    image: eu.gcr.io/brushed-charts/kraken_ohlc_clean:${PROFIL}-latest
+    restart: on-failure
+    container_name: kraken_ohlc_clean
     env_file: 
       - ./env/services.env
       - ./env/services.${PROFIL}.env
