@@ -2,11 +2,11 @@ from kraken_socket.pipe import Pipe
 import threading
 from google.cloud import error_reporting
 import os
-import sys 
+import sys
 
 
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
-SERVICE_NAME = "kraken_ohlc_fetcher"
+SERVICE_NAME = "kraken_ohlc_websocket"
 
 
 class ErrorReport(object):
