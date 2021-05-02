@@ -2,7 +2,7 @@ import time
 import threading
 
 
-MAX_DELAY = 20  # seconds
+MAX_DELAY = 25  # seconds
 MIN_DELAY = 0.1  # seconds
 
 
@@ -15,6 +15,7 @@ class Delay(object):
 
     def update(self):
         self.delay = MIN_DELAY * 2 ** self.attempt
+        self.delay = min(self.delay, MAX_DELAY)
 
     def get(self):
         self.increase()
