@@ -10,7 +10,6 @@ import traceback
 import pymongo
 
 pipe = Pipe()
-global asset_pairs
 
 
 def init_subscription(pairs: list[str]):
