@@ -51,7 +51,7 @@ def attribute_name(data_array: list) -> dict:
 
 
 def timestamp_to_iso_datetime(str_timestamp: str) -> str:
-    timestamp = int(float(str_timestamp))
+    timestamp = float(str_timestamp)
     utc_datetime = datetime.utcfromtimestamp(timestamp)
     iso_datetime = utc_datetime.isoformat()
 
