@@ -28,7 +28,7 @@ def fetch(interval: int, pair: str):
 
 def start_loop():
     for parameter in parameters:
-        interval, pair = *parameter
+        interval, pair = parameter
         fetch(interval, pair)
         time.sleep(DELAY)
 
