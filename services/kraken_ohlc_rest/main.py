@@ -2,7 +2,6 @@ from google.cloud import error_reporting as greport
 from price_response import PriceResponse
 
 import itertools
-import pymongo
 import watchlist
 import requests
 import traceback
@@ -13,7 +12,7 @@ import database
 SERVICE_NAME = os.getenv("SERVICE_NAME")
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 URL = "https://api.kraken.com/0/public/OHLC"
-DELAY = 3 # seconds
+DELAY = 3  # seconds
 INTERVALS = [1, 60, 1440]
 
 global asset_pairs

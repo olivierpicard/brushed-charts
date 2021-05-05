@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-LINE_TO_SELECT = 50
+LINE_TO_SELECT = 30
 
 
 class PriceResponse(object):
