@@ -1,4 +1,5 @@
 from google.cloud import error_reporting as greport
+import itertools
 
 import watchlist
 import requests
@@ -17,7 +18,7 @@ global asset_pairs
 global parameters
 
 
-def fetch(pair: str, interval: int):
+def fetch(interval: int, pair: str):
     query = f'{URL}?pair={pair}&interval={interval}'
     response = requests.get(query)
     response.raise_for_status()
@@ -25,20 +26,16 @@ def fetch(pair: str, interval: int):
     return response.text
 
 
-def loop_on_pairs():
-    for pair in asset_pairs:
-        fetch(pair=pair, interval=1)
+def start_loop():
+    for parameter in parameters:
+        interval, pair = *parameter
+        fetch(interval, pair)
         time.sleep(DELAY)
 
 
-def loop_on_interval():
-    for interval in INTERVALS:
-        loop_on_pairs()
-
-
-def start_fetch_looping():
+def try_execute():
     try:
-        loop_on_interval()
+        start_loop()
     except:
         traceback.print_exc()
         client = greport.Client(service=f'{SERVICE_NAME}.{ENVIRONMENT}')
@@ -46,11 +43,13 @@ def start_fetch_looping():
 
 
 def build_parameters():
-    return [(interval, pair) for interval in INTERVALS for pair in asset_pairs]
+    return list(itertools.product(INTERVALS, asset_pairs))
+
 
 if __name__ == "__main__":
     global asset_pairs, parameters
     asset_pairs = watchlist.get_asset_pairs()
     parameters = build_parameters()
+
     while True:
         try_execute()
