@@ -9,10 +9,10 @@ import time
 import os
 import database
 
-SERVICE_NAME = os.getenv("SERVICE_NAME")
+SERVICE_NAME = "kraken_ohlc_rest"
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 URL = "https://api.kraken.com/0/public/OHLC"
-DELAY = 3  # seconds
+REFRESH_RATE = 3  # seconds
 INTERVALS = [1, 60, 1440]
 
 global asset_pairs
@@ -38,7 +38,7 @@ def start_loop():
         interval, pair = parameter
         str_response = fetch(interval, pair)
         save_to_database(str_response, pair, interval)
-        time.sleep(DELAY)
+        time.sleep(REFRESH_RATE)
 
 
 def try_execute():
@@ -55,11 +55,17 @@ def build_parameters():
     return list(itertools.product(INTERVALS, asset_pairs))
 
 
+def check_environnement():
+    if ENVIRONMENT is None or ENVIRONMENT == '':
+        raise Exception("Environnment is not set")
+
+
 if __name__ == "__main__":
     global asset_pairs, parameters
+    check_environnement()
     asset_pairs = watchlist.get_asset_pairs()
     parameters = build_parameters()
 
     while True:
         try_execute()
-        time.sleep(DELAY)
+        time.sleep(REFRESH_RATE)

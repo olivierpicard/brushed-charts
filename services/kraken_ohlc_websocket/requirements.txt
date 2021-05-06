@@ -1,3 +1,0 @@
-google-cloud-error-reporting==1.0.*
-pymongo==3.11.*
-websocket-client==0.58.*
