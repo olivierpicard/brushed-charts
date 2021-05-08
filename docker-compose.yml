@@ -197,3 +197,22 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+
+
+  health_bigquery:
+    build: ./services/health_bigquery
+    image: eu.gcr.io/brushed-charts/health_bigquery:${PROFIL}-latest
+    restart: on-failure
+    container_name: health_bigquery
+    env_file: 
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+    volumes: 
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "5m"
+        max-file: "10"
