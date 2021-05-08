@@ -19,7 +19,6 @@ def build_status() -> list[dict]:
 def try_execute():
     try:
         status_list = build_status()
-        print(status_list)
         firestore.save_all(status_list)
     except:
         traceback.print_exc()
