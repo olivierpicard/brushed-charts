@@ -5,7 +5,6 @@ from bigquery import validator
 import firestore
 import traceback
 
-SERVICE_NAME = 'health'
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
 REFRESH_RATE = 24 * 60 * 60  # 24 hours in seconds
 
@@ -23,7 +22,7 @@ def try_execute():
     except:
         traceback.print_exc()
         if(ENVIRONMENT == 'dev'): return
-        client = greport.Client(service=f'{SERVICE_NAME}.{ENVIRONMENT}')
+        client = greport.Client(service=f'health_bigquery.{ENVIRONMENT}')
         client.report_exception()
 
 
