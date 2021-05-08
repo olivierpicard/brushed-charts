@@ -1,6 +1,6 @@
 from google.cloud import bigquery as gbigquery
 from bigquery import datetime_process
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 
 OANDA_BQ_PATH = os.getenv("OANDA_BIGQUERY_PATH_PRICE_TABLE")
@@ -33,17 +33,18 @@ def make_oanda_prices_query() -> str:
 
 
 def is_valid(last_datetime: datetime) -> bool:
-    if its_weekend():
+    if its_weekend(last_datetime):
         return True
 
     return datetime_process.is_update_time_valid(last_datetime)
 
 
-def its_weekend() -> bool:
-    dt = datetime.utcnow()
-    if dt.weekday == 5 or dt.weekday == 6:
-        return True
-    if dt.weekday == 4 and dt.hour == 20:
+def its_weekend(dt: datetime) -> bool:
+    diff_time = datetime.now(timezone.utc) - dt
+    if diff_time.days >= 3:
+        return False
+    
+    if dt.weekday() == 4 and dt.hour == 20:
         return True
 
     return False
