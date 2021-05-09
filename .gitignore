@@ -1,4 +1,6 @@
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/source.sh
 credentials/*
 !credentials/*.gpg
 .DS_Store
