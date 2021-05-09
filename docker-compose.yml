@@ -43,7 +43,7 @@ services:
     deploy:
       resources:
         limits: 
-          memory: 100M
+          memory: 70M
 
 
   oanda_fetcher:
@@ -64,6 +64,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   oanda_history:
@@ -83,6 +87,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   oanda_watchlist:
@@ -102,6 +110,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   oanda_clean_history:
@@ -121,6 +133,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
         
   
   oanda_graphql:
@@ -140,6 +156,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 120M
     
 
   kraken_ohlc_rest:
@@ -159,6 +179,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   kraken_ohlc_bigquery:
@@ -178,6 +202,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   kraken_ohlc_clean:
@@ -197,6 +225,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   health_bigquery:
@@ -216,6 +248,10 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
 
 
   health_mongo:
@@ -235,3 +271,7 @@ services:
       options: 
         max-size: "5m"
         max-file: "10"
+    deploy:
+      resources:
+        limits: 
+          memory: 70M
