@@ -15,9 +15,11 @@ def save_all(status_list: list[dict]):
     for status in status_list:
         check_conformity(status)
         save_one(db, status)
+    disconnect()
 
 
 def get_client() -> firestore.client:
+    create_firebase_app()
     if firebase_app is None:
         create_firebase_app()
 
@@ -30,6 +32,10 @@ def create_firebase_app():
     firebase_app = firebase_admin.initialize_app(cred, {
         'projectId': PROJECT_ID,
     })
+
+
+def disconnect():
+    firebase_admin.delete_app(firebase_app)
 
 
 def check_conformity(status: dict):

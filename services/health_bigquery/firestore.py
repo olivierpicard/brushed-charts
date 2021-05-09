@@ -7,20 +7,36 @@ PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 HEALTH_COLLECTION = os.getenv('FIRESTORE_HEALTH_COLLECTION')
 
 
+global firebase_app
+firebase_app = None
+
+
 def save_all(status_list: list[dict]):
     db = get_client()
     for status in status_list:
         check_conformity(status)
         save_one(db, status)
+    disconnect()
 
 
 def get_client() -> firestore.client:
+    create_firebase_app()
+    if firebase_app is None:
+        create_firebase_app()
+
+    return firestore.client(firebase_app)
+
+
+def create_firebase_app():
+    global firebase_app
     cred = credentials.ApplicationDefault()
-    firebase_admin.initialize_app(cred, {
+    firebase_app = firebase_admin.initialize_app(cred, {
         'projectId': PROJECT_ID,
     })
 
-    return firestore.client()
+
+def disconnect():
+    firebase_admin.delete_app(firebase_app)
 
 
 def check_conformity(status: dict):
