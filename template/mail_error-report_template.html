@@ -1,0 +1,121 @@
+<html>
+  <style>
+    html,body {
+      margin: auto;
+      padding-left: 5px;
+      padding-right: 5px;
+      font-family: sans-serif, Arial, Helvetica;
+      font-weight: normal;
+      max-width: 800px;
+      background-color: white;
+    }
+
+    header {
+      position: relative;
+      background-color: #bd1515;
+      height: 70px;
+      width: 100%;
+    }
+    
+    #project-name {
+      position: absolute;
+      right: 0;
+      font-size: 13pt;
+      font-weight: bold;
+      color: white;
+      margin-right: 20px;
+      margin-top: 7px;
+    }
+
+    #email-object {
+      color: white;
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      font-size: 22pt;
+      font-weight: 100;
+      transform: translate(-50%);
+    }
+
+    article {
+      margin-top: 70px;
+      margin-left: 40px;
+    }
+
+    h1 {
+      font-size: 20pt;
+      margin-bottom: 0px;
+      font-weight: 400;
+    }
+
+    h2 {
+      font-weight: 100;
+      font-size: 13pt;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    #frame {
+      background-color: #efefef;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      margin-top: 60px;
+      margin-left: 30px;
+      margin-right: 60px;
+      color: rgb(79, 79, 79);
+    }
+
+    #description {
+      font-weight: bold;
+      margin-bottom: 5px;
+      margin-left: 20px;
+    }
+
+    #details {
+      margin-top: 8px;
+      margin-left: 30px;
+    }
+
+    #button {
+      margin: auto;
+      margin-top: 90px;
+      width: 170px;
+      height: 40px;
+      background-color: #2a62b6;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    a {
+      position: relative;
+      top: 30%;
+      transform: translate(0, -50%);
+      color: white;
+      text-decoration: none;
+    }
+
+    footer {
+      height: 70px;
+    }
+
+    
+  </style>
+
+  <body>
+    <header>
+      <div id="project-name">Brushed-Charts</div>
+      <div id="email-object">Error Report</div>
+    </header>
+    <article>
+        <h1>{{title}}</h1>
+        <h2>{{test}}</h2>
+        <div id="frame">
+          <p id="description">{{description}}</p>
+          <p id="details">{{details}}</div>
+          <div id="button">
+            <a href="{{link}}">See more</a>
+          </div>
+  </article>
+  <footer></footer>
+  </body>
+</htm>
