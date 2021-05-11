@@ -6,7 +6,7 @@ import firestore
 import traceback
 
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
-REFRESH_RATE = 24 * 60 * 60  # 24 hours in seconds
+REFRESH_RATE = int(os.getenv('HEALTH_BIGQUERY_REFRESH_RATE'))  # in seconds
 
 
 def build_status() -> list[dict]:

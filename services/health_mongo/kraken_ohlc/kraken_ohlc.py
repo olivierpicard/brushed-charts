@@ -4,6 +4,7 @@ import os
 
 ACCEPTABLE_DELAY = 5 * 60  # x minutes in seconds
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
+REFRESH_RATE = int(os.getenv('HEALTH_MONGO_REFRESH_RATE'))  # in seconds
 
 
 def get_status():
@@ -33,11 +34,13 @@ def _is_delay_acceptable(last_datetime: datetime):
 
 def _make_status(last_datetime: datetime, validity: str):
     status = dict()
-    status['title'] = f'{ENVIRONMENT}_mongo_kraken_ohlc_last_inserted_datetime'
-    status['description'] = 'Mongo Kraken OHLC - last inserted datetime'
+    status['ref'] = f'{ENVIRONMENT}_mongo_kraken_ohlc_last_inserted_datetime'
+    status['title'] = 'Mongo Kraken OHLC'
+    status['subtitle'] = 'Last inserted datetime'
     status['last_row'] = last_datetime
     status['updated_at'] = datetime.utcnow()
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
+    status['refresh_rate'] = REFRESH_RATE
 
     return status

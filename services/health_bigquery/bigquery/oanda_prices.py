@@ -5,6 +5,7 @@ import os
 
 OANDA_BQ_PATH = os.getenv("OANDA_BIGQUERY_PATH_PRICE_TABLE")
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
+REFRESH_RATE = int(os.getenv('HEALTH_BIGQUERY_REFRESH_RATE'))  # in seconds
 
 
 def get_last_update_status(client: gbigquery.Client) -> dict[str]:
@@ -52,11 +53,13 @@ def its_weekend(dt: datetime) -> bool:
 
 def make_status(update_datetime: datetime, validity: str) -> dict[str]:
     status = dict()
-    status['title'] = f'{ENVIRONMENT}_bq_oanda_prices_last_inserted_datetime'
-    status['description'] = 'Biquery Oanda prices - last inserted datetime'
+    status['ref'] = f'{ENVIRONMENT}_bq_oanda_prices_last_inserted_datetime'
+    status['title'] = 'Biquery Oanda prices'
+    status['subtitle'] = 'Last inserted datetime'
     status['last_row'] = update_datetime
     status['updated_at'] = datetime.utcnow()
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
+    status['refresh_rate'] = REFRESH_RATE
 
     return status

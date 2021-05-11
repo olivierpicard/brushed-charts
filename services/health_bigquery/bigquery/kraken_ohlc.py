@@ -5,6 +5,8 @@ import os
 
 KRAKEN_BQ_PATH = os.getenv("KRAKEN_BIGQUERY_PATH_OHLC_TABLE")
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
+REFRESH_RATE = int(os.getenv('HEALTH_BIGQUERY_REFRESH_RATE'))  # in seconds
+
 
 
 def get_last_update_status(client: gbigquery.Client):
@@ -34,11 +36,13 @@ def make_oanda_prices_query():
 
 def make_status(update_datetime: datetime, validity: str):
     status = dict()
-    status['title'] = f'{ENVIRONMENT}_bq_kraken_ohlc_last_inserted_datetime'
-    status['description'] = 'Biquery Kraken OHLC - last inserted datetime'
+    status['ref'] = f'{ENVIRONMENT}_bq_kraken_ohlc_last_inserted_datetime'
+    status['title'] = 'Biquery Kraken OHLC'
+    status['subtitle'] = 'Last inserted datetime'
     status['last_row'] = update_datetime
     status['updated_at'] = datetime.utcnow()
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
+    status['refresh_rate'] = REFRESH_RATE
 
     return status
