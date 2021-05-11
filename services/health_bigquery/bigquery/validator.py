@@ -10,4 +10,3 @@ def get_status():
     status = [oanda_status, kraken_status]
 
     return status
-    

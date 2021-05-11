@@ -44,5 +44,6 @@ def make_status(update_datetime: datetime, validity: str):
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
+    status['acceptable_delay'] = datetime_process.ACCEPTABLE_DELAY
 
     return status
