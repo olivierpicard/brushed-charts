@@ -1,5 +1,5 @@
 from datetime import datetime
-from kraken_ohlc import kraken_ohlc_mongo
+from . import kraken_ohlc_mongo
 import os
 
 ACCEPTABLE_DELAY = 5 * 60  # x minutes in seconds
@@ -42,6 +42,6 @@ def _make_status(last_datetime: datetime, validity: str):
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
-    status['acceptable_delay'] = ACCEPTABLE_DELAY
+    status['acceptable_lag_seconds'] = ACCEPTABLE_DELAY * 60
 
     return status

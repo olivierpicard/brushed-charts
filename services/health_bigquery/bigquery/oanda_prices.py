@@ -1,5 +1,5 @@
 from google.cloud import bigquery as gbigquery
-from bigquery import datetime_process
+from . import datetime_process
 from datetime import datetime, timezone
 import os
 
@@ -34,6 +34,9 @@ def make_oanda_prices_query() -> str:
 
 
 def is_valid(last_datetime: datetime) -> bool:
+    if last_datetime is None:
+        return False
+
     if its_weekend(last_datetime):
         return True
 
@@ -61,6 +64,6 @@ def make_status(update_datetime: datetime, validity: str) -> dict[str]:
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
-    status['acceptable_delay'] = datetime_process.ACCEPTABLE_DELAY
+    status['acceptable_lag_seconds'] = datetime_process.ACCEPTABLE_DELAY * 60
 
     return status

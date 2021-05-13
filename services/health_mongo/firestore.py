@@ -40,17 +40,17 @@ def disconnect():
 
 def check_conformity(status: dict):
     environments = ['dev', 'test', 'prod']
-    if 'title' not in status:
-        raise Exception(f'Title is not defined for status: {str(status)}')
+    if 'ref' not in status:
+        raise Exception(f'Ref is not defined for status: {str(status)}')
     if 'environment' not in status:
         raise Exception(f'Environment is not defined in status: {str(status)}')
     
-    if not any(env in status['title'] for env in environments):
-        raise Exception(f'Title don\'t have environment in it')
+    if not any(env in status['ref'] for env in environments):
+        raise Exception(f'Ref don\'t have environment in it')
 
 
 
 def save_one(db: firestore.client, status: dict):
-    doc_name = status['title']
+    doc_name = status['ref']
     doc_ref = db.collection(HEALTH_COLLECTION).document(doc_name)
     doc_ref.set(status)

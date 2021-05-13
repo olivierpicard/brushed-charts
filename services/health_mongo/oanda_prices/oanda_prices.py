@@ -1,5 +1,5 @@
 from datetime import datetime
-from oanda_prices import oanda_prices_mongo
+from . import oanda_prices_mongo
 import os
 
 ACCEPTABLE_DELAY = 5 * 60  # x minutes in seconds
@@ -55,6 +55,6 @@ def _make_status(last_datetime: datetime, validity: str):
     status['validity'] = validity
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
-    status['acceptable_delay'] = ACCEPTABLE_DELAY
+    status['acceptable_lag_seconds'] = ACCEPTABLE_DELAY * 60
 
     return status
