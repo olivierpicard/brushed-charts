@@ -21,9 +21,6 @@ def save_all(status_list: list[dict]):
 
 def get_client() -> firestore.client:
     create_firebase_app()
-    if firebase_app is None:
-        create_firebase_app()
-
     return firestore.client(firebase_app)
 
 
