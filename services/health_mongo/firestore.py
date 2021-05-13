@@ -6,24 +6,37 @@ import os
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 HEALTH_COLLECTION = os.getenv('FIRESTORE_HEALTH_COLLECTION')
 
-global firebase_app
+global firebase_app, client
 firebase_app = None
+client = None
 
 
 def save_all(status_list: list[dict]):
-    db = get_client()
+    try:
+        execute(status_list)
+    finally:
+        _disconnect()
+    
+
+def execute(status_list: list[dict]):
+    _init_client()
     for status in status_list:
         check_conformity(status)
-        save_one(db, status)
-    disconnect()
+        save_one(status)
 
 
-def get_client() -> firestore.client:
-    create_firebase_app()
-    return firestore.client(firebase_app)
+def _init_client() -> firestore.client:
+    global client, firebase_app
+    
+    if firebase_app is None:
+        _create_firebase_app()
+    if client is not None:
+        return client
+
+    client = firestore.client(firebase_app)
 
 
-def create_firebase_app():
+def _create_firebase_app():
     global firebase_app
     cred = credentials.ApplicationDefault()
     firebase_app = firebase_admin.initialize_app(cred, {
@@ -31,8 +44,12 @@ def create_firebase_app():
     })
 
 
-def disconnect():
-    firebase_admin.delete_app(firebase_app)
+def _disconnect():
+    global client, firebase_app
+    client = None
+    if firebase_app is not None:
+        firebase_admin.delete_app(firebase_app)
+    firebase_app = None
 
 
 def check_conformity(status: dict):
@@ -47,7 +64,8 @@ def check_conformity(status: dict):
 
 
 
-def save_one(db: firestore.client, status: dict):
+def save_one(status: dict):
+    global client
     doc_name = status['ref']
-    doc_ref = db.collection(HEALTH_COLLECTION).document(doc_name)
+    doc_ref = client.collection(HEALTH_COLLECTION).document(doc_name)
     doc_ref.set(status)
