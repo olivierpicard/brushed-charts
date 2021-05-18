@@ -5,26 +5,34 @@ import os
 
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 HEALTH_COLLECTION = os.getenv('FIRESTORE_HEALTH_COLLECTION')
+ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
 
-global firebase_app
+global firebase_app, client
 firebase_app = None
+client = None
 
 
-def save_all(status_list: list[dict]):
-    db = get_client()
-    for status in status_list:
-        check_conformity(status)
-        save_one(db, status)
+def get_documents():
+    docs = None
+    try:
+        _init_client()
+        docs = _read()
+    finally:
+        _disconnect()
+    
+    return docs
 
 
-def get_client() -> firestore.client:
+def _init_client() -> firestore.client:
+    global client, firebase_app
     if firebase_app is None:
-        create_firebase_app()
+        _create_firebase_app()
+    if client is not None:
+        return client
+    client = firestore.client(firebase_app)
 
-    return firestore.client(firebase_app)
 
-
-def create_firebase_app():
+def _create_firebase_app():
     global firebase_app
     cred = credentials.ApplicationDefault()
     firebase_app = firebase_admin.initialize_app(cred, {
@@ -32,19 +40,17 @@ def create_firebase_app():
     })
 
 
-def check_conformity(status: dict):
-    environments = ['dev', 'test', 'prod']
-    if 'title' not in status:
-        raise Exception(f'Title is not defined for status: {str(status)}')
-    if 'environment' not in status:
-        raise Exception(f'Environment is not defined in status: {str(status)}')
+def _disconnect():
+    global client, firebase_app
+    client = None
+    if firebase_app is not None:
+        firebase_admin.delete_app(firebase_app)
+    firebase_app = None
+
+
+def _read() -> list:
+    global client
+    query_stream = client.collection(HEALTH_COLLECTION).stream()
+    docs = list(map(lambda doc: doc.to_dict(), query_stream))
     
-    if not any(env in status['title'] for env in environments):
-        raise Exception(f'Title don\'t have environment in it')
-
-
-
-def save_one(db: firestore.client, status: dict):
-    doc_name = status['title']
-    doc_ref = db.collection(HEALTH_COLLECTION).document(doc_name)
-    doc_ref.set(status)
+    return docs
