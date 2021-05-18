@@ -43,5 +43,6 @@ def _make_status(last_datetime: datetime, validity: str):
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
     status['acceptable_lag_seconds'] = ACCEPTABLE_DELAY * 60
+    status['description'] = "Datetime of the last inserted document in internal mongoDB document is not valid. They have not been updated within the acceptable delay"
 
     return status

@@ -65,5 +65,6 @@ def make_status(update_datetime: datetime, validity: str) -> dict[str]:
     status['environment'] = ENVIRONMENT
     status['refresh_rate'] = REFRESH_RATE
     status['acceptable_lag_seconds'] = datetime_process.ACCEPTABLE_DELAY * 60
+    status['description'] = "Datetime of the last inserted row in Biquery Oanda prices table is not valid. They have not been updated within the accepted delay"
 
     return status
