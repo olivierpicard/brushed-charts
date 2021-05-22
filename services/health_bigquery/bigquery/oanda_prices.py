@@ -37,18 +37,20 @@ def is_valid(last_datetime: datetime) -> bool:
     if last_datetime is None:
         return False
 
-    if its_weekend(last_datetime):
+    if _its_weekend(last_datetime):
         return True
 
     return datetime_process.is_update_time_valid(last_datetime)
 
 
-def its_weekend(dt: datetime) -> bool:
-    diff_time = datetime.now(timezone.utc) - dt
-    if diff_time.days >= 3:
-        return False
+def _its_weekend(dt: datetime) -> bool:
+    if dt.weekday() == 4 and dt.hour >= 20:
+        return True
     
-    if dt.weekday() == 4 and dt.hour == 20:
+    if dt.weekday() == 5:
+        return True
+    
+    if dt.weekday() == 6 and dt.hour < 21:
         return True
 
     return False

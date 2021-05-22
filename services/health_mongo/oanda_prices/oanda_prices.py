@@ -35,11 +35,13 @@ def _is_delay_acceptable(last_datetime: datetime):
 
 
 def _its_weekend(dt: datetime) -> bool:
-    diff_time = datetime.utcnow() - dt
-    if diff_time.days >= 3:
-        return False
+    if dt.weekday() == 4 and dt.hour >= 20:
+        return True
     
-    if dt.weekday() == 4 and dt.hour == 20:
+    if dt.weekday() == 5:
+        return True
+    
+    if dt.weekday() == 6 and dt.hour < 21:
         return True
 
     return False
