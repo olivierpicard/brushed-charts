@@ -7,7 +7,7 @@ import traceback
 import firestore
 
 ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
-REFRESH_RATE =  int(os.getenv('HEALTH_MONGO_REFRESH_RATE'))  # seconds
+REFRESH_RATE = int(os.getenv('HEALTH_MONGO_REFRESH_RATE'))  # seconds
 
 
 def build_status() -> list[dict]:
