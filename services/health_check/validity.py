@@ -19,6 +19,7 @@ def is_update_time_valid(document):
     update_diff = (utcnow - update_datetime).total_seconds()
     
     if update_diff + THREE_MINUTES > refresh_rate:
+        document['warning'] = "There is too long since this document was updated"
         return False
     
     return True
