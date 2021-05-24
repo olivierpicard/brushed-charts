@@ -1,24 +1,17 @@
 from flask import Flask
-from google.cloud import secretmanager
 from google.cloud import error_reporting as greport
-import os 
+import os
+import traceback
 import firestore
 import mail
+import mail_interval
 import validity
-import traceback
 
-SECRET_PATH = os.getenv('SECRET_PATH_MAILGUN_API_KEY')
-ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
+VERSION = "1.0"
+
 
 app = Flask(__name__)
-
-
-def get_api_key():
-    client = secretmanager.SecretManagerServiceClient()
-    response = client.access_secret_version(request={"name": SECRET_PATH}, )
-    payload = response.payload.data.decode("UTF-8")
-    
-    return payload
 
 
 def prune_dev(documents: list[dict]):
@@ -31,26 +24,28 @@ def prune_dev(documents: list[dict]):
 
 def process_diagnotics(documents: list[dict], api_key: str):
     for doc in documents:
+        ref = doc['ref']
+        emails = mail_interval.get_email_send_datetime()
         if validity.is_correct(doc):
             continue
+        if not validity.is_ready_for_email(ref, emails):
+            continue
         mail.send(doc, api_key)
+        mail_interval.update(ref)
 
 
 def try_execute():
     try:
-        api_key = get_api_key()
         diagnostics = firestore.get_documents()
         diagnostics = prune_dev(diagnostics)
-        process_diagnotics(diagnostics, api_key)
+        process_diagnotics(diagnostics, MAILGUN_API_KEY)
     except:
         traceback.print_exc()
-        if(ENVIRONMENT == 'dev'): return
-        client = greport.Client(service=f'health_check.{ENVIRONMENT}')
+        client = greport.Client(service=f'health_check')
         client.report_exception()
 
 
 @app.route("/")
 def check():
     try_execute()
-
-    return "<html></html>"
+    return f"<html>VERSION: {VERSION}</html>"
