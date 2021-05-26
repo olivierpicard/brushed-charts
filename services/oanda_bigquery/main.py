@@ -8,9 +8,10 @@ from datetime import datetime, timedelta
 from google.cloud import bigquery, error_reporting
 
 
-REFRESH_RATE = 30  # In seconds
+REFRESH_RATE = 30  # seconds
 PATH_PRICE_TABLE = os.getenv("OANDA_BIGQUERY_PATH_PRICE_TABLE")
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
+WINDOW_LIMIT = 10800  # seconds
 
 
 class EmptyCandles(Exception):
@@ -32,8 +33,11 @@ def make_time_window():
     lower_window = lastupdate_log.read()
     current_time = datetime.utcnow()
     upper_window = current_time - timedelta(minutes=3)
+    if (upper_window - lower_window).total_seconds() > 10800:
+        upper_window = lower_window + timedelta(seconds=10800)
 
     return (lower_window, upper_window)
+
 
 
 def execute():
