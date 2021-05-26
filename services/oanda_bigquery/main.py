@@ -11,7 +11,7 @@ from google.cloud import bigquery, error_reporting
 REFRESH_RATE = 30  # seconds
 PATH_PRICE_TABLE = os.getenv("OANDA_BIGQUERY_PATH_PRICE_TABLE")
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
-WINDOW_LIMIT = 10800  # seconds
+WINDOW_LIMIT = int(os.getenv('OANDA_BQ_SEND_WINDOW_MAX_SIZE'))  # seconds
 
 
 class EmptyCandles(Exception):
