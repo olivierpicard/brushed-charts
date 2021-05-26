@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 import pymongo
 
 
@@ -8,7 +9,7 @@ DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_HISTORY_COLLECTION")
 
 
-def get_candles_from_window(window: (int, int)):
+def get_candles_from_window(window: Tuple[int, int]):
     client = connect()
     collection = get_history_collection(client)
     documents = list(select_documents_after(window, collection))
@@ -30,7 +31,7 @@ def get_history_collection(client: pymongo.MongoClient):
     return collection
 
 
-def select_documents_after(window: (int, int), collection: pymongo.collection.Collection) -> pymongo.cursor.Cursor:
+def select_documents_after(window: Tuple[int, int], collection: pymongo.collection.Collection) -> pymongo.cursor.Cursor:
     lower_window, upper_window = parse_time_window(window)
     time_filter = {"date": {"$gt": lower_window, "$lte": upper_window}}
     projection = {"_id": 0}
@@ -39,7 +40,7 @@ def select_documents_after(window: (int, int), collection: pymongo.collection.Co
     return cursor
 
 
-def parse_time_window(window: (int, int)):
+def parse_time_window(window: Tuple[int, int]):
     parsed_lower_window = str(window[0]).replace(" ", "T")
     parsed_upper_window = str(window[1]).replace(" ", "T")
 
