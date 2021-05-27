@@ -18,8 +18,9 @@ class EmptyCandles(Exception):
     pass
 
 
-def raise_if_candles_empty(candles: list):
+def on_empty_candles(candles: list, upper_window: int):
     if candles is None or len(candles) == 0:
+        lastupdate_log.save_last_reading_date(upper_window)
         raise EmptyCandles
 
 
@@ -35,7 +36,7 @@ def make_time_window():
     upper_window = current_time - timedelta(minutes=3)
     if (upper_window - lower_window).total_seconds() > WINDOW_LIMIT:
         upper_window = lower_window + timedelta(seconds=WINDOW_LIMIT)
-
+    print(lower_window, upper_window)
     return (lower_window, upper_window)
 
 
@@ -44,7 +45,7 @@ def execute():
     time_window = make_time_window()
     upper_window = time_window[1]
     candles = history.get_candles_from_window(time_window)
-    raise_if_candles_empty(candles)
+    on_empty_candles(candles, upper_window)
     send_to_bigquery(candles)
     lastupdate_log.save_last_reading_date(upper_window)
 
