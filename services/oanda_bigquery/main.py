@@ -36,7 +36,7 @@ def make_time_window():
     upper_window = current_time - timedelta(minutes=3)
     if (upper_window - lower_window).total_seconds() > WINDOW_LIMIT:
         upper_window = lower_window + timedelta(seconds=WINDOW_LIMIT)
-    print(lower_window, upper_window)
+
     return (lower_window, upper_window)
 
 
