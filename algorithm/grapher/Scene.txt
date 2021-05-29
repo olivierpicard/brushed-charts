@@ -1,0 +1,32 @@
+class Scene {
+  private child: SceneObject
+  objectToRepaint: SceneObject
+  pointerHandle: PointerHandler
+
+  void paint(canvas, size) {
+    drawer = Drawer(canvas, size, objectToRepaint)
+    paintDrawables(drawer)
+  }
+
+  void paintDrawables(drawer) {
+    for object in objects {
+      if object is not Drawable : continue
+      objects.draw(drawer)
+    }
+  }
+
+  void shouldRepaint() {
+    if objectToRepaint == null  {
+      return false
+    }
+    return true
+  }
+
+  void setChild(node) {
+    child = node
+    objectToRepaint = node
+  }
+
+  SceneObject getChild() => return child
+  
+}

@@ -1,0 +1,4 @@
+interface ISpatializable {
+  getX();
+  getY();
+}

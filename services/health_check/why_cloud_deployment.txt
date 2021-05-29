@@ -1,0 +1,4 @@
+This containerized service run on cloud (Cloud run).
+It should not be deployed on server.
+Because if this server is down you will not receive notifications,
+to indicate that some service are down 

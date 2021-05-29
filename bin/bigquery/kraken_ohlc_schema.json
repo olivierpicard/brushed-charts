@@ -1,0 +1,52 @@
+[
+    {
+        "name": "datetime",
+        "type": "TIMESTAMP",
+        "mode": "REQUIRED"
+    },
+    {
+      "name": "asset_pair",
+      "type": "STRING",
+      "mode": "REQUIRED"
+    },
+    {
+        "name": "granularity",
+        "type": "INTEGER",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "open",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "high",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "low",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "close",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+      "name": "trade_count",
+      "type": "INTEGER",
+      "mode": "REQUIRED"
+    },
+    {
+        "name": "volume",
+        "type": "FLOAT",
+        "mode": "REQUIRED"
+    },
+    {
+      "name": "vwap",
+      "type": "FLOAT",
+      "mode": "REQUIRED"
+    }
+]

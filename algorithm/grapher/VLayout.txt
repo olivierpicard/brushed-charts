@@ -1,0 +1,63 @@
+class VLayout extends Sized {
+  // size inherited 
+  scene: Scene
+  objects: [Sized]
+  splitterCount = 0
+
+  constructor(this.scene);
+  
+  void draw(cursor) {
+    previous = null
+    for object in objects {
+      objectCursor = updateCursor(cursor, previous)
+      object.draw(objectCursor)
+    }
+  }
+
+  void updateCursor(canvasCursor: Cursor, previous, current: SceneObject) {
+    objectCursor = Cursor.Copy(canvasCursor)
+    if previous != null {
+      objectCursor.position.y += previous.getSize().height
+      objectCursor.zoneSize.height = current.getSize().height
+    }
+
+    return objectCursor
+  }
+
+  void add(object: SceneObject) {
+    ratio = getReductionRatio(object)
+    splitter = setupSplitters(object)
+    applyReduction(ratio)
+    setState(this)
+  }
+
+  VSplitter setupSplitters(pendingObject) {
+    if object.len == 0 {
+      return null
+    }
+    lastObject = object[object.len - 1]
+    splitter = new VSplitter(lastObject, pendingObject)
+    lastObject.getSize().real.height -= VSplitter.THICKNESS
+    
+    splitterCount += 1
+    objects.add(splitter)
+  } 
+
+  void getReductionRatio(object) {
+    return (this.size.height - 25%) / this.size.height
+  }
+
+  void applyReduction(ratio) {
+    for object in objecs {
+      object Height * ration
+    }
+  }
+
+  
+
+
+
+
+}
+
+

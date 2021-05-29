@@ -1,0 +1,4 @@
+class Cursor {
+  position: Offset
+  zoneSize: Size
+}

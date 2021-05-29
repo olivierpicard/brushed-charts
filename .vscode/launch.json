@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "cwd": "${fileDirname}",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_ENV": "development",
+            },
+            "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env",
+            "args": [
+                "run"
+            ],
+            "console": "internalConsole",
+            "jinja": true
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${fileDirname}/main.py",
+            // "program": "${file}",
+            "console": "internalConsole",
+            "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env",
+        },
+        {
+            "name": "Flutter",
+            "type": "dart",
+            "request": "launch",
+            "program": "${fileDirname}/main.dart",
+            "deviceId": "chrome"
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+class CoordinateSystem {
+  x: [Axis]
+  y: [Axis]
+
+  addX(axis) => x.add(axis)
+  addY(axis) => y.add(axis)
+}

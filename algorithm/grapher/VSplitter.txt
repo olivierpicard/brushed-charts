@@ -1,0 +1,22 @@
+class Splitter extends SizedObject{
+  static const THICKNESS = 5
+  previous: Drawable
+  next: Drawable
+
+  constructor(this.previous, this.next) {
+    size.height
+  }
+  
+  void onDrag(dragInfo) {
+    deltaHeight = dragInfo.delta.height
+    previous.size.height - deltaHeight
+    next.size.width + deltaHeight
+  }
+
+  void draw(cursor: Cursor) {
+    rect = Rect.LRTB(0, cursor.zoneSize, 0, 5)
+    cursor.addRect(rect)
+  }
+
+  override void setSize(size: FlexSize) => return
+}

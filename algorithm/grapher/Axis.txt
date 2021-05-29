@@ -1,0 +1,8 @@
+class Axis {
+  min: double
+  max: double
+  final links: <SceneObject>[]
+
+  addLink(link: SceneObject) => links.add(link)
+  remove(link: SceneObject) => links.remove(link)
+}

@@ -1,0 +1,26 @@
+abstract class SizedObject extends SceneObject{
+  size: FlexSize;
+  calculatedSize: Size;
+
+  SizedObject({super.kernel, this.size})
+
+  draw(drawEvent) {
+    resolveSize(drawEvent.zoneSize);
+    
+  }
+
+  resolveSize(zoneSize) {
+    screenSpaceTaken = Size.zero
+    for( ancestChild in ancestor.children) {
+      if ancestorChild !is SizedObject; continue
+      if ancestChild == this; continue
+      screenSpaceTaken += ancestChild.resolveSize(zoneSize)
+    }
+    calculatedSize = zoneSize - screenSpaceTaken
+  }
+
+  
+
+  Size getSize() => return size
+  Size setSize(size: FlexSize) => this.size = size
+}
