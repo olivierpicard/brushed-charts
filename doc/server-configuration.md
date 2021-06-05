@@ -5,6 +5,7 @@ This document relate all installation and configuration processes, needed on the
 
 ## Installation 
 ### Installation list 
+- Transfert `backend-institution` google account service in `/etc/brushed-charts`
 - Docker (docker swarm is include)
 - Docker compose
 - gcloud 
