@@ -43,7 +43,7 @@ services:
     deploy:
       resources:
         limits: 
-          memory: 70M
+          memory: 240M
 
 
   oanda_fetcher:
@@ -205,7 +205,7 @@ services:
     deploy:
       resources:
         limits: 
-          memory: 70M
+          memory: 240M
 
 
   kraken_ohlc_clean:
