@@ -12,6 +12,7 @@ REFRESH_RATE = 30  # In seconds
 PATH_PRICE_TABLE = os.getenv("KRAKEN_BIGQUERY_PATH_OHLC_TABLE")
 ENVIRONMENT = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 UPPER_BOUND_DELAY = 3  # minutes
+WINDOW_LIMIT = int(os.getenv('KRAKEN_BQ_SEND_WINDOW_MAX_SIZE'))  # seconds
 
 
 class EmptyCandles(Exception):
@@ -33,6 +34,8 @@ def make_time_window():
     lower_window = lastupdate_log.read()
     current_time = datetime.utcnow()
     upper_window = current_time - timedelta(minutes=UPPER_BOUND_DELAY)
+    if (upper_window - lower_window).total_seconds() > WINDOW_LIMIT:
+        upper_window = lower_window + timedelta(seconds=WINDOW_LIMIT)
 
     return (lower_window, upper_window)
 
