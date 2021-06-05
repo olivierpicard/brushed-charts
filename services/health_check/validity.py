@@ -19,7 +19,7 @@ def is_update_time_valid(document):
     utcnow = datetime.now(timezone.utc)
     update_diff = (utcnow - update_datetime).total_seconds()
     
-    if update_diff + ACCEPTABLE_DELAY > refresh_rate:
+    if update_diff - ACCEPTABLE_DELAY > refresh_rate:
         document['warning'] = "There is too long since this document was updated"
         return False
     
@@ -29,11 +29,12 @@ def is_update_time_valid(document):
 def is_ready_for_email(health_ref: str, docs: list[dict]):
     if not _docs_contain_ref(health_ref, docs):
         return True
-    dt = docs[0]['last_email']
+    ref_index = _get_ref_index(health_ref, docs)
+    dt = docs[ref_index]['last_email']
     diff = datetime.now(timezone.utc) - dt
     if diff.total_seconds() >= MAIL_INTERVAL:
         return True
-    
+        
     return False
 
 
@@ -45,3 +46,11 @@ def _docs_contain_ref(health_ref: str, docs: list[dict]):
         return False
     
     return True
+
+
+def _get_ref_index(ref: str, docs: list[dict]):
+    for i in range(len(docs)):
+        if docs[i]['ref'] == ref:
+            return i
+    
+    return None

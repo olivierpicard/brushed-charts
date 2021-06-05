@@ -7,8 +7,9 @@ import mail
 import mail_interval
 import validity
 
+ENVIRONMENT = os.getenv('BRUSHED_CHARTS_ENVIRONMENT')
 MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
-VERSION = "1.0"
+VERSION = "1.0.2"
 
 
 app = Flask(__name__)
@@ -30,7 +31,8 @@ def process_diagnotics(documents: list[dict], api_key: str):
             continue
         if not validity.is_ready_for_email(ref, emails):
             continue
-        mail.send(doc, api_key)
+        if ENVIRONMENT != 'dev':
+            mail.send(doc, api_key)
         mail_interval.update(ref)
 
 
