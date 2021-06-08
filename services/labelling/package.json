@@ -1,0 +1,25 @@
+{
+  "name": "labelling",
+  "version": "1.0.0",
+  "description": "Help to label data for machine learning analysis",
+  "main": "index.js",
+  "scripts": {
+    "dev": "onchange 'src/' -- webpack --mode='development' "
+  },
+  "keywords": [],
+  "author": "Olivier Picard",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "onchange": "^7.1.0",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.170",
+    "express": "^4.17.1",
+    "lightweight-charts": "^3.3.0"
+  }
+}
