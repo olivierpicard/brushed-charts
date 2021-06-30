@@ -75,6 +75,8 @@ services:
     image: eu.gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
     restart: on-failure
     container_name: oanda_history
+    ports: 
+        - 3330:3330
     env_file: 
       - ./env/services.env
       - ./env/services.${PROFIL}.env
@@ -182,7 +184,7 @@ services:
     deploy:
       resources:
         limits: 
-          memory: 70M
+          memory: 110M
 
 
   kraken_ohlc_bigquery:
