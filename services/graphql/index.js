@@ -5,7 +5,7 @@ const { typeDefs } = require('./typeDefs');
 
 const app = express();
 const server = new ApolloServer({ typeDefs, resolvers });
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, path: '/' });
 
 app.listen({port: 3330}, () => 
   console.log(`Server ready at port 3330`)
