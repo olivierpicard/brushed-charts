@@ -34,8 +34,6 @@ def make_time_window():
     lower_window = lastupdate_log.read()
     current_time = datetime.utcnow()
     upper_window = current_time - timedelta(minutes=3)
-    if (upper_window - lower_window).total_seconds() > WINDOW_LIMIT:
-        upper_window = lower_window + timedelta(seconds=WINDOW_LIMIT)
 
     return (lower_window, upper_window)
 

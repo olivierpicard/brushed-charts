@@ -1,151 +1,149 @@
 version: "3.8"
 
 services:
-  mongodb:
-    image: mongo:4.4
-    restart: on-failure
-    container_name: mongodb
-    hostname: mongodb
-    ports:
-      - 27017:27017
-    volumes: 
-      - /var/volumes/mongo-data/${PROFIL}:/data/db
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 400M
-        reservations:
-          memory: 300M  
+   mongodb:
+     image: mongo:4.4
+     restart: on-failure
+     container_name: mongodb
+     hostname: mongodb
+     ports:
+       - 27017:27017
+     volumes: 
+       - /var/volumes/mongo-data/${PROFIL}:/data/db
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 400M
+         reservations:
+           memory: 300M  
 
 
-  oanda_bigquery:
-    build: ./services/oanda_bigquery
-    image: eu.gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
-    restart: on-failure
-    container_name: oanda_bigquery 
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 240M
+   oanda_bigquery:
+     build: ./services/oanda_bigquery
+     image: eu.gcr.io/brushed-charts/oanda_bigquery:${PROFIL}-latest
+     restart: on-failure
+     container_name: oanda_bigquery 
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 240M
 
 
-  oanda_fetcher:
-    build: ./services/oanda_fetcher
-    image: eu.gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
-    restart: on-failure
-    container_name: oanda_fetcher
-    env_file: 
-      - ./env/services.env
-      - ./env/secrets.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   oanda_fetcher:
+     build: ./services/oanda_fetcher
+     image: eu.gcr.io/brushed-charts/oanda_fetcher:${PROFIL}-latest
+     restart: on-failure
+     container_name: oanda_fetcher
+     env_file: 
+       - ./env/services.env
+       - ./env/secrets.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
 
 
-  oanda_history:
-    build: ./services/oanda_history
-    image: eu.gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
-    restart: on-failure
-    container_name: oanda_history
-    ports: 
-        - 3330:3330
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   oanda_history:
+     build: ./services/oanda_history
+     image: eu.gcr.io/brushed-charts/oanda_history:${PROFIL}-latest
+     restart: on-failure
+     container_name: oanda_history
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
 
 
-  oanda_watchlist:
-    build: ./services/oanda_watchlist
-    image: eu.gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
-    restart: on-failure
-    container_name: oanda_watchlist
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   oanda_watchlist:
+     build: ./services/oanda_watchlist
+     image: eu.gcr.io/brushed-charts/oanda_watchlist:${PROFIL}-latest
+     restart: on-failure
+     container_name: oanda_watchlist
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
 
 
-  oanda_clean_history:
-    build: ./services/oanda_clean_history
-    image: eu.gcr.io/brushed-charts/oanda_clean_history:${PROFIL}-latest
-    restart: on-failure
-    container_name: oanda_clean_history
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   oanda_clean_history:
+     build: ./services/oanda_clean_history
+     image: eu.gcr.io/brushed-charts/oanda_clean_history:${PROFIL}-latest
+     restart: on-failure
+     container_name: oanda_clean_history
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
         
   
-  oanda_graphql:
-    build: ./services/oanda_graphql
-    image: eu.gcr.io/brushed-charts/oanda_graphql:${PROFIL}-latest
+  graphql:
+    build: ./services/graphql
+    image: eu.gcr.io/brushed-charts/graphql:${PROFIL}-latest
     restart: on-failure
-    container_name: oanda_graphql
+    container_name: graphql
     env_file: 
       - ./env/services.env
       - ./env/services.${PROFIL}.env
@@ -153,52 +151,8 @@ services:
       - type: bind
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 120M
-    
-
-  kraken_ohlc_rest:
-    build: ./services/kraken_ohlc_rest
-    image: eu.gcr.io/brushed-charts/kraken_ohlc_rest:${PROFIL}-latest
-    restart: on-failure
-    container_name: kraken_ohlc_rest
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 110M
-
-
-  kraken_ohlc_bigquery:
-    build: ./services/kraken_ohlc_bigquery
-    image: eu.gcr.io/brushed-charts/kraken_ohlc_bigquery:${PROFIL}-latest
-    restart: on-failure
-    container_name: kraken_ohlc_bigquery
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
+    ports:
+      - 3330:3330
     logging: 
       driver: "json-file"
       options: 
@@ -208,72 +162,126 @@ services:
       resources:
         limits: 
           memory: 240M
+    
+
+   kraken_ohlc_rest:
+     build: ./services/kraken_ohlc_rest
+     image: eu.gcr.io/brushed-charts/kraken_ohlc_rest:${PROFIL}-latest
+     restart: on-failure
+     container_name: kraken_ohlc_rest
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 110M
 
 
-  kraken_ohlc_clean:
-    build: ./services/kraken_ohlc_clean
-    image: eu.gcr.io/brushed-charts/kraken_ohlc_clean:${PROFIL}-latest
-    restart: on-failure
-    container_name: kraken_ohlc_clean
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   kraken_ohlc_bigquery:
+     build: ./services/kraken_ohlc_bigquery
+     image: eu.gcr.io/brushed-charts/kraken_ohlc_bigquery:${PROFIL}-latest
+     restart: on-failure
+     container_name: kraken_ohlc_bigquery
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 240M
 
 
-  health_bigquery:
-    build: ./services/health_bigquery
-    image: eu.gcr.io/brushed-charts/health_bigquery:${PROFIL}-latest
-    restart: on-failure
-    container_name: health_bigquery
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   kraken_ohlc_clean:
+     build: ./services/kraken_ohlc_clean
+     image: eu.gcr.io/brushed-charts/kraken_ohlc_clean:${PROFIL}-latest
+     restart: on-failure
+     container_name: kraken_ohlc_clean
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
 
 
-  health_mongo:
-    build: ./services/health_mongo
-    image: eu.gcr.io/brushed-charts/health_mongo:${PROFIL}-latest
-    restart: on-failure
-    container_name: health_mongo
-    env_file: 
-      - ./env/services.env
-      - ./env/services.${PROFIL}.env
-    volumes: 
-      - type: bind
-        source: /etc/brushed-charts/
-        target: /etc/brushed-charts/
-    logging: 
-      driver: "json-file"
-      options: 
-        max-size: "5m"
-        max-file: "10"
-    deploy:
-      resources:
-        limits: 
-          memory: 70M
+   health_bigquery:
+     build: ./services/health_bigquery
+     image: eu.gcr.io/brushed-charts/health_bigquery:${PROFIL}-latest
+     restart: on-failure
+     container_name: health_bigquery
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
+
+
+   health_mongo:
+     build: ./services/health_mongo
+     image: eu.gcr.io/brushed-charts/health_mongo:${PROFIL}-latest
+     restart: on-failure
+     container_name: health_mongo
+     env_file: 
+       - ./env/services.env
+       - ./env/services.${PROFIL}.env
+     volumes: 
+       - type: bind
+         source: /etc/brushed-charts/
+         target: /etc/brushed-charts/
+     logging: 
+       driver: "json-file"
+       options: 
+         max-size: "5m"
+         max-file: "10"
+     deploy:
+       resources:
+         limits: 
+           memory: 70M
+
+           
+  nginx:
+    image: nginx:1.20
+    ports: 
+      - 80:80
+    volumes:
+      - ./services/reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
