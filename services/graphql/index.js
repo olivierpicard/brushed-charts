@@ -1,12 +1,10 @@
 const express = require('express')
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server');
 const { resolvers } = require('./resolvers');
 const { typeDefs } = require('./typeDefs');
 
-const app = express();
 const server = new ApolloServer({ typeDefs, resolvers });
-server.applyMiddleware({ app });
 
-app.listen({port: 3330}, () => 
-  console.log(`Server ready at port 3330`)
-);
+server.listen({ port: 3330 }).then(({ url }) => {
+  console.log(`Server ready at ${url}`);
+});
