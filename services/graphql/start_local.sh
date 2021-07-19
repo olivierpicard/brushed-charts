@@ -7,7 +7,6 @@ docker build -t graphql_local .
 cd "../../"
 
 docker run \
-    -- rm
     --restart always \
     --name graphql_local \
     --env-file env/services.env \
