@@ -34,7 +34,6 @@ def make_time_window():
     lower_window = lastupdate_log.read()
     current_time = datetime.utcnow()
     upper_window = current_time - timedelta(minutes=UPPER_BOUND_DELAY)
-
     return (lower_window, upper_window)
 
 
