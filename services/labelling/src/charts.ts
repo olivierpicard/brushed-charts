@@ -1,13 +1,14 @@
 import { createChart, IChartApi, ISeriesApi, SeriesOptionsMap } from 'lightweight-charts';
 
-class View {
-    chart: IChartApi
+class Chart {
+    core: IChartApi
     div_chart: HTMLElement
     price: ISeriesApi<any>;
 
+    
     constructor() {
         this.div_chart = document.getElementById('chart')
-        this.chart = createChart(this.div_chart, { width: 300, height: 400 });
+        this.core = createChart(this.div_chart, { width: 300, height: 400 });
         this.handle_resize()
         window.onresize = () => this.handle_resize();
     }
@@ -16,7 +17,6 @@ class View {
     handle_resize() {
         let height = this.div_chart.offsetHeight;
         let width = this.div_chart.offsetWidth;
-        this.chart.resize(width, height);
+        this.core.resize(width, height);
     }
-
 }
