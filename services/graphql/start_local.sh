@@ -3,14 +3,15 @@
 dirpath=$(dirname $(which $0))
 
 cd "$dirpath"
-docker build -t oanda_graphql .
-cd "$dirpath/../../"
+docker build -t graphql_local .
+cd "../../"
 
 docker run \
+    -- rm
     --restart always \
-    --name oanda_graphql_local \
+    --name graphql_local \
     --env-file env/services.env \
     --env-file env/services.test.env \
     -v /etc/brushed-charts/backend-institution_account-service.json:/etc/brushed-charts/backend-institution_account-service.json \
     -p 3330:3330 \
-    -d oanda_graphql
+    -d graphql_local

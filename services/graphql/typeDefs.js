@@ -13,16 +13,22 @@ module.exports.typeDefs = gql`
 
   type CandlesMetadata {
     instrument: String!
-    date: String!
-    granularity: String!
-    bid: Candlestick!
-    ask: Candlestick!
-    mid: Candlestick!
-    spread: Candlestick!
-    volume: Int!
+    datetime: String!
+    granularity: Int!
+    price: Candlestick!
+    spread: Candlestick
+    trade_count: Int!
+    volume: Float
+    vwap: Float
   }
   
   type Query {
-    getCandles(dateFrom: String, dateTo: String, instrument: String, granularity: String, source: String): [CandlesMetadata!]!
+    getCandles(
+        dateFrom: String,
+        dateTo: String,
+        instrument: String,
+        granularity: Int,
+        source: String
+    ): [CandlesMetadata!]!
   }
 `;
