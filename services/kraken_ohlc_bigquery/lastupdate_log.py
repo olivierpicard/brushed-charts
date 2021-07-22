@@ -19,7 +19,7 @@ def read() -> ObjectId:
     return reference_object
 
 
-def save_last_reading_date(candles: list):
+def save_last_reading_object(candles: list):
     client = connect()
     gtr_object = refobj.get_greatest_item(candles)
     update(client, gtr_object)
