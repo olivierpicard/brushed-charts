@@ -270,6 +270,6 @@ services:
   nginx:
     image: nginx:1.20
     ports:
-      - ${REVERSE_PORXY_PORT}:80
+      - 80:80
     volumes:
       - ./services/reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
