@@ -1,6 +1,5 @@
 import pymongo
 import os
-from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 import reference_object as refobj
 
@@ -8,8 +7,6 @@ HOST = os.getenv("MONGODB_HOST")
 PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_BIGQUERY_SAVE_DATE_COLLECTION")
-HISTORY_COLLECTION = os.getenv("MONGODB_OANDA_HISTORY_COLLECTION")
-HOURS_EARLIER = datetime.utcnow() - timedelta(hours=12)
 
 
 def read() -> ObjectId:
