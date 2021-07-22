@@ -25,7 +25,6 @@ def read() -> datetime:
 
 def save_last_reading_date(date: datetime):
     client = connect()
-    reset_collection(client)
     update(client, date)
     
     
@@ -35,15 +34,10 @@ def connect() -> pymongo.MongoClient:
     return client
 
 
-def reset_collection(client: pymongo.MongoClient):
-    database = client.get_database(DATABASE)
-    database.drop_collection(COLLECTION)
-
-
 def update(client: pymongo.MongoClient, date: datetime):
     database = client.get_database(DATABASE)
     collection = database.get_collection(COLLECTION)
-    collection.insert_one({"last_update": date})
+    collection.update_one({}, {"$set": {"last_update": date}}, upsert=True)
 
 
 def disconnect(client: pymongo.MongoClient):

@@ -20,7 +20,6 @@ class EmptyCandles(Exception):
 
 def on_empty_candles(candles: list, upper_window: int):
     if candles is None or len(candles) == 0:
-        lastupdate_log.save_last_reading_date(upper_window)
         raise EmptyCandles
 
 
