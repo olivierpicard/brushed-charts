@@ -8,7 +8,7 @@ HOST = os.getenv("MONGODB_HOST")
 PORT = os.getenv("MONGODB_PORT")
 DATABASE = os.getenv("MONGODB_OANDA_DBNAME")
 COLLECTION = os.getenv("MONGODB_OANDA_HISTORY_COLLECTION")
-MAX_DOCUMENT_LOADED = 200
+MAX_DOCUMENT_LOADED = int(os.getenv("OANDA_MAX_DOCUMENT_READING"))
 
 
 def get_fresh_candles(window: Tuple[int, int]):
