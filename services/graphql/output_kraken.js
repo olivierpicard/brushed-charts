@@ -4,6 +4,7 @@ module.exports.prepare_kraken_output = (result) => {
     parse_datetime(row)
     parse_granularity(row)
     make_parse(row)
+    rename_assetpair_to_asset(row)
   }
   
   return result
@@ -32,4 +33,9 @@ function make_parse(row) {
   }
 
   row['price'] = candle
+}
+
+
+function rename_assetpair_to_asset(row) {
+  row['asset'] = row['asset_pair']
 }

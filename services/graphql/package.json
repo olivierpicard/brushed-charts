@@ -4,7 +4,7 @@
   "description": "A platform unified request between many brushed-charts's linked services",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon .",
+    "dev": "export GOOGLE_APPLICATION_CREDENTIALS=/etc/brushed-charts/backend-institution_account-service.json; nodemon .",
     "start": "node ."
   },
   "keywords": [

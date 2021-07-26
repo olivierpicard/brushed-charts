@@ -1,7 +1,7 @@
 const { prepare_input } = require("./prepare_input")
 const { prepare_ouput } = require("./prepare_output")
 
-var dateFrom, dateTo, granularity, asset_pair, source, mode
+var dateFrom, dateTo, granularity, asset, source, mode
 
 
 module.exports.query_maker = (args) => {
@@ -18,9 +18,9 @@ function assign_args_to_vars(args) {
   dateFrom = args['dateFrom']
   dateTo = args['dateTo']
   granularity = args['granularity']
-  asset_pair = args['instrument']
+  asset = args['asset']
   source = args['source'] // e.g: brushed-charts.prod.kraken
-  mode = args['mode'] // e.g: dev | test | prod
+  // mode = args['mode'] // e.g: dev | test | prod
 }
 
 function query_maker_dispatch(source) {
@@ -41,12 +41,15 @@ function make_oanda_query() {
   tablename = 'brushed-charts.prod.oanda_prices'
 
   const query = `
-  SELECT * 
+  SELECT
+    *,
+    UNIX_SECONDS(TIMESTAMP(date)) AS timestamp
   FROM \`${tablename}\` 
   WHERE 
     granularity = "${granularity}" AND 
-    instrument = "${asset_pair}" AND 
+    instrument = "${asset}" AND 
     date >= "${dateFrom}" AND date < "${dateTo}"
+  ORDER BY date DESC
   `
   return query
 }
@@ -56,12 +59,15 @@ function make_kraken_query() {
   tablename = 'brushed-charts.prod.kraken_ohlc'
 
   const query = `
-  SELECT * 
+  SELECT
+    *,
+    UNIX_SECONDS(TIMESTAMP(datetime)) AS timestamp
   FROM \`${tablename}\` 
   WHERE 
     granularity = ${granularity} AND 
-    asset_pair = "${asset_pair}" AND 
+    asset_pair = "${asset}" AND 
     datetime >= "${dateFrom}" AND datetime < "${dateTo}"
+    ORDER BY datetime DESC
   `
 
   return query

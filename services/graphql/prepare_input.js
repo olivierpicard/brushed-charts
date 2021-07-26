@@ -9,10 +9,10 @@ module.exports.prepare_input = (args) => {
     case 'oanda':
       input = prepare_oanda_input(args)
       break;
-      case 'kraken':
-        input = prepare_kraken_input(args)
-        break;
-      }
+    case 'kraken':
+      input = prepare_kraken_input(args)
+      break;
+  }
       
   return input;
 }

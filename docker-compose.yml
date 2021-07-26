@@ -267,9 +267,20 @@ services:
         limits:
           memory: 70M
 
-  nginx:
+  reverse_proxy:
     image: nginx:1.20
+    restart: on-failure
+    container_name: reverse_proxy
     ports:
       - 80:80
     volumes:
       - ./services/reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          memory: 70M

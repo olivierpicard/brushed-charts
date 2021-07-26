@@ -5,6 +5,8 @@ module.exports.prepare_oanda_output = (result) => {
     create_price_column(row);
     add_field_spread(row);
     parse_granularity(row);
+    rename_volume_to_trade_count(row)
+    rename_instrument_to_asset(row)
   }
 
   return result;
@@ -14,7 +16,7 @@ module.exports.prepare_oanda_output = (result) => {
 function parse_datetime(row) {
   let datetime_str = row['date']['value'];
   row['datetime'] = new String(datetime_str);
-  // delete row['date']
+  delete row['date']
 }
 
 
@@ -48,4 +50,17 @@ function parse_granularity(row) {
   }
 
   row['granularity'] = format_gran;
+}
+
+
+function rename_volume_to_trade_count(row) {
+  row['trade_count'] = row['volume']
+  delete row['volume']
+}
+
+
+function rename_instrument_to_asset(row) {
+  let instrument = row['instrument']
+  instrument = instrument.replace('_', '/')
+  row['asset'] = instrument
 }

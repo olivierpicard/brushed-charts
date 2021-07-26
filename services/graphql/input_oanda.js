@@ -24,9 +24,9 @@ function format_granularity(args) {
 
 
 function format_asset_pair(args) {
-  let asset_pair = args['instrument']
+  let asset_pair = args['asset']
   asset_pair = asset_pair.replace('/', '_')
-  args['instrument'] = asset_pair
+  args['asset'] = asset_pair
 
   return args
 }
