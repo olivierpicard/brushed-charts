@@ -35,7 +35,8 @@
             "type": "dart",
             "request": "launch",
             "program": "${fileDirname}/main.dart",
-            "deviceId": "chrome"
+            "deviceId": "chrome",
+            "console": "debugConsole"
         }
     ]
 }
