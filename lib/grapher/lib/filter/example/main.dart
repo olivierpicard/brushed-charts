@@ -19,6 +19,6 @@ void main(List<String> args) {
           child: Explode(
               child: ToTimeseries2D(
                   xLabel: "date",
-                  yLabel: "mid",
+                  yLabel: "price",
                   child: SortAccumulation(child: Tester())))));
 }

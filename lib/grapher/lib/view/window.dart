@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/src/gestures/drag_details.dart';
+import 'package:flutter/src/gestures/events.dart';
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/kernel/drawEvent.dart';
@@ -10,8 +11,12 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/pointer/helper/drag.dart';
 import 'package:grapher/pointer/helper/hit.dart';
+import 'package:grapher/pointer/helper/scroll.dart';
 
-class Window extends Drawable with SinglePropagator, HitHelper, DragHelper {
+import 'bound-process.dart';
+
+class Window extends Drawable
+    with SinglePropagator, HitHelper, DragHelper, ScrollHelper {
   final baseChunkLength = 20;
   double scale = 1;
   double xOffset = 0;
@@ -19,7 +24,8 @@ class Window extends Drawable with SinglePropagator, HitHelper, DragHelper {
 
   Window({GraphObject? child}) {
     Init.child(this, child);
-    addEventListeners();
+    dragAddEventListeners();
+    scrollAddEventListeners();
     eventRegistry.add(
         IncomingData, (input) => onIncomingData(input as IncomingData));
   }
@@ -32,40 +38,24 @@ class Window extends Drawable with SinglePropagator, HitHelper, DragHelper {
   @override
   void draw(covariant DrawEvent drawEvent) {
     super.draw(drawEvent);
-    if (sortedData.isEmpty) return;
-    final upperBound = getUpperBound();
-    final lowerBound = getLowerBound();
-    if (isBoundsValid(lowerBound, upperBound)) {
-      //TODO: Make a custom draw event and give the Data2D range
-    }
+    final bound = Bound(this);
+    if (!bound.isValid()) return;
+    final iterables = makeIterator(bound);
+    propagate(IncomingData(iterables));
   }
 
-  int maxDisplayableData() {
-    final zoneSize = baseDrawEvent!.drawZone.size;
-    return (zoneSize.width / baseChunkLength).ceil();
-  }
+  Iterable<Data2D> makeIterator(Bound bound) =>
+      sortedData.skip(bound.lower).take(bound.upper);
 
-  int getUpperBound() {
-    if (xOffset <= 0) return sortedData.length - 1;
-    final skipCounter = (xOffset / baseChunkLength).floor();
-    final upperBound = sortedData.length - skipCounter - 1;
-
-    return upperBound;
-  }
-
-  int getLowerBound() {
-    final upperBound = getUpperBound();
-    var lowerBound = upperBound - maxDisplayableData();
-    if (lowerBound <= 0) lowerBound = 0;
-
-    return lowerBound;
-  }
-
-  bool isBoundsValid(int lowerBound, int upperBound) {
-    if (upperBound <= lowerBound) return false;
-    return true;
+  @override
+  void onDrag(DragUpdateDetails event) {
+    this.xOffset += event.delta.dx;
+    setState(this);
   }
 
   @override
-  void onDrag(DragUpdateDetails event) {}
+  void onScroll(PointerScrollEvent event) {
+    print(event.scrollDelta);
+    setState(this);
+  }
 }

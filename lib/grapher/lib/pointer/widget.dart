@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grapher/kernel/widget.dart';
+import 'package:grapher/pointer/scroll-wrapper.dart';
 import '/kernel/kernel.dart';
 
 class GraphPointer extends StatelessWidget {
@@ -24,6 +25,6 @@ class GraphPointer extends StatelessWidget {
 
   onScrollableEvent(PointerSignalEvent signal) {
     if (signal is! PointerScrollEvent) return;
-    kernel.propagate(signal);
+    kernel.propagate(PointerScrollEventWrapper(signal));
   }
 }

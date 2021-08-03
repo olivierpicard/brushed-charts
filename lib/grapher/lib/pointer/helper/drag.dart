@@ -4,8 +4,8 @@ import 'hit.dart';
 mixin DragHelper on HitHelper {
   bool isHold = false;
 
-  void addEventListeners() {
-    eventRegistry.add(TapDownDetails, onTapDown);
+  void dragAddEventListeners() {
+    hitAddEventListeners();
     eventRegistry.add(DragEndDetails, onDragEnd);
     eventRegistry.add(DragUpdateDetails, onRawDrag);
     eventRegistry.add(DragDownDetails, onTapDown);

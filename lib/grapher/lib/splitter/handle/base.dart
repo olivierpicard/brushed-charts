@@ -23,7 +23,7 @@ abstract class Handle extends FlexObject
   List<Offset> getCircleCenters(DrawEvent drawEvent);
 
   Handle(this.previous, this.next) {
-    addEventListeners();
+    dragAddEventListeners();
   }
 
   @override
