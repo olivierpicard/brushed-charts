@@ -1,19 +1,18 @@
-import 'package:grapher/filter/dataStruct/data2D.dart';
-import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
+import 'package:grapher/view/view-event.dart';
 
 class Tester extends GraphObject with EndlinePropagator {
   Tester() {
-    eventRegistry.add(
-        IncomingData, (event) => onIncomingData(event as IncomingData));
+    eventRegistry.add(ViewEvent, (event) => onViewEvent(event as ViewEvent));
   }
 
-  void onIncomingData(IncomingData input) {
-    final data = input.content as Iterable<Data2D>;
-    print('first: ${data.first.x}');
-    print('last: ${data.last.x}');
-    print('count: ${data.length}');
-    print("------");
+  void onViewEvent(ViewEvent input) {
+    print('''baseChunk: ${input.viewAxis.baseChunkLength}\n
+chunkLength: ${input.viewAxis.chunkLength}\n
+scale: ${input.viewAxis.lengthOffset}\n
+offset: ${input.viewAxis.offset}\n
+dataCount: ${input.data?.length}\n
+----------\n''');
   }
 }

@@ -4,11 +4,11 @@ import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-timeseries2D.dart';
 import 'package:grapher/kernel/kernel.dart';
-import 'package:grapher/kernel/object.dart';
-import 'package:grapher/view/window.dart';
+import 'package:grapher/view/example/tester.dart';
+import 'package:grapher/view/interactive-view.dart';
+import 'package:grapher/view/view.dart';
 
 import 'json.dart';
-import 'tester.dart';
 
 import 'package:flutter/material.dart';
 import '/kernel/kernel.dart';
@@ -59,6 +59,6 @@ class App extends StatelessWidget {
                         xLabel: "date",
                         yLabel: "price",
                         child: SortAccumulation(
-                            child: Window(child: Tester())))))));
+                            child: InteractiveView(child: Tester())))))));
   }
 }
