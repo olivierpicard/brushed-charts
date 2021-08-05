@@ -13,6 +13,7 @@ class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
     GraphObject? child,
   }) : super(chunkLength: chunkLength, child: child);
 
+  @override
   void initEventListener() {
     super.initEventListener();
     dragAddEventListeners();
@@ -30,8 +31,8 @@ class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
   @override
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
-    final newScale = Offset(viewAxis.lengthOffset.dx + event.scrollDelta.dy,
-        viewAxis.lengthOffset.dy);
+    final newScale =
+        Offset(viewAxis.zoom.dx + event.scrollDelta.dy, viewAxis.zoom.dy);
     viewAxis = viewAxis.setScale(newScale);
     setState(this);
   }

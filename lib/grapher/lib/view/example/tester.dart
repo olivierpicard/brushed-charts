@@ -10,9 +10,9 @@ class Tester extends GraphObject with EndlinePropagator {
   void onViewEvent(ViewEvent input) {
     print('''baseChunk: ${input.viewAxis.baseChunkLength}\n
 chunkLength: ${input.viewAxis.chunkLength}\n
-scale: ${input.viewAxis.lengthOffset}\n
+scale: ${input.viewAxis.zoom}\n
 offset: ${input.viewAxis.offset}\n
-dataCount: ${input.data?.length}\n
+dataCount: ${input.data.length}\n
 ----------\n''');
   }
 }

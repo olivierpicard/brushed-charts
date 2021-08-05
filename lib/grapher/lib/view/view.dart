@@ -1,8 +1,3 @@
-import 'dart:collection';
-
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/gestures/drag_details.dart';
-import 'package:flutter/src/gestures/events.dart';
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/kernel/drawEvent.dart';
@@ -41,7 +36,15 @@ class View extends Drawable with SinglePropagator {
   @override
   void draw(covariant DrawEvent drawEvent) {
     super.draw(drawEvent);
-    final viewEvent = ViewEvent(drawEvent, viewAxis, inputData);
+    if (!isInputValid()) return;
+    final viewEvent = ViewEvent.fromDrawEvent(drawEvent, viewAxis, inputData!);
     propagate(viewEvent);
+  }
+
+  bool isInputValid() {
+    if (inputData == null) return false;
+    if (inputData!.length == 0) return false;
+
+    return true;
   }
 }

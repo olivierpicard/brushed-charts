@@ -6,7 +6,6 @@ import 'package:grapher/filter/json/to-timeseries2D.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/view/example/tester.dart';
 import 'package:grapher/view/interactive-view.dart';
-import 'package:grapher/view/view.dart';
 
 import 'json.dart';
 

@@ -3,27 +3,23 @@ import 'package:flutter/material.dart';
 class ViewAxis {
   final double baseChunkLength;
   late final double chunkLength;
-  final Offset lengthOffset;
+  final Offset zoom;
   final Offset offset;
 
   ViewAxis(
       {required this.baseChunkLength,
-      this.lengthOffset = Offset.zero,
+      this.zoom = Offset.zero,
       this.offset = Offset.zero}) {
-    chunkLength = baseChunkLength + lengthOffset.dx.abs();
+    chunkLength = baseChunkLength + zoom.dx.abs();
   }
 
   ViewAxis setScale(Offset lenOffset) {
     return ViewAxis(
-        baseChunkLength: baseChunkLength,
-        lengthOffset: lenOffset,
-        offset: offset);
+        baseChunkLength: baseChunkLength, zoom: lenOffset, offset: offset);
   }
 
   ViewAxis setOffset(Offset offset) {
     return ViewAxis(
-        baseChunkLength: baseChunkLength,
-        lengthOffset: lengthOffset,
-        offset: offset);
+        baseChunkLength: baseChunkLength, zoom: zoom, offset: offset);
   }
 }
