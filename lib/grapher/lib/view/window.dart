@@ -6,21 +6,20 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/view-axis.dart';
 import 'package:grapher/view/view-event.dart';
+import 'package:grapher/view/viewable.dart';
 
-class Window extends Drawable with SinglePropagator {
+class Window extends Viewable with SinglePropagator {
   late Iterable<Data2D> sortedData;
   late int lower, upper, length;
   late ViewAxis viewAxis;
 
   Window({GraphObject? child}) {
     Init.child(this, child);
-    eventRegistry.add(ViewEvent, (ev) => draw(ev as ViewEvent));
-    eventRegistry.remove(DrawEvent);
   }
 
   @override
-  void draw(covariant ViewEvent viewEvent) {
-    super.draw(viewEvent);
+  void onView(ViewEvent viewEvent) {
+    super.onView(viewEvent);
     sortedData = viewEvent.data;
     viewAxis = viewEvent.viewAxis;
     final truncatedIterables = truncateData();
