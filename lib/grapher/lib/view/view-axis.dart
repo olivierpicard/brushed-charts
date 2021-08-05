@@ -10,7 +10,9 @@ class ViewAxis {
       {required this.baseChunkLength,
       this.zoom = Offset.zero,
       this.offset = Offset.zero}) {
-    chunkLength = baseChunkLength + zoom.dx.abs();
+    var _chunkLength = baseChunkLength + zoom.dx;
+    if (_chunkLength <= 1) _chunkLength = 1;
+    chunkLength = _chunkLength;
   }
 
   ViewAxis setScale(Offset lenOffset) {
