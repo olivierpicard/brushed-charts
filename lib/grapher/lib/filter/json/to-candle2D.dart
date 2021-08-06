@@ -1,0 +1,17 @@
+import 'package:grapher/filter/dataStruct/candle.dart';
+import 'package:grapher/filter/dataStruct/ohlc.dart';
+import 'package:grapher/filter/dataStruct/timeseries2D.dart';
+import 'package:grapher/filter/json/to-timeseries2D%20copy.dart';
+import 'package:grapher/kernel/object.dart';
+
+class ToCandle2D extends ToTimeseries2D {
+  ToCandle2D({required xLabel, required yLabel, GraphObject? child})
+      : super(xLabel, yLabel, child);
+
+  @override
+  Timeseries2D instanciate(DateTime dateTime, dynamic y) {
+    final ohlc = OHLC(y);
+    final candle = Candle2D(dateTime, ohlc);
+    return candle;
+  }
+}

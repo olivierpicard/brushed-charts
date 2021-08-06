@@ -4,12 +4,13 @@ import 'package:grapher/kernel/object.dart';
 import '../base.dart';
 import '../incoming-data.dart';
 
-class ToTimeseries2D extends Filter {
+abstract class ToTimeseries2D extends Filter {
   final String xLabel;
   final String yLabel;
-  ToTimeseries2D(
-      {required this.xLabel, required this.yLabel, GraphObject? child})
-      : super(child);
+
+  ToTimeseries2D(this.xLabel, this.yLabel, GraphObject? child) : super(child);
+
+  Timeseries2D instanciate(DateTime dateTime, dynamic y);
 
   @override
   void onIncomingData(IncomingData input) {
@@ -17,7 +18,8 @@ class ToTimeseries2D extends Filter {
     final x = input.content[xLabel];
     final y = input.content[yLabel];
     final dateTime = DateTime.parse(x);
-    final timeseries = Timeseries2D(dateTime, y);
+    if (y == null) return;
+    final timeseries = instanciate(dateTime, y);
     propagate(IncomingData(timeseries));
   }
 }

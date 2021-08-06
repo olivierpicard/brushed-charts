@@ -3,7 +3,7 @@ import '../data-injector.dart';
 import 'json.dart';
 import '../json/extract.dart';
 import '../json/explode.dart';
-import '../json/to-timeseries2D.dart';
+import '../json/to-candle2D.dart';
 import 'tester.dart';
 
 Stream<Map> streamer(Map json) async* {
@@ -17,8 +17,8 @@ void main(List<String> args) {
       child: Extract(
           options: "data.getCandles",
           child: Explode(
-              child: ToTimeseries2D(
+              child: ToCandle2D(
                   xLabel: "date",
-                  yLabel: "price",
+                  yLabel: "mid",
                   child: SortAccumulation(child: Tester())))));
 }

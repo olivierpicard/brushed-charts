@@ -1,6 +1,4 @@
 import 'package:grapher/filter/dataStruct/data2D.dart';
-import 'package:grapher/kernel/drawEvent.dart';
-import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';

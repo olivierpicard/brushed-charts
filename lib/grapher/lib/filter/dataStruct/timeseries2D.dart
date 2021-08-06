@@ -1,6 +1,6 @@
 import 'data2D.dart';
 
-class Timeseries2D extends Data2D {
+abstract class Timeseries2D extends Data2D {
   final DateTime x;
   final y;
   Timeseries2D(this.x, this.y);

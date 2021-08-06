@@ -2,7 +2,7 @@ import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
-import 'package:grapher/filter/json/to-timeseries2D.dart';
+import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/view/example/tester.dart';
 import 'package:grapher/view/interactive-view.dart';
@@ -54,7 +54,7 @@ class App extends StatelessWidget {
             child: Extract(
                 options: "data.getCandles",
                 child: Explode(
-                    child: ToTimeseries2D(
+                    child: ToCandle2D(
                         xLabel: "date",
                         yLabel: "price",
                         child: SortAccumulation(
