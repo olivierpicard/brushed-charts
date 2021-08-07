@@ -1,7 +1,7 @@
 import 'package:grapher/filter/dataStruct/candle.dart';
 import 'package:grapher/filter/dataStruct/ohlc.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
-import 'package:grapher/filter/json/to-timeseries2D%20copy.dart';
+import 'package:grapher/filter/json/to-timeseries2D.dart';
 import 'package:grapher/kernel/object.dart';
 
 class ToCandle2D extends ToTimeseries2D {
