@@ -19,9 +19,10 @@ class DrawUnit extends GraphObject with SinglePropagator {
 
     final minY = metadata.yAxis.min * scaleFactor;
     canvas.save();
-    canvas.translate(unitPosition.dx, unitPosition.dy - minY);
+    canvas.translate(unitPosition.dx,
+        unitPosition.dy + minY + metadata.viewEvent.drawZone.size.height);
     canvas.translate(childXCenter(), 0);
-    canvas.scale(1, scaleFactor);
+    canvas.scale(1, -scaleFactor);
     final event = makeEvent();
     propagate(event);
     canvas.restore();

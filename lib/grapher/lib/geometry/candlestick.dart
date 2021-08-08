@@ -23,12 +23,13 @@ class Candlestick extends Geometry with EndlinePropagator {
         bodyWidth / 2 + WICK_WIDTH / 2, ohlc.low);
     canvas.drawRect(wick, Paint()..color = Colors.grey);
     canvas.drawRect(body, getColor(ohlc));
-    /* canvas.drawRect(
-        Rect.fromLTRB(0, 10, bodyWidth, 300), Paint()..color = Colors.red); */
+    // canvas.drawRect(
+    //     Rect.fromLTRB(0, event.drawZone.size.height - 10, bodyWidth, 10),
+    //     Paint()..color = Colors.red);
   }
 
   Paint getColor(OHLC ohlc) {
-    if (ohlc.open < ohlc.close) return Paint()..color = Colors.red;
+    if (ohlc.open > ohlc.close) return Paint()..color = Colors.red;
     return Paint()..color = Colors.green;
   }
 
