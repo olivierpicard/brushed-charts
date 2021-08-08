@@ -1,10 +1,5 @@
 import 'package:grapher/drawUnit/helper/metadata.dart';
-import 'package:grapher/drawUnit/helper/yScale.dart';
 import 'package:grapher/drawUnit/instanciable.dart';
-import 'package:grapher/drawUnit/metadata.dart';
-import 'package:grapher/filter/dataStruct/data2D.dart';
-import 'package:grapher/geometry/geometry.dart';
-import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';

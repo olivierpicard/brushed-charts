@@ -1,19 +1,22 @@
+import 'package:grapher/drawUnit/axis.dart';
+
 import '../factory.dart';
 
-class YScaleHelper {
+class YAxisHelper {
   final DrawUnitFactory facto;
-  late final double scaleFactor;
+  late final Axis yAxis;
 
-  YScaleHelper(this.facto) {
+  YAxisHelper(this.facto) {
     final min = getYMin();
     final max = getYMax();
     final originalLen = max - min;
     final zoneHeight = facto.viewEvent.drawZone.size.height;
-    scaleFactor = zoneHeight / originalLen;
+    final yScale = zoneHeight / originalLen;
+    yAxis = Axis(min, max, yScale);
   }
 
-  static double calculate(DrawUnitFactory facto) {
-    return YScaleHelper(facto).scaleFactor;
+  static Axis calculate(DrawUnitFactory facto) {
+    return YAxisHelper(facto).yAxis;
   }
 
   double getYMin() {

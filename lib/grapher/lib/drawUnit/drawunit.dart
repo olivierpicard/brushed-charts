@@ -15,10 +15,13 @@ class DrawUnit extends GraphObject with SinglePropagator {
     Init.child(this, child);
     final canvas = metadata.viewEvent.canvas;
     final unitPosition = metadata.viewEvent.drawZone.position;
+    final double scaleFactor = metadata.yAxis.scale;
+
+    final minY = metadata.yAxis.min * scaleFactor;
     canvas.save();
-    canvas.translate(unitPosition.dx, unitPosition.dy);
+    canvas.translate(unitPosition.dx, unitPosition.dy - minY);
     canvas.translate(childXCenter(), 0);
-    canvas.scale(1, metadata.yScale);
+    canvas.scale(1, scaleFactor);
     final event = makeEvent();
     propagate(event);
     canvas.restore();
@@ -41,7 +44,12 @@ class DrawUnit extends GraphObject with SinglePropagator {
   }
 
   DrawUnitEvent makeEvent() {
-    return DrawUnitEvent(metadata.viewEvent, metadata.data,
-        calculateChildWidth(), metadata.yScale, this, metadata.previous?.child);
+    return DrawUnitEvent(
+        metadata.viewEvent,
+        metadata.data,
+        calculateChildWidth(),
+        metadata.yAxis.scale,
+        this,
+        metadata.previous?.child);
   }
 }

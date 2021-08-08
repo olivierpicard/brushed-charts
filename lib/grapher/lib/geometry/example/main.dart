@@ -1,16 +1,15 @@
-import 'package:grapher/drawUnit/example/fake-template.dart';
 import 'package:grapher/drawUnit/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
+import 'package:grapher/geometry/candlestick.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/window.dart';
 
 import 'json.dart';
-import 'tester.dart';
 
 import 'package:flutter/material.dart';
 import '/kernel/kernel.dart';
@@ -63,8 +62,7 @@ class App extends StatelessWidget {
                         child: SortAccumulation(
                             child: InteractiveView(
                                 child: Window(
-                                    child: ChunkFactoryTester(
-                                        child: DrawUnitFactory(
-                                            template: FakeTemplate()))))))))));
+                                    child: DrawUnitFactory(
+                                        template: Candlestick())))))))));
   }
 }
