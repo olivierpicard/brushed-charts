@@ -9,6 +9,13 @@ class DrawEvent {
 
   DrawEvent(this.parent, this.canvas, this.drawZone);
 
-  static DrawEvent copy(DrawEvent event) =>
-      DrawEvent(event.parent, event.canvas, event.drawZone);
+  DrawEvent.fromUpdatedDrawZone(DrawEvent baseEvent, DrawZone drawZone)
+      : parent = baseEvent.parent,
+        canvas = baseEvent.canvas,
+        this.drawZone = drawZone;
+
+  DrawEvent.copy(DrawEvent event)
+      : parent = event.parent,
+        canvas = event.canvas,
+        drawZone = event.drawZone;
 }

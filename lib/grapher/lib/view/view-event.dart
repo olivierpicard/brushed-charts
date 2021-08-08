@@ -4,12 +4,12 @@ import 'package:grapher/view/view-axis.dart';
 
 class ViewEvent extends DrawEvent {
   final ViewAxis viewAxis;
-  final Iterable<Data2D> data;
+  final Iterable<Data2D> chainData;
 
-  ViewEvent(ViewEvent event, this.data)
+  ViewEvent(ViewEvent event, this.chainData)
       : this.viewAxis = event.viewAxis,
         super(event.parent, event.canvas, event.drawZone);
 
-  ViewEvent.fromDrawEvent(DrawEvent drawEvent, this.viewAxis, this.data)
+  ViewEvent.fromDrawEvent(DrawEvent drawEvent, this.viewAxis, this.chainData)
       : super(drawEvent.parent, drawEvent.canvas, drawEvent.drawZone);
 }

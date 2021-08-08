@@ -12,7 +12,7 @@ class Tester extends GraphObject with EndlinePropagator {
 chunkLength: ${input.viewAxis.chunkLength}\n
 scale: ${input.viewAxis.zoom}\n
 offset: ${input.viewAxis.offset}\n
-dataCount: ${input.data.length}\n
+dataCount: ${input.chainData.length}\n
 ----------\n''');
   }
 }

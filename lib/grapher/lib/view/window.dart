@@ -16,9 +16,9 @@ class Window extends Viewable with SinglePropagator {
   }
 
   @override
-  void onView(ViewEvent viewEvent) {
-    super.onView(viewEvent);
-    sortedData = viewEvent.data;
+  void draw(ViewEvent viewEvent) {
+    super.draw(viewEvent);
+    sortedData = viewEvent.chainData;
     viewAxis = viewEvent.viewAxis;
     final truncatedIterables = truncateData();
     final event = ViewEvent(viewEvent, truncatedIterables);

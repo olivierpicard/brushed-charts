@@ -4,12 +4,11 @@ import 'package:grapher/view/view-event.dart';
 
 abstract class Viewable extends Drawable {
   Viewable() {
-    eventRegistry.add(ViewEvent, (e) => onView(e as ViewEvent));
+    eventRegistry.add(ViewEvent, (e) => draw(e as ViewEvent));
     eventRegistry.remove(DrawEvent);
   }
 
-  void onView(ViewEvent viewEvent) {
+  void draw(covariant ViewEvent viewEvent) {
     super.draw(viewEvent);
-    baseDrawEvent = viewEvent;
   }
 }

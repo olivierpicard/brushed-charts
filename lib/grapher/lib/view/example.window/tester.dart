@@ -8,7 +8,7 @@ class Tester extends GraphObject with EndlinePropagator {
   }
 
   void onEvent(ViewEvent event) {
-    final data = event.data;
+    final data = event.chainData;
     print('first: ${data.first.x}');
     print('last: ${data.last.x}');
     print('count: ${data.length}');
