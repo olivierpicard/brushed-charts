@@ -31,8 +31,8 @@ class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
   @override
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
-    final newScale =
-        Offset(viewAxis.zoom.dx + event.scrollDelta.dy, viewAxis.zoom.dy);
+    final yScrollDelta = moderatedScroll(event.scrollDelta.dy);
+    final newScale = Offset(viewAxis.zoom.dx + yScrollDelta, viewAxis.zoom.dy);
     viewAxis = viewAxis.setScale(newScale);
     setState(this);
   }
@@ -42,5 +42,15 @@ class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
     final drawRect = super.baseDrawEvent!.drawZone.toRect;
 
     return drawRect.contains(pointerPosition);
+  }
+
+  double moderatedScroll(double deltaScroll) {
+    if (baseDrawEvent == null) return 0;
+    final zoneWidth = baseDrawEvent!.drawZone.size.width;
+    final unitLen = viewAxis.chunkLength;
+    final unitCount = zoneWidth / unitLen;
+    final moderatedScroll = deltaScroll / unitCount;
+
+    return moderatedScroll;
   }
 }
