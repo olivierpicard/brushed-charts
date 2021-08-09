@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:grapher/drawUnit/instanciable.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/drawUnit/unit-drawable.dart';
@@ -7,7 +9,10 @@ abstract class Geometry extends UnitDrawable
     with EndlinePropagator, DrawUnitObject {
   final double widthPercent;
 
-  Geometry(this.widthPercent) {}
+  Geometry(this.widthPercent);
 
-  void draw(DrawUnitEvent event);
+  @override
+  void draw(DrawUnitEvent event) {
+    super.draw(event);
+  }
 }
