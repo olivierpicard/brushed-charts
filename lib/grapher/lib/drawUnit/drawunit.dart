@@ -1,3 +1,4 @@
+import 'package:grapher/drawUnit/helper/canvas-transform.dart';
 import 'package:grapher/drawUnit/instanciable.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/kernel/misc/Init.dart';
@@ -13,27 +14,24 @@ class DrawUnit extends GraphObject with SinglePropagator {
   DrawUnit(this.metadata, DrawUnitObject template)
       : child = template.instanciate() {
     Init.child(this, child);
-    final canvas = metadata.viewEvent.canvas;
-    final unitPosition = metadata.viewEvent.drawZone.position;
-    final double scaleFactor = metadata.yAxis.scale;
-
-    final minY = metadata.yAxis.min * scaleFactor;
-    canvas.save();
-    canvas.translate(unitPosition.dx,
-        unitPosition.dy + minY + metadata.viewEvent.drawZone.size.height);
-    canvas.translate(childXCenter(), 0);
-    canvas.scale(1, -scaleFactor);
-    final event = makeEvent();
-    propagate(event);
-    canvas.restore();
+    draw();
   }
 
-  double childXCenter() {
-    final childWidth = calculateChildWidth();
-    final unitCenter = metadata.viewEvent.drawZone.size.width / 2;
-    final startPosition = unitCenter - childWidth / 2;
+  void draw() {
+    CanvasTransform.start(this);
+    final event = makeDrawUnitEvent();
+    propagate(event);
+    CanvasTransform.end(this);
+  }
 
-    return startPosition;
+  DrawUnitEvent makeDrawUnitEvent() {
+    return DrawUnitEvent(
+        metadata.viewEvent,
+        metadata.data,
+        calculateChildWidth(),
+        metadata.yAxis.scale,
+        this,
+        metadata.previous?.child);
   }
 
   double calculateChildWidth() {
@@ -42,15 +40,5 @@ class DrawUnit extends GraphObject with SinglePropagator {
     final pixelWidth = percent / 100 * unitLength;
 
     return pixelWidth;
-  }
-
-  DrawUnitEvent makeEvent() {
-    return DrawUnitEvent(
-        metadata.viewEvent,
-        metadata.data,
-        calculateChildWidth(),
-        metadata.yAxis.scale,
-        this,
-        metadata.previous?.child);
   }
 }
