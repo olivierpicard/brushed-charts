@@ -25,7 +25,8 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
 
   void createUnit() {
     children = [];
-    viewEvent.chainData.forEach((item) {
+    final reversedData = viewEvent.chainData.toList().reversed;
+    reversedData.forEach((item) {
       final metadata = MetadataHelper.make(this, item);
       final drawUnit = DrawUnit(metadata, template);
       children.add(drawUnit);

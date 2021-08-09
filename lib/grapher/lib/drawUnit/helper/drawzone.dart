@@ -27,9 +27,10 @@ class DrawZoneHelper {
   }
 
   double _computeStartPoint() {
+    final screenWidth = facto.viewEvent.drawZone.size.width;
     final chunkCount = facto.children.length;
     final chunkLength = facto.viewEvent.viewAxis.chunkLength;
-    final start = chunkLength * chunkCount;
+    final start = screenWidth - chunkLength - chunkLength * chunkCount;
 
     return start;
   }
