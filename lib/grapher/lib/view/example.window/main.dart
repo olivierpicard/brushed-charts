@@ -59,7 +59,6 @@ class App extends StatelessWidget {
                         xLabel: "date",
                         yLabel: "price",
                         child: SortAccumulation(
-                            child: InteractiveView(
-                                child: Window(child: Tester()))))))));
+                            child: Window(child: Tester())))))));
   }
 }

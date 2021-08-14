@@ -14,9 +14,9 @@ class View extends Drawable with SinglePropagator {
   ViewAxis viewAxis;
 
   View({
-    double chunkLength = View.DEFAULT_CHUNK_LENGTH,
+    double unitLength = View.DEFAULT_CHUNK_LENGTH,
     GraphObject? child,
-  }) : viewAxis = ViewAxis(baseChunkLength: chunkLength) {
+  }) : viewAxis = ViewAxis(baseUnitLength: unitLength) {
     Init.child(this, child);
     initEventListener();
   }
@@ -36,9 +36,6 @@ class View extends Drawable with SinglePropagator {
   @override
   void draw(covariant DrawEvent drawEvent) {
     super.draw(drawEvent);
-    if (!isInputValid()) return;
-    final viewEvent = ViewEvent.fromDrawEvent(drawEvent, viewAxis, inputData!);
-    propagate(viewEvent);
   }
 
   bool isInputValid() {
@@ -46,5 +43,13 @@ class View extends Drawable with SinglePropagator {
     if (inputData!.length == 0) return false;
 
     return true;
+  }
+
+  int maxDisplayableUnit() {
+    final zoneSize = baseDrawEvent!.drawZone.size;
+    final unitLength = viewAxis.chunkLength;
+    final maxChunk = (zoneSize.width / unitLength).ceil();
+
+    return maxChunk;
   }
 }

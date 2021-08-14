@@ -1,27 +1,29 @@
+import 'package:flutter/gestures.dart';
 import 'package:grapher/filter/dataStruct/data2D.dart';
+import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/view-axis.dart';
 import 'package:grapher/view/view-event.dart';
-import 'package:grapher/view/viewable.dart';
 
-class Window extends Viewable with SinglePropagator {
-  late Iterable<Data2D> sortedData;
+class Window extends InteractiveView with SinglePropagator {
+  static const double UNIT_DEFAULT_LENGTH = 20;
   late int lower, upper, length;
-  late ViewAxis viewAxis;
 
-  Window({GraphObject? child}) {
+  Window({unitLength = UNIT_DEFAULT_LENGTH, GraphObject? child})
+      : super(child: child) {
     Init.child(this, child);
   }
 
   @override
-  void draw(ViewEvent viewEvent) {
-    super.draw(viewEvent);
-    sortedData = viewEvent.chainData;
-    viewAxis = viewEvent.viewAxis;
+  void draw(DrawEvent drawEvent) {
+    super.draw(drawEvent);
+    if (!isInputValid()) return;
     final truncatedIterables = truncateData();
-    final event = ViewEvent(viewEvent, truncatedIterables);
+    final event =
+        ViewEvent.fromDrawEvent(drawEvent, viewAxis, truncatedIterables);
     propagate(event);
   }
 
@@ -31,7 +33,7 @@ class Window extends Viewable with SinglePropagator {
   }
 
   Iterable<Data2D> makeIterator() {
-    return sortedData.skip(lower).take(length);
+    return inputData!.skip(lower).take(length);
   }
 
   void defineBoudary() {
@@ -40,18 +42,10 @@ class Window extends Viewable with SinglePropagator {
     length = upper - lower;
   }
 
-  int maxChunk() {
-    final zoneSize = baseDrawEvent!.drawZone.size;
-    final chunkLength = viewAxis.chunkLength;
-    final maxChunk = (zoneSize.width / chunkLength).ceil();
-
-    return maxChunk;
-  }
-
   int getUpperBound() {
-    if (viewAxis.offset.dx <= 0) return sortedData.length;
+    if (viewAxis.offset.dx <= 0) return inputData!.length;
     final skippedChunk = countSkippedChunk();
-    final dataLen = sortedData.length;
+    final dataLen = inputData!.length;
     final upperBound = dataLen - skippedChunk;
 
     return upperBound;
@@ -67,9 +61,26 @@ class Window extends Viewable with SinglePropagator {
 
   int getLowerBound() {
     final upperBound = getUpperBound();
-    var lowerBound = upperBound - maxChunk();
+    var lowerBound = upperBound - maxDisplayableUnit();
     if (lowerBound <= 0) lowerBound = 0;
 
     return lowerBound;
+  }
+
+  void onScroll(PointerScrollEvent event) {
+    if (!isPointerOnView(event.localPosition)) return;
+    super.onScroll(event);
+    updateOffsetOnZoom(event);
+    setState(this);
+  }
+
+  void updateOffsetOnZoom(PointerScrollEvent event) {
+    final skipCount = countSkippedChunk();
+    final offsetX = viewAxis.offset.dx;
+    final deltaScrollX = moderatedScroll(event.scrollDelta.dy);
+    final cumuledDelta = deltaScrollX * skipCount;
+    final newX = offsetX + cumuledDelta;
+    final newOffset = Offset(newX, viewAxis.offset.dy);
+    viewAxis = viewAxis.setOffset(newOffset);
   }
 }

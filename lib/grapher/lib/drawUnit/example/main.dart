@@ -61,10 +61,9 @@ class App extends StatelessWidget {
                         xLabel: "date",
                         yLabel: "mid",
                         child: SortAccumulation(
-                            child: InteractiveView(
-                                child: Window(
-                                    child: ChunkFactoryTester(
-                                        child: DrawUnitFactory(
-                                            template: FakeTemplate()))))))))));
+                            child: Window(
+                                child: ChunkFactoryTester(
+                                    child: DrawUnitFactory(
+                                        template: FakeTemplate())))))))));
   }
 }

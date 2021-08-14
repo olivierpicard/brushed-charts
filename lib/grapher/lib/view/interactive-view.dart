@@ -7,11 +7,12 @@ import 'package:grapher/pointer/helper/hit.dart';
 import 'package:grapher/pointer/helper/scroll.dart';
 import 'package:grapher/view/view.dart';
 
-class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
+abstract class InteractiveView extends View
+    with HitHelper, DragHelper, ScrollHelper {
   InteractiveView({
-    double chunkLength = View.DEFAULT_CHUNK_LENGTH,
+    double unitLength = View.DEFAULT_CHUNK_LENGTH,
     GraphObject? child,
-  }) : super(chunkLength: chunkLength, child: child);
+  }) : super(unitLength: unitLength, child: child);
 
   @override
   void initEventListener() {
@@ -33,7 +34,7 @@ class InteractiveView extends View with HitHelper, DragHelper, ScrollHelper {
     if (!isPointerOnView(event.localPosition)) return;
     final yScrollDelta = moderatedScroll(event.scrollDelta.dy);
     final newScale = Offset(viewAxis.zoom.dx + yScrollDelta, viewAxis.zoom.dy);
-    viewAxis = viewAxis.setScale(newScale);
+    viewAxis = viewAxis.setZoom(newScale);
     setState(this);
   }
 
