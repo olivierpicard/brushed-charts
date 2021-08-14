@@ -4,15 +4,15 @@ import 'package:grapher/view/view-event.dart';
 
 class Tester extends GraphObject with EndlinePropagator {
   Tester() {
-    eventRegistry.add(ViewEvent, (event) => onViewEvent(event as ViewEvent));
+    eventRegistry.add(ViewEvent, (event) => onEvent(event as ViewEvent));
   }
 
-  void onViewEvent(ViewEvent input) {
-    print('''baseChunk: ${input.viewAxis.baseUnitLength}\n
-chunkLength: ${input.viewAxis.chunkLength}\n
-scale: ${input.viewAxis.zoom}\n
-offset: ${input.viewAxis.offset}\n
-dataCount: ${input.chainData.length}\n
-----------\n''');
+  void onEvent(ViewEvent event) {
+    final data = event.chainData;
+    print('first: ${data.first.x}');
+    print('last: ${data.last.x}');
+    print('count: ${data.length}');
+    print('candleLen: ${event.viewAxis.chunkLength}');
+    print("------");
   }
 }
