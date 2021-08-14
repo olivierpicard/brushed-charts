@@ -5,7 +5,6 @@ import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/interactive-view.dart';
-import 'package:grapher/view/view-axis.dart';
 import 'package:grapher/view/view-event.dart';
 
 class Window extends InteractiveView with SinglePropagator {
@@ -78,7 +77,8 @@ class Window extends InteractiveView with SinglePropagator {
     final skipCount = countSkippedChunk();
     final offsetX = viewAxis.offset.dx;
     final deltaScrollX = moderatedScroll(event.scrollDelta.dy);
-    final cumuledDelta = deltaScrollX * skipCount;
+    var cumuledDelta = deltaScrollX * skipCount;
+    cumuledDelta += deltaScrollX / 2;
     final newX = offsetX + cumuledDelta;
     final newOffset = Offset(newX, viewAxis.offset.dy);
     viewAxis = viewAxis.setOffset(newOffset);
