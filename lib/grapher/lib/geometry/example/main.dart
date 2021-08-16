@@ -6,6 +6,7 @@ import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
 import 'package:grapher/kernel/kernel.dart';
+import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/window.dart';
 
@@ -56,12 +57,13 @@ class App extends StatelessWidget {
             child: Extract(
                 options: "data.getCandles",
                 child: Explode(
-                    child: ToCandle2D(
-                        xLabel: "date",
-                        yLabel: "mid",
-                        child: SortAccumulation(
-                            child: Window(
-                                child: DrawUnitFactory(
-                                    template: Candlestick()))))))));
+                    child: SortAccumulation(
+                        child: Window(
+                            child: StackLayout(children: [
+                  ToCandle2D(
+                      xLabel: "date",
+                      yLabel: "mid",
+                      child: DrawUnitFactory(template: Candlestick())),
+                ])))))));
   }
 }
