@@ -14,6 +14,7 @@ class GraphKernel extends ChangeNotifier
 
   GraphKernel({GraphObject? child}) {
     Init.child(this, child);
+    kernel = this;
     propagate(KernelLinkEvent(this));
   }
 
