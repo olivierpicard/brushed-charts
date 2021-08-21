@@ -5,7 +5,8 @@ import 'package:grapher/filter/json/to-timeseries2D.dart';
 import 'package:grapher/kernel/object.dart';
 
 class ToCandle2D extends ToTimeseries2D {
-  ToCandle2D({required xLabel, required yLabel, GraphObject? child})
+  ToCandle2D(
+      {required String xLabel, required String yLabel, GraphObject? child})
       : super(xLabel, yLabel, child);
 
   @override
