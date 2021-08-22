@@ -6,10 +6,9 @@ import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
 import 'package:grapher/kernel/kernel.dart';
+import 'package:grapher/pack/example/json-oanda.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/view/window.dart';
-
-import 'json.dart';
 
 import 'package:flutter/material.dart';
 import '/kernel/kernel.dart';
@@ -49,16 +48,16 @@ class App extends StatelessWidget {
   }
 
   GraphKernel createGraph() {
-    final json = getMockJSON();
+    final json = getMockOandaJSON();
     return GraphKernel(
         child: DataInjector(
             stream: streamer(json),
             child: Extract(
-                options: "data.getCandles",
+                options: "data.oanda",
                 child: Explode(
                     child: ToCandle2D(
-                        xLabel: "date",
-                        yLabel: "mid",
+                        xLabel: "datetime",
+                        yLabel: "price",
                         child: SortAccumulation(
                             child: Window(
                                 child: StackLayout(children: [
