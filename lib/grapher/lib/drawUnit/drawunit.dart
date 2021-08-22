@@ -20,14 +20,15 @@ class DrawUnit extends GraphObject with SinglePropagator {
   void draw() {
     CanvasTransform.start(this);
     final event = makeDrawUnitEvent();
-    propagate(event);
+    if (event != null) propagate(event);
     CanvasTransform.end(this);
   }
 
-  DrawUnitEvent makeDrawUnitEvent() {
+  DrawUnitEvent? makeDrawUnitEvent() {
+    if (metadata.data == null) return null;
     return DrawUnitEvent(
         metadata.viewEvent,
-        metadata.data,
+        metadata.data!,
         calculateChildWidth(),
         metadata.yAxis.scale,
         this,

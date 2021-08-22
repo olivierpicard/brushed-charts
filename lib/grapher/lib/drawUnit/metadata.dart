@@ -6,7 +6,7 @@ import 'package:grapher/view/view-event.dart';
 class DrawUnitMetadata {
   final ViewEvent viewEvent;
   final Axis yAxis;
-  final Data2D data;
+  final Data2D? data;
   final DrawUnit? previous;
 
   DrawUnitMetadata(this.viewEvent, this.yAxis, this.data, this.previous);

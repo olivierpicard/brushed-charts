@@ -20,9 +20,9 @@ class Window extends InteractiveView with SinglePropagator {
   void draw(DrawEvent drawEvent) {
     super.draw(drawEvent);
     if (!isInputValid()) return;
-    final truncatedIterables = truncateData();
-    final event =
-        ViewEvent.fromDrawEvent(drawEvent, viewAxis, truncatedIterables);
+    final cuttedIter = truncateData();
+    updateYRange(cuttedIter);
+    final event = ViewEvent.fromDrawEvent(drawEvent, viewAxis, cuttedIter);
     propagate(event);
   }
 
@@ -82,5 +82,16 @@ class Window extends InteractiveView with SinglePropagator {
     final newX = offsetX + cumuledDelta;
     final newOffset = Offset(newX, viewAxis.offset.dy);
     viewAxis = viewAxis.setOffset(newOffset);
+  }
+
+  void updateYRange(Iterable<Data2D> chain) {
+    final yMin = chain
+        .reduce((prev, curr) => (prev.yMin < curr.yMin) ? prev : curr)
+        .yMin;
+    final yMax = chain
+        .reduce((prev, curr) => (prev.yMin > curr.yMin) ? prev : curr)
+        .yMax;
+
+    viewAxis = viewAxis.setYRange(yMin, yMax);
   }
 }

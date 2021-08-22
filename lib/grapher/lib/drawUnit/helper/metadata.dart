@@ -12,14 +12,14 @@ class MetadataHelper {
   final DrawUnitFactory fact;
   late final DrawUnitMetadata metadata;
 
-  MetadataHelper(this.fact, Data2D item) {
+  MetadataHelper(this.fact, Data2D? item) {
     final yAxis = YAxisHelper.calculate(fact);
     final newViewEvent = updateViewEvent();
     final previous = getPrevious();
     metadata = DrawUnitMetadata(newViewEvent, yAxis, item, previous);
   }
 
-  static DrawUnitMetadata make(DrawUnitFactory fact, Data2D item) {
+  static DrawUnitMetadata make(DrawUnitFactory fact, Data2D? item) {
     return MetadataHelper(fact, item).metadata;
   }
 

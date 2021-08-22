@@ -1,3 +1,4 @@
+import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
@@ -22,21 +23,16 @@ class UnpackFromViewEvent extends Viewable with SinglePropagator {
     propagate(newViewEvent);
   }
 
-  List<Timeseries2D> extractPacket(Iterable chainData) {
-    final packets = chainData;
-    final timeseries = packets
-        .map((e) {
-          e = e as Packet;
-          final timeseries = e.getByTagName(tagName);
-          return timeseries;
-        })
-        .where((element) => (element != null))
-        .cast<Timeseries2D>();
-
+  List<Timeseries2D?> extractPacket(Iterable chain) {
+    final packets = chain;
+    final timeseries = packets.map((item) {
+      item = item as Packet;
+      return item.getByTagName(tagName);
+    });
     return timeseries.toList();
   }
 
-  ViewEvent makeViewEvent(List<Timeseries2D> chain, ViewEvent event) {
+  ViewEvent makeViewEvent(List<Timeseries2D?> chain, ViewEvent event) {
     final viewWithNewChain = ViewEvent(event, chain);
     return viewWithNewChain;
   }
