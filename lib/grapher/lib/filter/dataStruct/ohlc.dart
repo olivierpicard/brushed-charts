@@ -1,9 +1,9 @@
 class OHLC {
   final double open, high, low, close;
 
-  OHLC(Map<String, double> map)
-      : open = map['open']!,
-        high = map['high']!,
-        low = map['low']!,
-        close = map['close']!;
+  OHLC(Map<String, num> map)
+      : open = map['open']! as double,
+        high = map['high']! as double,
+        low = map['low']! as double,
+        close = map['close']! as double;
 }
