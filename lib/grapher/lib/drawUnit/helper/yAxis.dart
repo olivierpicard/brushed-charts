@@ -1,4 +1,5 @@
 import 'package:grapher/drawUnit/axis.dart';
+import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 
 import '../factory.dart';
 
@@ -20,7 +21,7 @@ class YAxisHelper {
   }
 
   double getYMin() {
-    final data = facto.viewEvent.chainData;
+    final data = facto.viewEvent.chainData as Iterable<Timeseries2D>;
     final min = data.reduce((prev, curr) {
       return (prev.yMin < curr.yMin) ? prev : curr;
     }).yMin;
@@ -29,7 +30,7 @@ class YAxisHelper {
   }
 
   double getYMax() {
-    final data = facto.viewEvent.chainData;
+    final data = facto.viewEvent.chainData as Iterable<Timeseries2D>;
     final max = data.reduce((prev, curr) {
       return (prev.yMax > curr.yMax) ? prev : curr;
     }).yMax;
