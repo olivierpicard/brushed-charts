@@ -8,11 +8,11 @@ import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/view-event.dart';
 
 class Window extends InteractiveView with SinglePropagator {
-  static const double UNIT_DEFAULT_LENGTH = 20;
+  static const double UNIT_DEFAULT_LENGTH = 10;
   late int lower, upper, length;
 
   Window({unitLength = UNIT_DEFAULT_LENGTH, GraphObject? child})
-      : super(child: child) {
+      : super(unitLength: unitLength, child: child) {
     Init.child(this, child);
   }
 

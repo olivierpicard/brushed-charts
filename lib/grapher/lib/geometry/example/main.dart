@@ -60,8 +60,7 @@ class App extends StatelessWidget {
                         yLabel: "price",
                         child: SortAccumulation(
                             child: Window(
-                                child: StackLayout(children: [
-                          DrawUnitFactory(template: Candlestick()),
-                        ]))))))));
+                                child: DrawUnitFactory(
+                                    template: Candlestick()))))))));
   }
 }
