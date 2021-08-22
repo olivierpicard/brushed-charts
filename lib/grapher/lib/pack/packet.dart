@@ -11,20 +11,28 @@ class Packet extends Timeseries2D {
     _updateYRange(tag);
   }
 
-  void _updateYRange(TaggedBox tag) {
-    final data2D = tag.content as Data2D;
-    yMin = min(yMin, data2D.yMin);
-    yMax = max(yMax, data2D.yMax);
-  }
-
   void upsert(TaggedBox tag) {
-    final yTags = super.y as List<TaggedBox>;
     if (!_contains(tag)) {
       yTags.add(tag);
       return;
     }
     _updateItem(tag);
     _updateYRange(tag);
+  }
+
+  Timeseries2D? getByTagName(String tagName) {
+    final index = _getTagNameIndex(tagName);
+    if (index == -1) return null;
+    final tag = yTags[index];
+    final originalData = tag.content;
+
+    return originalData;
+  }
+
+  void _updateYRange(TaggedBox tag) {
+    final data2D = tag.content as Data2D;
+    yMin = min(yMin, data2D.yMin);
+    yMax = max(yMax, data2D.yMax);
   }
 
   bool _contains(TaggedBox tag) {
@@ -35,8 +43,9 @@ class Packet extends Timeseries2D {
   }
 
   int _getTagNameIndex(String tagName) {
-    final yTags = super.y as List<TaggedBox>;
-    final index = yTags.indexWhere((element) => element.name == tagName);
+    final index = yTags.indexWhere((element) {
+      return element.name == tagName;
+    });
 
     return index;
   }
@@ -47,5 +56,11 @@ class Packet extends Timeseries2D {
     yTags[index] = tag;
   }
 
+  void unlink() {
+    if (previous == null && next == null) return;
+    super.unlink();
+  }
+
   List<TaggedBox> get y => super.y as List<TaggedBox>;
+  List<TaggedBox> get yTags => this.y;
 }

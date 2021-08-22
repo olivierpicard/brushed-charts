@@ -1,5 +1,6 @@
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/filter/incoming-data.dart';
+import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/pack/packet.dart';
@@ -11,6 +12,7 @@ class Pack extends GraphObject with SinglePropagator {
   final packetRegistry = PacketRegister();
 
   Pack({this.child}) {
+    Init.child(this, child);
     eventRegistry.add(IncomingData, (e) => onIncommingEvent(e as IncomingData));
   }
 
@@ -43,6 +45,8 @@ class Pack extends GraphObject with SinglePropagator {
     final tag = inputEvent.content as TaggedBox;
     final datetime = (tag.content as Timeseries2D).x;
     final packet = packetRegistry.elementAt(datetime)!;
+    packet.unlink();
+
     return packet;
   }
 
