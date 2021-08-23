@@ -86,10 +86,10 @@ class Window extends InteractiveView with SinglePropagator {
 
   void updateYRange(Iterable<Data2D> chain) {
     final yMin = chain
-        .reduce((prev, curr) => (prev.yMin < curr.yMin) ? prev : curr)
+        .reduce((value, curr) => (value.yMin < curr.yMin) ? value : curr)
         .yMin;
     final yMax = chain
-        .reduce((prev, curr) => (prev.yMin > curr.yMin) ? prev : curr)
+        .reduce((value, curr) => (value.yMax > curr.yMax) ? value : curr)
         .yMax;
 
     viewAxis = viewAxis.setYRange(yMin, yMax);
