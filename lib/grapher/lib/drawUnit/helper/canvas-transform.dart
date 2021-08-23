@@ -26,6 +26,7 @@ class CanvasTransform {
   }
 
   void transformCanvas() {
+    moveToUnitPosition();
     removeYGap();
     centerChild();
     scaleCanvas();
@@ -34,8 +35,13 @@ class CanvasTransform {
   void removeYGap() {
     final canvas = metadata.viewEvent.canvas;
     final gapLength = gapLengthBellowData();
+    canvas.translate(0, gapLength);
+  }
+
+  void moveToUnitPosition() {
+    final canvas = metadata.viewEvent.canvas;
     final unitPosition = metadata.viewEvent.drawZone.position;
-    canvas.translate(unitPosition.dx, gapLength);
+    canvas.translate(unitPosition.dx, 0);
   }
 
   double gapLengthBellowData() {
