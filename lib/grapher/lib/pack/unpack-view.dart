@@ -1,4 +1,3 @@
-import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
