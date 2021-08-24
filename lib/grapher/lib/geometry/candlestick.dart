@@ -8,7 +8,7 @@ import 'package:grapher/kernel/propagator/endline.dart';
 
 class Candlestick extends Geometry with EndlinePropagator {
   static const double BODY_PERCENT = 60;
-  static const double WICK_WIDTH = 2;
+  static const double WICK_WIDTH = 1;
 
   late final double bodyWidth;
   late final OHLC ohlc;
@@ -39,7 +39,7 @@ class Candlestick extends Geometry with EndlinePropagator {
     final left = _wickLeftPosition;
     final right = _wickRightPosition;
     final bodyRect = Rect.fromLTRB(left, ohlc.high, right, ohlc.low);
-    final paint = Paint()..color = Colors.grey;
+    final paint = Paint()..color = getBodyColor(ohlc);
     canvas!.drawRect(bodyRect, paint);
   }
 

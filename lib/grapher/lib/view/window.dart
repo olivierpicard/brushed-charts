@@ -23,6 +23,7 @@ class Window extends InteractiveView with SinglePropagator {
     final cuttedIter = truncateData();
     updateYRange(cuttedIter);
     final event = ViewEvent.fromDrawEvent(drawEvent, viewAxis, cuttedIter);
+    // print('lower: ${cuttedIter.first.x} -- upper: ${cuttedIter.last.x}');
     propagate(event);
   }
 
