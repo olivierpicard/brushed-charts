@@ -12,10 +12,11 @@ class Packet extends Timeseries2D {
   }
 
   void upsert(TaggedBox tag) {
-    if (!_contains(tag)) {
-      yTags.add(tag);
-      return;
-    }
+    // if (!_contains(tag)) {
+    //   print('contain2');
+    //   yTags.add(tag);
+    //   return;
+    // }
     _updateItem(tag);
     _updateYRange(tag);
   }
@@ -33,8 +34,8 @@ class Packet extends Timeseries2D {
     final data2D = tag.content as Data2D;
     yMin = min(yMin, data2D.yMin);
     yMax = max(yMax, data2D.yMax);
-    // print(
-    //     'ts: ${data2D.x} -- name: ${tag.name} -- tagmin: ${data2D.yMin} -- tagmax: ${data2D.yMax} -- packmin: ${yMin} -- packmax: ${yMax}');
+    print(
+        'ts: ${data2D.x} -- name: ${tag.name} -- tagCount: ${y.length} -- tmin: ${data2D.yMin} -- pmin: ${yMin} -- tmax: ${data2D.yMax} -- pmax: ${yMax}');
   }
 
   bool _contains(TaggedBox tag) {
@@ -53,7 +54,6 @@ class Packet extends Timeseries2D {
   }
 
   void _updateItem(TaggedBox tag) {
-    final yTags = super.y as List<TaggedBox>;
     final index = _getTagNameIndex(tag.name);
     yTags[index] = tag;
   }

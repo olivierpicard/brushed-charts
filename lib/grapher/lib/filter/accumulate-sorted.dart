@@ -9,7 +9,7 @@ import 'incoming-data.dart';
 class SortAccumulation extends Filter {
   final sortedData = LinkedList<Data2D>();
   SortAccumulation({GraphObject? child}) : super(child) {
-    Timer(Duration(seconds: 6), () {
+    /* Timer(Duration(seconds: 6), () {
       sortedData.forEach((entry) {
         final packet = entry as Packet;
         final tagNames = packet.y
@@ -18,9 +18,9 @@ class SortAccumulation extends Filter {
         final tagX = packet.y.map((e) => e.content.x);
         print('ts: ${entry.x} -- tagName: ${tagNames} -- x: ${tagX}');
       });
-    });
+    }); */
 
-    print('-------------');
+    // print('-------------');
   }
 
   @override

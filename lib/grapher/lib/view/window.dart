@@ -4,6 +4,7 @@ import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher/pack/packet.dart';
 import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/view-event.dart';
 
@@ -23,6 +24,17 @@ class Window extends InteractiveView with SinglePropagator {
     final cuttedIter = truncateData();
     updateYRange(cuttedIter);
     final event = ViewEvent.fromDrawEvent(drawEvent, viewAxis, cuttedIter);
+    cuttedIter.forEach((entry) {
+      entry = entry as Packet;
+      final tags = entry.y.map((e) => e.content);
+      final min = tags.map((e) => e.yMin);
+      final max = tags.map((e) => e.yMax);
+      //   print(
+      //       'ts: ${entry.x} -- pmin: ${entry.yMin} -- min: ${min} -- pmax: ${entry.yMax} -- max: ${max}');
+    });
+    // print('----------');
+    print(viewAxis.yMin);
+    print(viewAxis.yMax);
     // print('lower: ${cuttedIter.first.x} -- upper: ${cuttedIter.last.x}');
     propagate(event);
   }

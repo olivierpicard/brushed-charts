@@ -3,25 +3,30 @@ import 'package:grapher/pack/packet.dart';
 import 'package:grapher/tag/tagged-box.dart';
 
 class PacketRegister {
-  final Map<DateTime, Packet> _storage = {};
+  final Map<int, Packet> _storage = {};
 
   void upsert(TaggedBox tag) {
     final timeseries = tag.content as Timeseries2D;
-    DateTime time = timeseries.x;
-    _addIfDontContainKey(time, tag);
-    _updateIfContainKey(time, tag);
+    final timestamp = timeseries.x.millisecondsSinceEpoch;
+    _updateIfContainKey(timestamp, tag);
+    _addIfDontContainKey(timestamp, tag);
   }
 
-  void _addIfDontContainKey(DateTime time, TaggedBox tag) {
-    if (_storage.containsKey(time)) return;
-    _storage[time] = Packet(tag);
+  void _addIfDontContainKey(int timestamp, TaggedBox tag) {
+    if (_storage.containsKey(timestamp)) return;
+    print(
+        "${DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true)} -- don't contain");
+    _storage[timestamp] = Packet(tag);
   }
 
-  void _updateIfContainKey(DateTime time, TaggedBox tag) {
-    if (!_storage.containsKey(time)) return null;
-    final packet = _storage[time]!;
+  void _updateIfContainKey(int timestamp, TaggedBox tag) {
+    if (!_storage.containsKey(timestamp)) return null;
+    print(
+        "${DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true)} -- contain");
+    final packet = _storage[timestamp]!;
     packet.upsert(tag);
   }
 
-  Packet? elementAt(DateTime dateTime) => _storage[dateTime];
+  Packet? elementAt(DateTime dateTime) =>
+      _storage[dateTime.millisecondsSinceEpoch];
 }
