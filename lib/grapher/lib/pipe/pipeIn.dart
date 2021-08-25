@@ -1,4 +1,3 @@
-import 'package:grapher/kernel/linkEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';

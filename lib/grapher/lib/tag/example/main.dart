@@ -1,6 +1,4 @@
 import 'package:grapher/filter/data-injector.dart';
-import 'package:grapher/filter/dataStruct/candle.dart';
-import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';

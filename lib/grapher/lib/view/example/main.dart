@@ -4,7 +4,6 @@ import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/kernel/kernel.dart';
-import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/window.dart';
 
 import 'json.dart';

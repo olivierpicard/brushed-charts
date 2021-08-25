@@ -14,15 +14,11 @@ class PacketRegister {
 
   void _addIfDontContainKey(int timestamp, TaggedBox tag) {
     if (_storage.containsKey(timestamp)) return;
-    print(
-        "${DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true)} -- don't contain");
     _storage[timestamp] = Packet(tag);
   }
 
   void _updateIfContainKey(int timestamp, TaggedBox tag) {
     if (!_storage.containsKey(timestamp)) return null;
-    print(
-        "${DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true)} -- contain");
     final packet = _storage[timestamp]!;
     packet.upsert(tag);
   }

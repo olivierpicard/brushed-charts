@@ -6,7 +6,6 @@ import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/view-axis.dart';
-import 'package:grapher/view/view-event.dart';
 
 class View extends Drawable with SinglePropagator {
   static const double DEFAULT_CHUNK_LENGTH = 20;
