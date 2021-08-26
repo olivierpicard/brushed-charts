@@ -3,6 +3,7 @@ const { prepare_oanda_input } = require("./input_oanda");
 
 module.exports.prepare_input = (args) => {
   input = null;
+  // source_args = args['sourceSelector'];
   source = args['source']
   
   switch (source) {

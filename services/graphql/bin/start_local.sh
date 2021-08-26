@@ -1,9 +1,9 @@
 #!/bin/zsh 
 
 dirpath=$(dirname $(which $0))
-absolute_path=`cd $dirpath && pwd`
+absolute_path=`cd $dirpath../ && pwd`
 
-cd "$dirpath"
+cd "$dirpath../"
 docker build -t graphql_local -f ./Dockerfile-dev .
 cd "../../"
 

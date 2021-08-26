@@ -1,7 +1,7 @@
 const { prepare_input } = require("./prepare_input")
 const { prepare_ouput } = require("./prepare_output")
 
-var dateFrom, dateTo, granularity, asset, source, mode
+var dateFrom, dateTo, granularity, asset, source, mode, columns
 
 
 module.exports.query_maker = (args) => {
@@ -14,13 +14,22 @@ module.exports.query_maker = (args) => {
 }
 
 
+
 function assign_args_to_vars(args) {
   dateFrom = args['dateFrom']
   dateTo = args['dateTo']
   granularity = args['granularity']
   asset = args['asset']
   source = args['source'] // e.g: brushed-charts.prod.kraken
+  columns = get_columns(args)
   // mode = args['mode'] // e.g: dev | test | prod
+}
+
+function get_columns(args) {
+  if (args['columns'] == undefined) {
+    return '*';
+  }
+  return args['columns'].join()
 }
 
 function query_maker_dispatch(source) {
@@ -42,7 +51,7 @@ function make_oanda_query() {
 
   const query = `
   SELECT
-    *,
+    ${columns},
     UNIX_SECONDS(TIMESTAMP(date)) AS timestamp
   FROM \`${tablename}\` 
   WHERE 
@@ -60,7 +69,7 @@ function make_kraken_query() {
 
   const query = `
   SELECT
-    *,
+    ${columns},
     UNIX_SECONDS(TIMESTAMP(datetime)) AS timestamp
   FROM \`${tablename}\` 
   WHERE 
