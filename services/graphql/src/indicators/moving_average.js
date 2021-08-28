@@ -8,7 +8,7 @@ module.exports.moving_average = async (args) => {
   input = prepare_input(args);
   query = make_query(args)
   bq_rows = await fetch(query)
-  output = prepare_ouput(input, bq_rows)
+  output = prepare_ouput(source, bq_rows)
 
   return output
 }
