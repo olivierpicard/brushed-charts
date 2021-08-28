@@ -5,8 +5,8 @@ import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/filter/json/explode.dart';
 import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
+import 'package:grapher/filter/json/to-point2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
-import 'package:grapher/geometry/example/json-kraken.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/pack/example/json-oanda.dart';
 import 'package:grapher/pack/pack.dart';
@@ -18,9 +18,10 @@ import 'package:grapher/tag/tag.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
-import '../candlestickblue.dart';
+import '../line.dart';
 import '/kernel/kernel.dart';
 import '/pointer/widget.dart';
+import 'json-oanda-ma.dart';
 
 main(List<String> args) async {
   runApp(App());
@@ -74,7 +75,8 @@ class App extends StatelessWidget {
 
   GraphKernel createGraph() {
     final oandaJSON = getMockOandaJSON();
-    final krakenJSON = getMockKrakenJSON();
+    final maOandaJSON = getMockMAJSON();
+
     return GraphKernel(
         child: StackLayout(children: [
       DataInjector(
@@ -90,15 +92,15 @@ class App extends StatelessWidget {
                           child: PipeIn(
                               eventType: IncomingData, name: 'pipe_main')))))),
       DataInjector(
-          stream: streamer(krakenJSON),
+          stream: streamer(maOandaJSON),
           child: Extract(
-              options: "data.kraken",
+              options: "data.moving_average",
               child: Explode(
-                  child: ToCandle2D(
+                  child: ToPoint2D(
                       xLabel: "datetime",
-                      yLabel: "price",
+                      yLabel: "value",
                       child: Tag(
-                          name: 'kraken',
+                          name: 'moving_average',
                           child: PipeIn(
                               eventType: IncomingData, name: 'pipe_main')))))),
       PipeOut(
@@ -111,8 +113,8 @@ class App extends StatelessWidget {
                 tagName: 'oanda',
                 child: DrawUnitFactory(template: Candlestick())),
             UnpackFromViewEvent(
-                tagName: 'kraken',
-                child: DrawUnitFactory(template: CandlestickBlue())),
+                tagName: 'moving_average',
+                child: DrawUnitFactory(template: Line())),
           ])))))
     ]));
   }

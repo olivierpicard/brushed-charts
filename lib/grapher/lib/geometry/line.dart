@@ -1,49 +1,40 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:grapher/drawUnit/instanciable.dart';
-// import 'package:grapher/drawUnit/unit-draw-event.dart';
-// import 'package:grapher/filter/dataStruct/ohlc.dart';
-// import 'package:grapher/geometry/geometry.dart';
-// import 'package:grapher/kernel/propagator/endline.dart';
+import 'dart:ui';
 
-// class Line extends Geometry with EndlinePropagator {
-//   static const double BODY_PERCENT = 0;
+import 'package:flutter/material.dart';
+import 'package:grapher/drawUnit/draw-unit-object.dart';
+import 'package:grapher/drawUnit/unit-draw-event.dart';
+import 'package:grapher/geometry/geometry.dart';
+import 'package:grapher/kernel/propagator/endline.dart';
 
-//   late final double bodyWidth;
-//   late final OHLC ohlc;
+class Line extends Geometry with EndlinePropagator {
+  static const double BODY_PERCENT = 0;
 
-//   Line() : super(BODY_PERCENT);
+  Line() : super(BODY_PERCENT);
 
-//   @override
-//   void draw(DrawUnitEvent event) {
-//     super.draw(event);
-//     bodyWidth = event.width;
-//     drawWick(event);
-//     drawBody(event);
-//   }
+  @override
+  void draw(DrawUnitEvent event) {
+    super.draw(event);
+    if (event.previous == null) return;
+    drawLine(event);
+  }
 
-//   void drawBody(DrawUnitEvent event) {
-//     final bodyRect = Rect.fromLTRB(0, ohlc.close, bodyWidth, ohlc.open);
-//     final paint = Paint()..color = getBodyColor(ohlc);
-//     canvas!.drawRect(bodyRect, paint);
-//   }
+  void drawLine(DrawUnitEvent event) {
+    final prevPosition = previousPosition(event);
+    final position = Offset(0, event.unitData.y);
+    final color = Paint()..color = Colors.blue;
+    canvas!.drawLine(position, prevPosition, color);
+  }
 
-//   MaterialColor getBodyColor(OHLC ohlc) {
-//     if (ohlc.open > ohlc.close) return Colors.red;
-//     return Colors.green;
-//   }
+  Offset previousPosition(DrawUnitEvent event) {
+    var prevDrawZone = event.previous!.baseDrawEvent!.drawZone;
+    final drawZone = baseDrawEvent!.drawZone;
+    final xDistance = prevDrawZone.position.dx - drawZone.position.dx;
+    final prevY = (event.previous!.baseDrawEvent! as DrawUnitEvent).unitData.y;
+    final prevPosition = Offset(xDistance, prevY);
 
-//   void drawWick(DrawUnitEvent event) {
-//     final left = _wickLeftPosition;
-//     final right = _wickRightPosition;
-//     final bodyRect = Rect.fromLTRB(left, ohlc.high, right, ohlc.low);
-//     final paint = Paint()..color = Colors.grey;
-//     canvas!.drawRect(bodyRect, paint);
-//   }
+    return prevPosition;
+  }
 
-//   double get _wickLeftPosition => bodyWidth / 2 - WICK_WIDTH / 2;
-//   double get _wickRightPosition => bodyWidth / 2 + WICK_WIDTH / 2;
-
-//   @override
-//   DrawUnitObject instanciate() => Candlestick();
-// }
+  @override
+  DrawUnitObject instanciate() => Line();
+}
