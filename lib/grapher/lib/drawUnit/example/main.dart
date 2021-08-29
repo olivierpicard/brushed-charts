@@ -1,3 +1,4 @@
+import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/drawUnit/example/fake-template.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
@@ -63,6 +64,7 @@ class App extends StatelessWidget {
                             child: Window(
                                 child: ChunkFactoryTester(
                                     child: DrawUnitFactory(
-                                        template: FakeTemplate())))))))));
+                                        template: DrawUnit(
+                                            template: FakeTemplate()))))))))));
   }
 }

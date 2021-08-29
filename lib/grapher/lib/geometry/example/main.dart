@@ -1,3 +1,4 @@
+import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/drawUnit/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
@@ -94,10 +95,11 @@ class App extends StatelessWidget {
                       child: StackLayout(children: [
             UnpackFromViewEvent(
                 tagName: 'oanda',
-                child: DrawUnitFactory(template: Candlestick())),
+                child: DrawUnitFactory(
+                    template: DrawUnit(template: Candlestick()))),
             UnpackFromViewEvent(
                 tagName: 'moving_average',
-                child: DrawUnitFactory(template: Line())),
+                child: DrawUnitFactory(template: DrawUnit(template: Line()))),
           ])))))
     ]));
   }

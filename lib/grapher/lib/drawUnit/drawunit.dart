@@ -9,12 +9,18 @@ import 'metadata.dart';
 
 class DrawUnit extends GraphObject with SinglePropagator {
   final DrawUnitObject child;
-  final DrawUnitMetadata metadata;
+  late final DrawUnitMetadata metadata;
 
-  DrawUnit(this.metadata, DrawUnitObject template)
+  DrawUnit({required DrawUnitObject template}) : child = template;
+
+  DrawUnit._instanciate(this.metadata, DrawUnitObject template)
       : child = template.instanciate() {
     Init.child(this, child);
     draw();
+  }
+
+  DrawUnit instanciate(DrawUnitMetadata metadata) {
+    return DrawUnit._instanciate(metadata, child);
   }
 
   void draw() {

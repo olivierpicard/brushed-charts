@@ -10,7 +10,7 @@ import 'drawunit.dart';
 
 class DrawUnitFactory extends Viewable with MultiPropagator {
   List<GraphObject> children = [];
-  final DrawUnitObject template;
+  final DrawUnit template;
   late ViewEvent viewEvent;
 
   DrawUnitFactory({required this.template});
@@ -28,7 +28,7 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
     final reversedData = viewEvent.chainData.toList().reversed;
     reversedData.forEach((item) {
       final metadata = MetadataHelper.make(this, item);
-      final drawUnit = DrawUnit(metadata, template);
+      final drawUnit = template.instanciate(metadata);
       children.add(drawUnit);
     });
   }
