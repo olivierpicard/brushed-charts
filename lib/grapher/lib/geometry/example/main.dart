@@ -56,23 +56,6 @@ class App extends StatelessWidget {
     );
   }
 
-  // GraphKernel createGraph() {
-  //   final json = getMockOandaJSON();
-  //   return GraphKernel(
-  //       child: DataInjector(
-  //           stream: streamer(json),
-  //           child: Extract(
-  //               options: "data.oanda",
-  //               child: Explode(
-  //                   child: ToCandle2D(
-  //                       xLabel: "datetime",
-  //                       yLabel: "price",
-  //                       child: SortAccumulation(
-  //                           child: Window(
-  //                               child: DrawUnitFactory(
-  //                                   template: Candlestick()))))))));
-  // }
-
   GraphKernel createGraph() {
     final oandaJSON = getMockOandaJSON();
     final maOandaJSON = getMockMAJSON();
