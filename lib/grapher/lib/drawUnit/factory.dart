@@ -1,5 +1,4 @@
 import 'package:grapher/drawUnit/helper/metadata.dart';
-import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
@@ -29,6 +28,7 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
     reversedData.forEach((item) {
       final metadata = MetadataHelper.make(this, item);
       final drawUnit = template.instanciate(metadata);
+      drawUnit.handleEvent(metadata.viewEvent);
       children.add(drawUnit);
     });
   }

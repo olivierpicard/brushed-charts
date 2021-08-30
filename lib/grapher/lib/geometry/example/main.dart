@@ -96,10 +96,11 @@ class App extends StatelessWidget {
             UnpackFromViewEvent(
                 tagName: 'oanda',
                 child: DrawUnitFactory(
-                    template: DrawUnit(template: Candlestick()))),
+                    template: DrawUnit.template(child: Candlestick()))),
             UnpackFromViewEvent(
                 tagName: 'moving_average',
-                child: DrawUnitFactory(template: DrawUnit(template: Line()))),
+                child: DrawUnitFactory(
+                    template: DrawUnit.template(child: Line()))),
           ])))))
     ]));
   }

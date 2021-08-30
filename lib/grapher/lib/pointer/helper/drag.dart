@@ -24,5 +24,6 @@ mixin DragHelper on HitHelper {
   void onRawDrag(dynamic event) {
     if (!isHold) return;
     onDrag(event);
+    propagate(event);
   }
 }

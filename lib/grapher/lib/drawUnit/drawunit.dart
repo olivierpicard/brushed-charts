@@ -2,43 +2,38 @@ import 'package:grapher/drawUnit/helper/canvas-transform.dart';
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/kernel/misc/Init.dart';
-import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher/view/view-event.dart';
+import 'package:grapher/view/viewable.dart';
 
 import 'metadata.dart';
 
-class DrawUnit extends GraphObject with SinglePropagator {
+class DrawUnit extends Viewable with SinglePropagator {
   final DrawUnitObject child;
   late final DrawUnitMetadata metadata;
 
-  DrawUnit({required DrawUnitObject template}) : child = template;
-
-  DrawUnit._instanciate(this.metadata, DrawUnitObject template)
+  DrawUnit(this.metadata, DrawUnitObject template)
       : child = template.instanciate() {
     Init.child(this, child);
-    draw();
   }
+
+  DrawUnit.template({required this.child});
 
   DrawUnit instanciate(DrawUnitMetadata metadata) {
-    return DrawUnit._instanciate(metadata, child);
+    return DrawUnit(metadata, child);
   }
 
-  void draw() {
+  void draw(ViewEvent viewEvent) {
     CanvasTransform.start(this);
-    final event = makeDrawUnitEvent();
-    if (event != null) propagate(event);
+    final outputEvent = makeDrawUnitEvent(viewEvent);
+    if (outputEvent != null) propagate(outputEvent);
     CanvasTransform.end(this);
   }
 
-  DrawUnitEvent? makeDrawUnitEvent() {
+  DrawUnitEvent? makeDrawUnitEvent(viewEvent) {
     if (metadata.data == null) return null;
-    return DrawUnitEvent(
-        metadata.viewEvent,
-        metadata.data!,
-        calculateChildWidth(),
-        metadata.yAxis.scale,
-        this,
-        metadata.previous?.child);
+    return DrawUnitEvent(viewEvent, metadata.data!, calculateChildWidth(),
+        metadata.yAxis.scale, this, metadata.previous?.child);
   }
 
   double calculateChildWidth() {

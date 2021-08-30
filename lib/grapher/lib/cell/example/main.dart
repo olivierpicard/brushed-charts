@@ -1,5 +1,7 @@
-import 'package:grapher/drawUnit/drawunit.dart';
+import 'package:grapher/cell/cell.dart';
+import 'package:grapher/cell/example/tap-tester.dart';
 import 'package:grapher/drawUnit/example/fake-template.dart';
+import 'package:grapher/drawUnit/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/json/explode.dart';
@@ -8,9 +10,7 @@ import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/view/window.dart';
 
-import '../factory.dart';
 import 'json.dart';
-import 'tester.dart';
 
 import 'package:flutter/material.dart';
 import '/kernel/kernel.dart';
@@ -62,9 +62,9 @@ class App extends StatelessWidget {
                         yLabel: "mid",
                         child: SortAccumulation(
                             child: Window(
-                                child: ChunkFactoryTester(
+                                child: TapTester(
                                     child: DrawUnitFactory(
-                                        template: DrawUnit.template(
+                                        template: Cell.template(
                                             child: FakeTemplate()))))))))));
   }
 }
