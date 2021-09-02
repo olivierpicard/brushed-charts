@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:grapher/cell/event.dart';
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/drawunit.dart';
-import 'package:grapher/pointer/helper/drag.dart';
 import 'package:grapher/pointer/helper/hit.dart';
-import 'package:grapher/view/view-event.dart';
 import '../drawUnit/metadata.dart';
 
-class Cell extends DrawUnit with HitHelper, DragHelper {
+class Cell extends DrawUnit with HitHelper {
   Cell(DrawUnitMetadata metadata, DrawUnitObject template)
       : super(metadata, template) {
     hitAddEventListeners();
-    dragAddEventListeners();
   }
 
   Cell.template({required DrawUnitObject child}) : super.template(child: child);
@@ -19,21 +17,16 @@ class Cell extends DrawUnit with HitHelper, DragHelper {
     return Cell(metadata, child);
   }
 
-  void draw(covariant ViewEvent event) {
-    super.draw(event);
-  }
-
   @override
   void onTapDown(covariant TapDownDetails event) {
-    print(baseDrawEvent?.drawZone);
-    if (isHit(event.localPosition)) {
-      print("sss");
-    }
-    // print(event.globalPosition);
+    if (!isTappingOnSelf(event)) return;
+    final cellEvent = CellEvent(this, event);
+    propagate(cellEvent);
   }
 
-  @override
-  void onDrag(DragUpdateDetails event) {
-    // print(event.delta);
+  bool isTappingOnSelf(TapDownDetails tap) {
+    if (baseDrawEvent == null) return false;
+    if (!isHit(tap.globalPosition)) return false;
+    return true;
   }
 }

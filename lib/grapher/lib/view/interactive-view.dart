@@ -25,7 +25,7 @@ abstract class InteractiveView extends View
   void onDrag(DragUpdateDetails event) {
     if (!isPointerOnView(event.localPosition)) return;
     final newOffset = viewAxis.offset + event.delta;
-    viewAxis = viewAxis.setOffset(newOffset);
+    viewAxis.offset = newOffset;
     setState(this);
   }
 
@@ -33,8 +33,9 @@ abstract class InteractiveView extends View
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
     final yScrollDelta = moderatedScroll(event.scrollDelta.dy);
-    final newScale = Offset(viewAxis.zoom.dx + yScrollDelta, viewAxis.zoom.dy);
-    viewAxis = viewAxis.setZoom(newScale);
+    final zoom = viewAxis.zoom;
+    final newScale = Offset(zoom.dx + yScrollDelta, zoom.dy);
+    viewAxis.zoom = newScale;
     setState(this);
   }
 
@@ -48,7 +49,7 @@ abstract class InteractiveView extends View
   double moderatedScroll(double deltaScroll) {
     if (baseDrawEvent == null) return 0;
     final zoneWidth = baseDrawEvent!.drawZone.size.width;
-    final unitLen = viewAxis.chunkLength;
+    final unitLen = viewAxis.unitLength;
     final unitCount = zoneWidth / unitLen;
     final moderatedScroll = deltaScroll / unitCount;
 

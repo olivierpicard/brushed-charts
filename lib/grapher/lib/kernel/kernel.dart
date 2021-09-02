@@ -21,7 +21,7 @@ class GraphKernel extends ChangeNotifier
   @override
   void paint(Canvas canvas, Size size) {
     final drawZone = new DrawZone(Offset.zero, size);
-    final drawEvent = new DrawEvent(this, canvas, drawZone);
+    final drawEvent = new DrawEvent(canvas, drawZone);
     propagate(drawEvent);
   }
 

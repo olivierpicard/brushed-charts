@@ -28,7 +28,7 @@ abstract class DirectionalLayout extends FlexObject with MultiPropagator {
 
   DrawEvent makeDrawEvent(DrawEvent? lastDrawEvent, FlexObject child) {
     final zone = makeDrawZone(lastDrawEvent, child);
-    final event = DrawEvent(this, baseDrawEvent!.canvas, zone);
+    final event = DrawEvent(baseDrawEvent!.canvas, zone);
 
     return event;
   }

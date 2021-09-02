@@ -1,5 +1,6 @@
 import 'package:grapher/cell/cell.dart';
-import 'package:grapher/cell/example/tap-tester.dart';
+import 'package:grapher/cell/example/basic-geometry.dart';
+import 'package:grapher/cell/example/tester.dart';
 import 'package:grapher/drawUnit/example/fake-template.dart';
 import 'package:grapher/drawUnit/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
@@ -62,9 +63,8 @@ class App extends StatelessWidget {
                         yLabel: "mid",
                         child: SortAccumulation(
                             child: Window(
-                                child: TapTester(
-                                    child: DrawUnitFactory(
-                                        template: Cell.template(
-                                            child: FakeTemplate()))))))))));
+                                child: DrawUnitFactory(
+                                    template: Cell.template(
+                                        child: BasicGeometry())))))))));
   }
 }

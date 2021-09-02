@@ -32,11 +32,6 @@ class View extends Drawable with SinglePropagator {
     setState(this);
   }
 
-  @override
-  void draw(covariant DrawEvent drawEvent) {
-    super.draw(drawEvent);
-  }
-
   bool isInputValid() {
     if (inputData == null) return false;
     if (inputData!.length == 0) return false;
@@ -46,7 +41,7 @@ class View extends Drawable with SinglePropagator {
 
   int maxDisplayableUnit() {
     final zoneSize = baseDrawEvent!.drawZone.size;
-    final unitLength = viewAxis.chunkLength;
+    final unitLength = viewAxis.unitLength;
     final maxChunk = (zoneSize.width / unitLength).ceil();
 
     return maxChunk;

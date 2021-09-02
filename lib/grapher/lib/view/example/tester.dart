@@ -12,7 +12,7 @@ class Tester extends GraphObject with EndlinePropagator {
     print('first: ${data.first!.x}');
     print('last: ${data.last!.x}');
     print('count: ${data.length}');
-    print('candleLen: ${event.viewAxis.chunkLength}');
+    print('candleLen: ${event.viewAxis.unitLength}');
     print("------");
   }
 }

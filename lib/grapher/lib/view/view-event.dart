@@ -8,8 +8,8 @@ class ViewEvent extends DrawEvent {
 
   ViewEvent(ViewEvent event, this.chainData)
       : this.viewAxis = event.viewAxis,
-        super(event.parent, event.canvas, event.drawZone);
+        super(event.canvas, event.drawZone);
 
   ViewEvent.fromDrawEvent(DrawEvent drawEvent, this.viewAxis, this.chainData)
-      : super(drawEvent.parent, drawEvent.canvas, drawEvent.drawZone);
+      : super(drawEvent.canvas, drawEvent.drawZone);
 }

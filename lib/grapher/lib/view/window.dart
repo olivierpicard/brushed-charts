@@ -4,12 +4,11 @@ import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher/view/interactive-view.dart';
 import 'package:grapher/view/view-event.dart';
+import 'package:grapher/view/boundary.dart';
 
-class Window extends InteractiveView with SinglePropagator {
+class Window extends Boundary with SinglePropagator {
   static const double UNIT_DEFAULT_LENGTH = 10;
-  late int lower, upper, length;
 
   Window({unitLength = UNIT_DEFAULT_LENGTH, GraphObject? child})
       : super(unitLength: unitLength, child: child) {
@@ -20,60 +19,28 @@ class Window extends InteractiveView with SinglePropagator {
   void draw(DrawEvent drawEvent) {
     super.draw(drawEvent);
     if (!isInputValid()) return;
-    final cuttedIter = truncateData();
-    updateYRange(cuttedIter);
-    final event = ViewEvent.fromDrawEvent(drawEvent, viewAxis, cuttedIter);
+    drawOnValidInput(drawEvent);
+  }
+
+  void drawOnValidInput(DrawEvent drawEvent) {
+    final cuttedChain = inputData!.skip(lower).take(length);
+    updateYRange(cuttedChain);
+    final event = ViewEvent.fromDrawEvent(
+      drawEvent,
+      viewAxis,
+      cuttedChain,
+    );
     propagate(event);
-  }
-
-  Iterable<Data2D> truncateData() {
-    defineBoudary();
-    return makeIterator();
-  }
-
-  Iterable<Data2D> makeIterator() {
-    return inputData!.skip(lower).take(length);
-  }
-
-  void defineBoudary() {
-    upper = getUpperBound();
-    lower = getLowerBound();
-    length = upper - lower;
-  }
-
-  int getUpperBound() {
-    if (viewAxis.offset.dx <= 0) return inputData!.length;
-    final skippedChunk = countSkippedChunk();
-    final dataLen = inputData!.length;
-    final upperBound = dataLen - skippedChunk;
-
-    return upperBound;
-  }
-
-  int countSkippedChunk() {
-    final xOffset = viewAxis.offset.dx;
-    final chunkLen = viewAxis.chunkLength;
-    final skipCounter = (xOffset / chunkLen).floor();
-
-    return skipCounter;
-  }
-
-  int getLowerBound() {
-    final upperBound = getUpperBound();
-    var lowerBound = upperBound - maxDisplayableUnit();
-    if (lowerBound <= 0) lowerBound = 0;
-
-    return lowerBound;
   }
 
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
     super.onScroll(event);
-    updateOffsetOnZoom(event);
+    shiftOnZooming(event);
     setState(this);
   }
 
-  void updateOffsetOnZoom(PointerScrollEvent event) {
+  void shiftOnZooming(PointerScrollEvent event) {
     final skipCount = countSkippedChunk();
     final offsetX = viewAxis.offset.dx;
     final deltaScrollX = moderatedScroll(event.scrollDelta.dy);
@@ -81,17 +48,16 @@ class Window extends InteractiveView with SinglePropagator {
     cumuledDelta += deltaScrollX / 2;
     final newX = offsetX + cumuledDelta;
     final newOffset = Offset(newX, viewAxis.offset.dy);
-    viewAxis = viewAxis.setOffset(newOffset);
+    viewAxis.offset = newOffset;
   }
 
   void updateYRange(Iterable<Data2D> chain) {
-    final yMin = chain
-        .reduce((value, curr) => (value.yMin < curr.yMin) ? value : curr)
-        .yMin;
-    final yMax = chain
-        .reduce((value, curr) => (value.yMax > curr.yMax) ? value : curr)
-        .yMax;
+    viewAxis.yMin = chain.reduce((value, curr) {
+      return (value.yMin < curr.yMin) ? value : curr;
+    }).yMin;
 
-    viewAxis = viewAxis.setYRange(yMin, yMax);
+    viewAxis.yMax = chain.reduce((value, curr) {
+      return (value.yMax > curr.yMax) ? value : curr;
+    }).yMax;
   }
 }
