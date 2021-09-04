@@ -14,4 +14,14 @@ class ViewAxis {
     if (_chunkLength <= 1) _chunkLength = 1;
     unitLength = _chunkLength;
   }
+
+  ViewAxis.copy(ViewAxis axis)
+      : baseUnitLength = axis.baseUnitLength,
+        unitLength = axis.unitLength,
+        zoom = axis.zoom,
+        offset = axis.offset,
+        yMin = axis.yMin,
+        yMax = axis.yMax;
+
+  ViewAxis copy() => ViewAxis.copy(this);
 }

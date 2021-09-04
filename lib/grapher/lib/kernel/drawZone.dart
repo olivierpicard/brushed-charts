@@ -1,18 +1,17 @@
 import 'dart:ui';
 
 class DrawZone {
-  final Offset position;
-  final Size size;
+  Offset position;
+  Size size;
 
-  static DrawZone copy(DrawZone cursor) => DrawZone(
-      Offset(cursor.position.dx, cursor.position.dy),
-      Size(cursor.size.width, cursor.size.height));
+  DrawZone.copy(DrawZone ref)
+      : position = ref.position,
+        size = ref.size;
 
   DrawZone(this.position, this.size);
 
-  Offset endPosition() {
-    return Offset(position.dx + size.width, position.dy + size.height);
-  }
+  DrawZone copy() => DrawZone.copy(this);
 
+  Offset endPosition() => toRect.bottomRight;
   Rect get toRect => position & size;
 }

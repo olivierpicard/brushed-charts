@@ -3,15 +3,18 @@ import 'drawZone.dart';
 
 class DrawEvent {
   final Canvas canvas;
-  final DrawZone drawZone;
+  DrawZone drawZone;
 
   DrawEvent(this.canvas, this.drawZone);
 
+  //TODO: Remove this function later
   DrawEvent.fromUpdatedDrawZone(DrawEvent baseEvent, DrawZone drawZone)
       : canvas = baseEvent.canvas,
         this.drawZone = drawZone;
 
   DrawEvent.copy(DrawEvent event)
       : canvas = event.canvas,
-        drawZone = event.drawZone;
+        drawZone = DrawZone.copy(event.drawZone);
+
+  DrawEvent copy() => DrawEvent.copy(this);
 }
