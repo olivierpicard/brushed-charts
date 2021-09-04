@@ -4,7 +4,7 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/interactive-view.dart';
 
-class Boundary extends InteractiveView with SinglePropagator {
+abstract class Boundary extends InteractiveView with SinglePropagator {
   static const double UNIT_DEFAULT_LENGTH = 10;
   late int lower, upper, length;
 

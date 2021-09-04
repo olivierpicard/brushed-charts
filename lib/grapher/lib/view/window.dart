@@ -25,12 +25,11 @@ class Window extends Boundary with SinglePropagator {
   void drawOnValidInput(DrawEvent drawEvent) {
     final cuttedChain = inputData!.skip(lower).take(length);
     updateYRange(cuttedChain);
-    final event = ViewEvent.fromDrawEvent(
+    propagate(ViewEvent.fromDrawEvent(
       drawEvent,
       viewAxis,
       cuttedChain,
-    );
-    propagate(event);
+    ));
   }
 
   void onScroll(PointerScrollEvent event) {
