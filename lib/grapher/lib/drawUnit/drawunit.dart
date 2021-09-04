@@ -1,6 +1,9 @@
-import 'package:grapher/drawUnit/helper/canvas-transform.dart';
+import 'dart:ui';
+
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
+import 'package:grapher/kernel/drawEvent.dart';
+import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/view-event.dart';
@@ -24,16 +27,30 @@ class DrawUnit extends Viewable with SinglePropagator {
   }
 
   void draw(ViewEvent viewEvent) {
-    CanvasTransform.start(this);
+    super.draw(viewEvent);
     final outputEvent = makeDrawUnitEvent(viewEvent);
     if (outputEvent != null) propagate(outputEvent);
-    CanvasTransform.end(this);
   }
 
-  DrawUnitEvent? makeDrawUnitEvent(viewEvent) {
+  DrawUnitEvent? makeDrawUnitEvent(ViewEvent viewEvent) {
     if (metadata.data == null) return null;
-    return DrawUnitEvent(viewEvent, metadata.data!, calculateChildWidth(),
-        metadata.yAxis.scale, this, metadata.previous?.child);
+    final updatedViewEvent = makeUpdatedViewEvent(viewEvent);
+    return DrawUnitEvent(updatedViewEvent, metadata.data!,
+        calculateChildWidth(), metadata.previous?.child);
+  }
+
+  ViewEvent makeUpdatedViewEvent(ViewEvent viewEvent) {
+    final drawEvent = DrawEvent.fromUpdatedDrawZone(
+      viewEvent,
+      makeChildDrawZone(),
+    );
+    final newViewEvent = ViewEvent.fromDrawEvent(
+      drawEvent,
+      viewEvent.viewAxis,
+      viewEvent.chainData,
+    );
+
+    return newViewEvent;
   }
 
   double calculateChildWidth() {
@@ -42,5 +59,18 @@ class DrawUnit extends Viewable with SinglePropagator {
     final pixelWidth = percent / 100 * unitLength;
 
     return pixelWidth;
+  }
+
+  DrawZone makeChildDrawZone() {
+    final childWidth = calculateChildWidth();
+    final drawZone = baseDrawEvent!.drawZone;
+    final startXPos = drawZone.position.dx;
+    final unitYPos = drawZone.position.dy;
+    final childZone = DrawZone(
+      Offset(startXPos, unitYPos),
+      Size(childWidth, drawZone.size.height),
+    );
+
+    return childZone;
   }
 }
