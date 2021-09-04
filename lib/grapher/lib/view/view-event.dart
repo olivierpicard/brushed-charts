@@ -6,6 +6,9 @@ class ViewEvent extends DrawEvent {
   ViewAxis viewAxis;
   Iterable<Data2D?> chainData;
 
+  // TODO: remove this constructor. If we create a an viewEvent
+  // Based on another viewEvent it's a copy to change the chain data
+  // It's not usefull anymore
   ViewEvent(ViewEvent event, this.chainData)
       : this.viewAxis = event.viewAxis,
         super(event.canvas, event.drawZone);
