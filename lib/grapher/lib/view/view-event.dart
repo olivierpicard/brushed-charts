@@ -1,6 +1,5 @@
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/kernel/drawEvent.dart';
-import 'package:grapher/utils/range.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 import 'package:grapher/view/view-axis.dart';
 
@@ -14,26 +13,16 @@ class ViewEvent extends DrawEvent {
 
   ViewEvent(DrawEvent drawEvent, this.viewAxis, this.chainData)
       : yAxis = VirtualAxis(
-            Range(drawEvent.drawZone.position.dy,
-                drawEvent.drawZone.endPosition().dy),
-            viewAxis.yMin,
-            viewAxis.yMax),
-        xAxis = UnitAxis(
-            Range(drawEvent.drawZone.position.dx,
-                drawEvent.drawZone.endPosition().dx),
-            viewAxis.unitLength),
+            drawEvent.drawZone.yRange, viewAxis.yMin, viewAxis.yMax),
+        xAxis = UnitAxis(drawEvent.drawZone.xRange, viewAxis.unitLength),
         super(drawEvent.canvas, drawEvent.drawZone);
 
   ViewEvent.copy(ViewEvent event)
       : viewAxis = event.viewAxis.copy(),
         chainData = event.chainData,
         yAxis = VirtualAxis(
-            Range(event.drawZone.position.dy, event.drawZone.endPosition().dy),
-            event.viewAxis.yMin,
-            event.viewAxis.yMax),
-        xAxis = UnitAxis(
-            Range(event.drawZone.position.dx, event.drawZone.endPosition().dx),
-            event.viewAxis.unitLength),
+            event.drawZone.yRange, event.viewAxis.yMin, event.viewAxis.yMax),
+        xAxis = UnitAxis(event.drawZone.xRange, event.viewAxis.unitLength),
         super.copy(event);
 
   ViewEvent copy() => ViewEvent.copy(this);
