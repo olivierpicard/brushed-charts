@@ -1,5 +1,5 @@
 import 'package:grapher/drawUnit/drawunit.dart';
-import 'package:grapher/drawUnit/factory.dart';
+import 'package:grapher/factory/factory.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';

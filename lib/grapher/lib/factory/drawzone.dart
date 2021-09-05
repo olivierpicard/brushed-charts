@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:grapher/kernel/drawZone.dart';
-import '../factory.dart';
+import 'factory.dart';
 
 class DrawZoneHelper {
   final DrawUnitFactory facto;

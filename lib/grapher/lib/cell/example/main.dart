@@ -1,8 +1,6 @@
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/cell/example/basic-geometry.dart';
-import 'package:grapher/cell/example/tester.dart';
-import 'package:grapher/drawUnit/example/fake-template.dart';
-import 'package:grapher/drawUnit/factory.dart';
+import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/json/explode.dart';

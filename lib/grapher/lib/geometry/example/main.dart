@@ -1,5 +1,5 @@
 import 'package:grapher/drawUnit/drawunit.dart';
-import 'package:grapher/drawUnit/factory.dart';
+import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/incoming-data.dart';
@@ -14,6 +14,7 @@ import 'package:grapher/pack/pack.dart';
 import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
+import 'package:grapher/splitter/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/tag/tag.dart';
 import 'package:grapher/view/window.dart';
@@ -62,46 +63,93 @@ class App extends StatelessWidget {
     final maOandaJSON = getMockMAJSON();
 
     return GraphKernel(
-        child: StackLayout(children: [
-      DataInjector(
-          stream: streamer(oandaJSON),
-          child: Extract(
-              options: "data.oanda",
-              child: Explode(
-                  child: ToCandle2D(
-                      xLabel: "datetime",
-                      yLabel: "price",
-                      child: Tag(
-                          name: 'oanda',
-                          child: PipeIn(
-                              eventType: IncomingData, name: 'pipe_main')))))),
-      DataInjector(
-          stream: streamer(maOandaJSON),
-          child: Extract(
-              options: "data.moving_average",
-              child: Explode(
-                  child: ToPoint2D(
-                      xLabel: "datetime",
-                      yLabel: "value",
-                      child: Tag(
-                          name: 'moving_average',
-                          child: PipeIn(
-                              eventType: IncomingData, name: 'pipe_main')))))),
-      PipeOut(
-          name: 'pipe_main',
-          child: Pack(
-              child: SortAccumulation(
-                  child: Window(
-                      child: StackLayout(children: [
-            UnpackFromViewEvent(
-                tagName: 'oanda',
-                child: DrawUnitFactory(
-                    template: DrawUnit.template(child: Candlestick()))),
-            UnpackFromViewEvent(
-                tagName: 'moving_average',
-                child: DrawUnitFactory(
-                    template: DrawUnit.template(child: Line()))),
-          ])))))
+        child: HorizontalSplitter(children: [
+      StackLayout(children: [
+        DataInjector(
+            stream: streamer(oandaJSON),
+            child: Extract(
+                options: "data.oanda",
+                child: Explode(
+                    child: ToCandle2D(
+                        xLabel: "datetime",
+                        yLabel: "price",
+                        child: Tag(
+                            name: 'oanda',
+                            child: PipeIn(
+                                eventType: IncomingData,
+                                name: 'pipe_main')))))),
+        DataInjector(
+            stream: streamer(maOandaJSON),
+            child: Extract(
+                options: "data.moving_average",
+                child: Explode(
+                    child: ToPoint2D(
+                        xLabel: "datetime",
+                        yLabel: "value",
+                        child: Tag(
+                            name: 'moving_average',
+                            child: PipeIn(
+                                eventType: IncomingData,
+                                name: 'pipe_main')))))),
+        PipeOut(
+            name: 'pipe_main',
+            child: Pack(
+                child: SortAccumulation(
+                    child: Window(
+                        child: StackLayout(children: [
+              UnpackFromViewEvent(
+                  tagName: 'oanda',
+                  child: DrawUnitFactory(
+                      template: DrawUnit.template(child: Candlestick()))),
+              UnpackFromViewEvent(
+                  tagName: 'moving_average',
+                  child: DrawUnitFactory(
+                      template: DrawUnit.template(child: Line()))),
+            ])))))
+      ]),
+      StackLayout(children: [
+        DataInjector(
+            stream: streamer(oandaJSON),
+            child: Extract(
+                options: "data.oanda",
+                child: Explode(
+                    child: ToCandle2D(
+                        xLabel: "datetime",
+                        yLabel: "price",
+                        child: Tag(
+                            name: 'oanda',
+                            child: PipeIn(
+                                eventType: IncomingData,
+                                name: 'pipe_main')))))),
+        DataInjector(
+            stream: streamer(maOandaJSON),
+            child: Extract(
+                options: "data.moving_average",
+                child: Explode(
+                    child: ToPoint2D(
+                        xLabel: "datetime",
+                        yLabel: "value",
+                        child: Tag(
+                            name: 'moving_average',
+                            child: PipeIn(
+                                eventType: IncomingData,
+                                name: 'pipe_main')))))),
+        PipeOut(
+            name: 'pipe_main',
+            child: Pack(
+                child: SortAccumulation(
+                    child: Window(
+                        child: StackLayout(children: [
+              UnpackFromViewEvent(
+                  tagName: 'oanda',
+                  child: DrawUnitFactory(
+                      template: DrawUnit.template(child: Candlestick()))),
+              UnpackFromViewEvent(
+                  tagName: 'moving_average',
+                  child: DrawUnitFactory(
+                      template: DrawUnit.template(child: Line()))),
+            ])))))
+      ])
     ]));
   }
 }

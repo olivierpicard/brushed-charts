@@ -35,11 +35,11 @@ class Window extends Boundary with SinglePropagator {
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
     super.onScroll(event);
-    shiftOnZooming(event);
+    offsetOnZooming(event);
     setState(this);
   }
 
-  void shiftOnZooming(PointerScrollEvent event) {
+  void offsetOnZooming(PointerScrollEvent event) {
     final skipCount = countSkippedChunk();
     final offsetX = viewAxis.offset.dx;
     final deltaScrollX = moderatedScroll(event.scrollDelta.dy);

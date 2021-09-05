@@ -1,11 +1,11 @@
-import 'package:grapher/drawUnit/helper/metadata.dart';
+import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
 
-import 'drawunit.dart';
+import 'metadata.dart';
 
 class DrawUnitFactory extends Viewable with MultiPropagator {
   List<GraphObject> children = [];

@@ -19,7 +19,6 @@ class BasicGeometry extends UnitDrawable with SinglePropagator, DrawUnitObject {
   void draw(DrawUnitEvent event) {
     super.draw(event);
     ohlc = event.unitData.y as OHLC;
-    bodyWidth = event.width;
     drawCircle(ohlc.close);
   }
 

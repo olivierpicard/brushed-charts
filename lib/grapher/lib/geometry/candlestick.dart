@@ -19,32 +19,49 @@ class Candlestick extends Geometry with EndlinePropagator {
   void draw(DrawUnitEvent event) {
     super.draw(event);
     ohlc = event.unitData.y as OHLC;
-    bodyWidth = event.width;
     drawWick(event);
     drawBody(event);
   }
 
   void drawBody(DrawUnitEvent event) {
-    final bodyRect = Rect.fromLTRB(0, ohlc.close, bodyWidth, ohlc.open);
-    final paint = Paint()..color = getBodyColor(ohlc);
+    final left = event.drawZone.toRect.left;
+    final right = event.drawZone.toRect.right;
+    final bodyRect = Rect.fromLTRB(
+        left, yAxis.toPixel(ohlc.close), right, yAxis.toPixel(ohlc.open));
+    final paint = Paint()..color = getCandleColor(ohlc);
     canvas!.drawRect(bodyRect, paint);
-  }
-
-  MaterialColor getBodyColor(OHLC ohlc) {
-    if (ohlc.open > ohlc.close) return Colors.red;
-    return Colors.green;
   }
 
   void drawWick(DrawUnitEvent event) {
-    final left = _wickLeftPosition;
-    final right = _wickRightPosition;
-    final bodyRect = Rect.fromLTRB(left, ohlc.high, right, ohlc.low);
-    final paint = Paint()..color = getBodyColor(ohlc);
+    final left = _wickLeftSide;
+    final right = _wickRightSide;
+    final high = yAxis.toPixel(ohlc.high);
+    final low = yAxis.toPixel(ohlc.low);
+    final bodyRect = Rect.fromLTRB(left, high, right, low);
+    final paint = Paint()..color = getCandleColor(ohlc);
     canvas!.drawRect(bodyRect, paint);
   }
 
-  double get _wickLeftPosition => bodyWidth / 2 - WICK_WIDTH / 2;
-  double get _wickRightPosition => bodyWidth / 2 + WICK_WIDTH / 2;
+  double get _wickLeftSide {
+    final bodyWidth = baseDrawEvent!.drawZone.toRect;
+    final bodyCenter = bodyWidth.center.dx;
+    final wickLeftSide = bodyCenter - WICK_WIDTH / 2;
+
+    return wickLeftSide;
+  }
+
+  double get _wickRightSide {
+    final bodyWidth = baseDrawEvent!.drawZone.toRect;
+    final bodyCenter = bodyWidth.center.dx;
+    final wickRighSide = bodyCenter + WICK_WIDTH / 2;
+
+    return wickRighSide;
+  }
+
+  MaterialColor getCandleColor(OHLC ohlc) {
+    if (ohlc.open > ohlc.close) return Colors.red;
+    return Colors.green;
+  }
 
   @override
   DrawUnitObject instanciate() => Candlestick();

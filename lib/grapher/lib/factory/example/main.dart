@@ -1,5 +1,4 @@
 import 'package:grapher/drawUnit/drawunit.dart';
-import 'package:grapher/drawUnit/example/fake-template.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/json/explode.dart';
@@ -9,6 +8,7 @@ import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/view/window.dart';
 
 import '../factory.dart';
+import 'fake-template.dart';
 import 'json.dart';
 import 'tester.dart';
 

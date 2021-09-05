@@ -18,19 +18,23 @@ class Line extends Geometry with EndlinePropagator {
     drawLine(event);
   }
 
+  // TODO: refactor this part of code
   void drawLine(DrawUnitEvent event) {
+    // print(event.viewAxis.zoom);
     final prevPosition = previousPosition(event);
-    final position = Offset(0, event.unitData.y);
+    final yValue = event.unitData.y;
+    final yPosition = event.yAxis.toPixel(yValue);
+    final xPosition = event.drawZone.toRect.center.dx;
+    final position = Offset(xPosition, yPosition);
     final color = Paint()..color = Colors.blue;
     canvas!.drawLine(position, prevPosition, color);
   }
 
   Offset previousPosition(DrawUnitEvent event) {
-    var prevDrawZone = event.previous!.baseDrawEvent!.drawZone;
-    final drawZone = baseDrawEvent!.drawZone;
-    final xDistance = prevDrawZone.position.dx - drawZone.position.dx;
-    final prevY = (event.previous!.baseDrawEvent! as DrawUnitEvent).unitData.y;
-    final prevPosition = Offset(xDistance, prevY);
+    final xCenter = event.previous!.baseDrawEvent!.drawZone.toRect.center.dx;
+    final yValue = (event.previous!.baseDrawEvent! as DrawUnitEvent).unitData.y;
+    final yPixel = event.yAxis.toPixel(yValue);
+    final prevPosition = Offset(xCenter, yPixel);
 
     return prevPosition;
   }
