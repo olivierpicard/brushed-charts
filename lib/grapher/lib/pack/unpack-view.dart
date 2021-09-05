@@ -16,23 +16,25 @@ class UnpackFromViewEvent extends Viewable with SinglePropagator {
 
   void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
-    final chainOriginal = viewEvent.chainData;
-    final chainExtracted = extractPacket(chainOriginal);
-    final newViewEvent = makeViewEvent(chainExtracted, viewEvent);
-    propagate(newViewEvent);
+    propagateUnpackedChain(viewEvent);
+  }
+
+  void propagateUnpackedChain(ViewEvent viewEvent) {
+    final packedChain = viewEvent.chainData;
+    final matchingChain = extractPacket(packedChain);
+    final event = makeViewEvent(matchingChain, viewEvent);
+    propagate(event);
   }
 
   List<Timeseries2D?> extractPacket(Iterable chain) {
-    final packets = chain;
-    final timeseries = packets.map((item) {
-      item = item as Packet;
-      return item.getByTagName(tagName);
-    });
-    return timeseries.toList();
+    final packets = chain.cast<Packet>();
+    final matchingChain = packets.map((item) => item.getByTagName(tagName));
+    return matchingChain.toList();
   }
 
-  ViewEvent makeViewEvent(List<Timeseries2D?> chain, ViewEvent event) {
-    final viewWithNewChain = ViewEvent(event, chain);
-    return viewWithNewChain;
+  ViewEvent makeViewEvent(List<Timeseries2D?> chain, ViewEvent baseEvent) {
+    final copiedEvent = ViewEvent.copy(baseEvent);
+    copiedEvent.chainData = chain;
+    return copiedEvent;
   }
 }

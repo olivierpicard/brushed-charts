@@ -7,7 +7,7 @@ class DrawUnitEvent extends ViewEvent {
   final DrawUnitObject? previous;
 
   DrawUnitEvent(ViewEvent baseEvent, this.unitData, this.previous)
-      : super(baseEvent, baseEvent.chainData);
+      : super.copy(baseEvent);
 
   DrawUnitEvent.copy(DrawUnitEvent event)
       : unitData = event.unitData,

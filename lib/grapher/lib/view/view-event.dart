@@ -7,22 +7,12 @@ import 'package:grapher/view/view-axis.dart';
 import 'axis/unit-axis.dart';
 
 class ViewEvent extends DrawEvent {
-  final Iterable<Data2D?> chainData;
+  Iterable<Data2D?> chainData;
   ViewAxis viewAxis;
   VirtualAxis yAxis;
   UnitAxis xAxis;
 
-  // TODO: remove this constructor. If we create a an viewEvent
-  // Based on another viewEvent it's a copy to change the chain data
-  // It's not usefull anymore
-  ViewEvent(ViewEvent event, this.chainData)
-      : this.viewAxis = event.viewAxis,
-        yAxis = VirtualAxis(
-            event.drawZone.yRange, event.viewAxis.yMin, event.viewAxis.yMax),
-        xAxis = UnitAxis(event.drawZone.xRange, event.viewAxis.unitLength),
-        super(event.canvas, event.drawZone);
-
-  ViewEvent.fromDrawEvent(DrawEvent drawEvent, this.viewAxis, this.chainData)
+  ViewEvent(DrawEvent drawEvent, this.viewAxis, this.chainData)
       : yAxis = VirtualAxis(
             Range(drawEvent.drawZone.position.dy,
                 drawEvent.drawZone.endPosition().dy),
