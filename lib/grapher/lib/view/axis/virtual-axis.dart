@@ -3,11 +3,15 @@ import 'package:grapher/utils/range.dart';
 import 'axis.dart';
 
 class VirtualAxis extends Axis {
-  Range virtualRange;
+  late Range virtualRange;
 
-  VirtualAxis(Range pixelRange, double min, double max)
-      : virtualRange = Range(min, max),
-        super(pixelRange);
+  VirtualAxis();
+
+  VirtualAxis.copy(VirtualAxis ref)
+      : virtualRange = ref.virtualRange,
+        super.copy(ref);
+
+  VirtualAxis copy() => VirtualAxis.copy(this);
 
   double toPixel(double x) {
     final vMin = virtualRange.min;

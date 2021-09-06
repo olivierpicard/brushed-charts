@@ -22,24 +22,21 @@ class DrawZoneHelper {
     final x = base.position.dx + start;
     final y = base.position.dy;
     final position = Offset(x, y);
-
     return position;
   }
 
   double _computeStartPoint() {
     final screenWidth = facto.viewEvent.drawZone.size.width;
     final chunkCount = facto.children.length;
-    final chunkLength = facto.viewEvent.viewAxis.unitLength;
+    final chunkLength = facto.viewEvent.xAxis.unitLength;
     final start = screenWidth - chunkLength - chunkLength * chunkCount;
-
     return start;
   }
 
   Size _computeSize() {
-    final unitLength = facto.viewEvent.viewAxis.unitLength;
+    final unitLength = facto.viewEvent.xAxis.unitLength;
     final baseHeight = facto.baseDrawEvent!.drawZone.size.height;
     final size = Size(unitLength, baseHeight);
-
     return size;
   }
 }

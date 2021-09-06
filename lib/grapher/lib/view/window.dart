@@ -24,12 +24,7 @@ class Window extends Boundary with SinglePropagator {
 
   void drawOnValidInput(DrawEvent drawEvent) {
     final cuttedChain = inputData!.skip(lower).take(length);
-    updateYRange(cuttedChain);
-    propagate(ViewEvent(
-      drawEvent,
-      viewAxis,
-      cuttedChain,
-    ));
+    propagate(ViewEvent(drawEvent, xAxis, yAxis, cuttedChain));
   }
 
   void onScroll(PointerScrollEvent event) {
@@ -41,22 +36,9 @@ class Window extends Boundary with SinglePropagator {
 
   void offsetOnZooming(PointerScrollEvent event) {
     final skipCount = countSkippedChunk();
-    final offsetX = viewAxis.offset.dx;
-    final deltaScrollX = moderatedScroll(event.scrollDelta.dy);
-    var cumuledDelta = deltaScrollX * skipCount;
-    cumuledDelta += deltaScrollX / 2;
-    final newX = offsetX + cumuledDelta;
-    final newOffset = Offset(newX, viewAxis.offset.dy);
-    viewAxis.offset = newOffset;
-  }
-
-  void updateYRange(Iterable<Data2D> chain) {
-    viewAxis.yMin = chain.reduce((value, curr) {
-      return (value.yMin < curr.yMin) ? value : curr;
-    }).yMin;
-
-    viewAxis.yMax = chain.reduce((value, curr) {
-      return (value.yMax > curr.yMax) ? value : curr;
-    }).yMax;
+    final spreadZoom = getSpreadZoom(event.scrollDelta.dy);
+    final cumuledDelta = (spreadZoom * skipCount);
+    print("${skipCount} -- ${cumuledDelta} -- ${spreadZoom}");
+    xAxis.offset += cumuledDelta;
   }
 }

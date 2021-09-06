@@ -10,7 +10,7 @@ import 'package:grapher/view/view.dart';
 abstract class InteractiveView extends View
     with HitHelper, DragHelper, ScrollHelper {
   InteractiveView({
-    double unitLength = View.DEFAULT_CHUNK_LENGTH,
+    double unitLength = View.DEFAULT_UNIT_LENGTH,
     GraphObject? child,
   }) : super(unitLength: unitLength, child: child);
 
@@ -24,35 +24,30 @@ abstract class InteractiveView extends View
   @override
   void onDrag(DragUpdateDetails event) {
     if (!isPointerOnView(event.localPosition)) return;
-    final newOffset = viewAxis.offset + event.delta;
-    viewAxis.offset = newOffset;
+    xAxis.offset += event.delta.dx;
+    yAxis.offset += event.delta.dy;
     setState(this);
   }
 
   @override
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
-    final yScrollDelta = moderatedScroll(event.scrollDelta.dy);
-    final zoom = viewAxis.zoom;
-    final newScale = Offset(zoom.dx + yScrollDelta, zoom.dy);
-    viewAxis.zoom = newScale;
+    final yScrollDelta = getSpreadZoom(event.scrollDelta.dy);
+    xAxis.zoom += yScrollDelta;
     setState(this);
   }
 
   bool isPointerOnView(Offset pointerPosition) {
     if (super.baseDrawEvent == null) return false;
     final drawRect = super.baseDrawEvent!.drawZone.toRect;
-
     return drawRect.contains(pointerPosition);
   }
 
-  double moderatedScroll(double deltaScroll) {
+  double getSpreadZoom(double deltaScroll) {
     if (baseDrawEvent == null) return 0;
     final zoneWidth = baseDrawEvent!.drawZone.size.width;
-    final unitLen = viewAxis.unitLength;
-    final unitCount = zoneWidth / unitLen;
+    final unitCount = zoneWidth / xAxis.unitLength;
     final moderatedScroll = deltaScroll / unitCount;
-
     return moderatedScroll;
   }
 }

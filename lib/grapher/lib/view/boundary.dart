@@ -26,19 +26,17 @@ abstract class Boundary extends InteractiveView with SinglePropagator {
   }
 
   int getUpperBound() {
-    if (viewAxis.offset.dx <= 0) return inputData!.length;
+    if (xAxis.offset <= 0) return inputData!.length;
     final skippedChunk = countSkippedChunk();
     final dataLen = inputData!.length;
     final upperBound = dataLen - skippedChunk;
-
     return upperBound;
   }
 
   int countSkippedChunk() {
-    final xOffset = viewAxis.offset.dx;
-    final chunkLen = viewAxis.unitLength;
-    final skipCounter = (xOffset / chunkLen).floor();
-
+    final xOffset = xAxis.offset;
+    final unitLength = xAxis.unitLength;
+    final skipCounter = (xOffset / unitLength).floor();
     return skipCounter;
   }
 
@@ -46,7 +44,6 @@ abstract class Boundary extends InteractiveView with SinglePropagator {
     final upperBound = getUpperBound();
     var lowerBound = upperBound - maxDisplayableUnit();
     if (lowerBound <= 0) lowerBound = 0;
-
     return lowerBound;
   }
 }

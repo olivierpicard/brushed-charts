@@ -2,9 +2,19 @@ import 'package:grapher/utils/range.dart';
 
 class Axis {
   // TODO: use a set property to make some change on zoom change
-  double zoom = 0;
+  double _zoom = 0;
   double offset = 0;
-  Range pixelRange;
+  late Range pixelRange;
 
-  Axis(this.pixelRange);
+  Axis();
+
+  Axis.copy(Axis ref)
+      : offset = ref.offset,
+        _zoom = ref.zoom,
+        pixelRange = ref.pixelRange;
+
+  Axis copy() => Axis.copy(this);
+
+  double get zoom => _zoom;
+  void set zoom(double value) => _zoom = value;
 }

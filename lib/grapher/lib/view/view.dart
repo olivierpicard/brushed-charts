@@ -5,17 +5,18 @@ import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher/view/view-axis.dart';
+import 'package:grapher/utils/range.dart';
+import 'package:grapher/view/axis/unit-axis.dart';
+import 'package:grapher/view/axis/virtual-axis.dart';
 
 class View extends Drawable with SinglePropagator {
-  static const double DEFAULT_CHUNK_LENGTH = 20;
+  static const double DEFAULT_UNIT_LENGTH = 20;
   Iterable<Data2D>? inputData;
-  ViewAxis viewAxis;
+  final xAxis = UnitAxis();
+  final yAxis = VirtualAxis();
 
-  View({
-    double unitLength = View.DEFAULT_CHUNK_LENGTH,
-    GraphObject? child,
-  }) : viewAxis = ViewAxis(baseUnitLength: unitLength) {
+  View({double unitLength = View.DEFAULT_UNIT_LENGTH, GraphObject? child}) {
+    xAxis.unitLength = unitLength;
     Init.child(this, child);
     initEventListener();
   }
@@ -26,9 +27,16 @@ class View extends Drawable with SinglePropagator {
     });
   }
 
+  void draw(DrawEvent event) {
+    super.draw(event);
+    xAxis.pixelRange = event.drawZone.xRange;
+    yAxis.pixelRange = event.drawZone.yRange;
+  }
+
   void onIncomingData(IncomingData event) {
     if (event.content is! Iterable<Data2D>) return;
     inputData = event.content;
+    yAxis.virtualRange = getYRange();
     setState(this);
   }
 
@@ -41,9 +49,23 @@ class View extends Drawable with SinglePropagator {
 
   int maxDisplayableUnit() {
     final zoneSize = baseDrawEvent!.drawZone.size;
-    final unitLength = viewAxis.unitLength;
+    final unitLength = xAxis.unitLength;
     final maxChunk = (zoneSize.width / unitLength).ceil();
 
     return maxChunk;
+  }
+
+  // TODO: remove this function by mark down the yMin, yMax of the whole chain
+  // It will avoid two loop and consequently increase performance
+  Range getYRange() {
+    final yMin = inputData!.reduce((value, curr) {
+      return (value.yMin < curr.yMin) ? value : curr;
+    }).yMin;
+
+    final yMax = inputData!.reduce((value, curr) {
+      return (value.yMax > curr.yMax) ? value : curr;
+    }).yMax;
+
+    return Range(yMin, yMax);
   }
 }
