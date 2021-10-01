@@ -1,5 +1,4 @@
 import 'package:flutter/gestures.dart';
-import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
@@ -29,8 +28,8 @@ class Window extends Boundary with SinglePropagator {
 
   void onScroll(PointerScrollEvent event) {
     if (!isPointerOnView(event.localPosition)) return;
-    super.onScroll(event);
     offsetOnZooming(event);
+    super.onScroll(event);
     setState(this);
   }
 
@@ -38,7 +37,6 @@ class Window extends Boundary with SinglePropagator {
     final skipCount = countSkippedChunk();
     final spreadZoom = getSpreadZoom(event.scrollDelta.dy);
     final cumuledDelta = (spreadZoom * skipCount);
-    print("${skipCount} -- ${cumuledDelta} -- ${spreadZoom}");
-    xAxis.offset += cumuledDelta;
+    xAxis.offset -= cumuledDelta;
   }
 }
