@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/kernel/drawEvent.dart';
@@ -55,17 +57,12 @@ class View extends Drawable with SinglePropagator {
     return maxChunk;
   }
 
-  // TODO: remove this function by mark down the yMin, yMax of the whole chain
-  // It will avoid two loop and consequently increase performance
   Range getYRange() {
-    final yMin = inputData!.reduce((value, curr) {
-      return (value.yMin < curr.yMin) ? value : curr;
-    }).yMin;
-
-    final yMax = inputData!.reduce((value, curr) {
-      return (value.yMax > curr.yMax) ? value : curr;
-    }).yMax;
-
+    double yMin = 999999, yMax = -99999;
+    inputData!.forEach((packet) {
+      yMin = min(packet.yMin, yMin);
+      yMax = max(packet.yMax, yMax);
+    });
     return Range(yMin, yMax);
   }
 }
