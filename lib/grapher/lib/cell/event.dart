@@ -1,6 +1,5 @@
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/drawUnit/draw-unit-object.dart';
-import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/kernel/drawZone.dart';
 import 'package:grapher/view/view-event.dart';

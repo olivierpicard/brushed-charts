@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:grapher/cell/event.dart';
-import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
 
