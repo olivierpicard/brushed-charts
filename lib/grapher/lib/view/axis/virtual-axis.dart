@@ -18,8 +18,7 @@ class VirtualAxis extends Axis {
     final vMax = virtualRange.max;
     final tMin = pixelRange.min;
     final tMax = pixelRange.max;
-    final pixel = (x - vMin) / (vMax - vMin) * (tMax - tMin) + tMin;
-
+    final pixel = tMax - (x - vMin) / (vMax - vMin) * (tMax - tMin);
     return pixel;
   }
 }
