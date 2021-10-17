@@ -11,7 +11,8 @@ class Cell extends DrawUnit with HitHelper {
     hitAddEventListeners();
   }
 
-  Cell.template({required DrawUnitObject child}) : super.template(child: child);
+  Cell.template({required DrawUnitObject template})
+      : super.template(child: template);
 
   Cell instanciate(DrawUnitMetadata metadata) {
     return Cell(metadata, child);

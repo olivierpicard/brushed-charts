@@ -4,16 +4,15 @@ import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/filter/dataStruct/ohlc.dart';
 import 'package:grapher/geometry/geometry.dart';
-import 'package:grapher/kernel/propagator/endline.dart';
 
-class Candlestick extends Geometry with EndlinePropagator {
+class Candlestick extends Geometry {
   static const double BODY_PERCENT = 60;
   static const double WICK_WIDTH = 1;
 
   late final double bodyWidth;
   late final OHLC ohlc;
 
-  Candlestick() : super(BODY_PERCENT);
+  Candlestick({DrawUnitObject? child}) : super(BODY_PERCENT, child);
 
   @override
   void draw(DrawUnitEvent event) {
@@ -64,5 +63,5 @@ class Candlestick extends Geometry with EndlinePropagator {
   }
 
   @override
-  DrawUnitObject instanciate() => Candlestick();
+  DrawUnitObject instanciate() => Candlestick(child: child?.instanciate());
 }

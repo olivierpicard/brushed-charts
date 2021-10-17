@@ -11,6 +11,8 @@ class DrawUnit extends Viewable with SinglePropagator {
   final DrawUnitObject child;
   late final DrawUnitMetadata metadata;
 
+  DrawUnit.template({required this.child});
+
   DrawUnit(this.metadata, DrawUnitObject template)
       : child = template.instanciate() {
     Init.child(this, child);
@@ -22,8 +24,6 @@ class DrawUnit extends Viewable with SinglePropagator {
     if (childEvent == null) return;
     propagate(childEvent);
   }
-
-  DrawUnit.template({required this.child});
 
   DrawUnit instanciate(DrawUnitMetadata metadata) {
     return DrawUnit(metadata, child);

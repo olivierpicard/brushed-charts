@@ -1,4 +1,5 @@
 import 'package:grapher/drawUnit/drawunit.dart';
+import 'package:grapher/kernel/linkEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/multi.dart';
@@ -22,6 +23,7 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
     Init.children(this, children);
   }
 
+  // TODO: Adjust vertical scale for displayed data, not for all downloaded data
   void createUnit() {
     children = [];
     final reversedData = viewEvent.chainData.toList().reversed;
@@ -31,5 +33,6 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
       drawUnit.handleEvent(metadata.viewEvent);
       children.add(drawUnit);
     });
+    propagate(KernelLinkEvent(kernel));
   }
 }

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/geometry/geometry.dart';
-import 'package:grapher/kernel/propagator/endline.dart';
 
-class Line extends Geometry with EndlinePropagator {
+class Line extends Geometry {
   static const double BODY_PERCENT = 0;
 
-  Line() : super(BODY_PERCENT);
+  Line({DrawUnitObject? child}) : super(BODY_PERCENT, child);
 
   @override
   void draw(DrawUnitEvent event) {
@@ -43,5 +42,5 @@ class Line extends Geometry with EndlinePropagator {
   }
 
   @override
-  DrawUnitObject instanciate() => Line();
+  DrawUnitObject instanciate() => Line(child: child?.instanciate());
 }
