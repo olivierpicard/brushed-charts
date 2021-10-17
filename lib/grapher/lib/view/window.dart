@@ -23,6 +23,7 @@ class Window extends Boundary with SinglePropagator {
 
   void drawOnValidInput(DrawEvent drawEvent) {
     final cuttedChain = inputData!.skip(lower).take(length);
+    yAxis.virtualRange = getYRange(cuttedChain);
     propagate(ViewEvent(drawEvent, xAxis, yAxis, cuttedChain));
   }
 

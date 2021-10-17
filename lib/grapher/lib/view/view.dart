@@ -38,7 +38,7 @@ class View extends Drawable with SinglePropagator {
   void onIncomingData(IncomingData event) {
     if (event.content is! Iterable<Data2D>) return;
     inputData = event.content;
-    yAxis.virtualRange = getYRange();
+    yAxis.virtualRange = getYRange(inputData!);
     setState(this);
   }
 
@@ -57,9 +57,9 @@ class View extends Drawable with SinglePropagator {
     return maxChunk;
   }
 
-  Range getYRange() {
+  Range getYRange(Iterable<Data2D> chain) {
     double yMin = 999999, yMax = -99999;
-    inputData!.forEach((packet) {
+    chain.forEach((packet) {
       yMin = min(packet.yMin, yMin);
       yMax = max(packet.yMax, yMax);
     });

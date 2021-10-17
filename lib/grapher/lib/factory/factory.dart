@@ -23,7 +23,6 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
     Init.children(this, children);
   }
 
-  // TODO: Adjust vertical scale for displayed data, not for all downloaded data
   void createUnit() {
     children = [];
     final reversedData = viewEvent.chainData.toList().reversed;
