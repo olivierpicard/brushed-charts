@@ -17,6 +17,7 @@ import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/splitter/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/tag/tag.dart';
+import 'package:grapher/utils/misc.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';

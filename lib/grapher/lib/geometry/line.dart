@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/geometry/geometry.dart';
+import 'package:grapher/utils/misc.dart';
 
 class Line extends Geometry {
   static const double BODY_PERCENT = 0;
+  Paint paint = Paint()..color = Misc.randomColor();
 
-  Line({DrawUnitObject? child}) : super(BODY_PERCENT, child);
+  Line({Paint? paint, DrawUnitObject? child}) : super(BODY_PERCENT, child) {
+    if (paint != null) this.paint = paint;
+  }
 
   @override
   void draw(DrawUnitEvent event) {
@@ -20,8 +24,7 @@ class Line extends Geometry {
   void drawLine(DrawUnitEvent event) {
     final prevPosition = previousPosition(event);
     final selfPosition = calculatePosition(event);
-    final color = Paint()..color = Colors.blue;
-    canvas!.drawLine(selfPosition, prevPosition, color);
+    canvas!.drawLine(selfPosition, prevPosition, paint);
   }
 
   Offset calculatePosition(DrawUnitEvent event) {
@@ -42,5 +45,6 @@ class Line extends Geometry {
   }
 
   @override
-  DrawUnitObject instanciate() => Line(child: child?.instanciate());
+  DrawUnitObject instanciate() =>
+      Line(paint: paint, child: child?.instanciate());
 }
