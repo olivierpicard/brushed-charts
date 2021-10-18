@@ -7,8 +7,7 @@ import 'package:grapher/pointer/helper/hit.dart';
 import 'package:grapher/pointer/helper/scroll.dart';
 import 'package:grapher/view/view.dart';
 
-abstract class InteractiveView extends View
-    with HitHelper, DragHelper, ScrollHelper {
+abstract class InteractiveView extends View with DragHelper, ScrollHelper {
   InteractiveView({
     double unitLength = View.DEFAULT_UNIT_LENGTH,
     GraphObject? child,

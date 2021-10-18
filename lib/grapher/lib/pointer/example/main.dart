@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grapher/pointer/example/tester.dart';
 import '/kernel/kernel.dart';
 import '../widget.dart';
 
@@ -17,7 +18,7 @@ class App extends StatelessWidget {
             Container(color: Colors.blue, height: 200, width: 200),
             Expanded(
                 child: GraphPointer(
-              kernel: GraphKernel(),
+              kernel: GraphKernel(child: Tester()),
             ))
           ],
         ),

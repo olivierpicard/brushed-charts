@@ -7,8 +7,7 @@ import '/kernel/propagator/endline.dart';
 import '/pointer/helper/drag.dart';
 import '/pointer/helper/hit.dart';
 
-abstract class Handle extends FlexObject
-    with EndlinePropagator, HitHelper, DragHelper {
+abstract class Handle extends FlexObject with EndlinePropagator, DragHelper {
   static const double THICKNESS = 20;
   static const double CIRCLE_RADIUS = THICKNESS / 4;
   static const double CIRCLE_OFFSET = CIRCLE_RADIUS * 2 + 2;
