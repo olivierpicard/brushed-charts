@@ -113,28 +113,43 @@ class App extends StatelessWidget {
       ]),
       StackLayout(children: [
         DataInjector(
-            stream: streamer(krakenJSON),
+            stream: streamer(oandaJSON),
             child: Extract(
                 options: "data.kraken",
-                child: Explode(
-                    child: ToCandle2D(
-                        xLabel: "datetime",
-                        yLabel: "price",
-                        child: Tag(
-                            name: 'kraken',
-                            child: PipeIn(
-                                eventType: IncomingData,
-                                name: 'pipe_main_kraken')))))),
+                child: StackLayout(children: [
+                  Explode(
+                      child: ToCandle2D(
+                          xLabel: "datetime",
+                          yLabel: "price",
+                          child: Tag(
+                              name: 'kraken',
+                              child: PipeIn(
+                                  eventType: IncomingData,
+                                  name: 'pipe_main_kraken')))),
+                  Explode(
+                      child: ToPoint2D(
+                          xLabel: "datetime",
+                          yLabel: "volume",
+                          child: Tag(
+                              name: 'kraken_volume',
+                              child: PipeIn(
+                                  eventType: IncomingData,
+                                  name: 'pipe_main_kraken')))),
+                ]))),
         PipeOut(
             name: 'pipe_main_kraken',
             child: Pack(
                 child: SortAccumulation(
                     child: Window(
                         child: StackLayout(children: [
+              // UnpackFromViewEvent(
+              //     tagName: 'kraken',
+              //     child: DrawUnitFactory(
+              //         template: DrawUnit.template(child: Candlestick()))),
               UnpackFromViewEvent(
-                  tagName: 'kraken',
+                  tagName: 'kraken_volume',
                   child: DrawUnitFactory(
-                      template: DrawUnit.template(child: Candlestick()))),
+                      template: DrawUnit.template(child: Histogram()))),
             ])))))
       ])
     ]));
