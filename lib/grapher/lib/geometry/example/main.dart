@@ -113,7 +113,7 @@ class App extends StatelessWidget {
       ]),
       StackLayout(children: [
         DataInjector(
-            stream: streamer(oandaJSON),
+            stream: streamer(krakenJSON),
             child: Extract(
                 options: "data.kraken",
                 child: StackLayout(children: [
@@ -140,17 +140,18 @@ class App extends StatelessWidget {
             name: 'pipe_main_kraken',
             child: Pack(
                 child: SortAccumulation(
-                    child: Window(
-                        child: StackLayout(children: [
-              // UnpackFromViewEvent(
-              //     tagName: 'kraken',
-              //     child: DrawUnitFactory(
-              //         template: DrawUnit.template(child: Candlestick()))),
-              UnpackFromViewEvent(
-                  tagName: 'kraken_volume',
-                  child: DrawUnitFactory(
-                      template: DrawUnit.template(child: Histogram()))),
-            ])))))
+                    child: StackLayout(children: [
+              Window(
+                  child: UnpackFromViewEvent(
+                      tagName: 'kraken',
+                      child: DrawUnitFactory(
+                          template: DrawUnit.template(child: Candlestick())))),
+              Window(
+                  child: UnpackFromViewEvent(
+                      tagName: 'kraken_volume',
+                      child: DrawUnitFactory(
+                          template: DrawUnit.template(child: Histogram())))),
+            ]))))
       ])
     ]));
   }
