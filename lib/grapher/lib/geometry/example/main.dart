@@ -8,6 +8,7 @@ import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/filter/json/to-point2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
+import 'package:grapher/geometry/histogram.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/pack/example/json-kraken.dart';
 import 'package:grapher/pack/example/json-oanda.dart';
@@ -107,7 +108,7 @@ class App extends StatelessWidget {
               UnpackFromViewEvent(
                   tagName: 'moving_average',
                   child: DrawUnitFactory(
-                      template: DrawUnit.template(child: Line()))),
+                      template: DrawUnit.template(child: Histogram()))),
             ])))))
       ]),
       StackLayout(children: [
