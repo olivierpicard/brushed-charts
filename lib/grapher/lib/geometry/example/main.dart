@@ -17,9 +17,13 @@ import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/splitter/horizontal.dart';
+import 'package:grapher/staticLayout/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
+import 'package:grapher/staticLayout/vertical.dart';
 import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tag.dart';
+import 'package:grapher/utils/resize-zone.dart';
+import 'package:grapher/utils/yrange.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
@@ -140,18 +144,21 @@ class App extends StatelessWidget {
             name: 'pipe_main_kraken',
             child: Pack(
                 child: SortAccumulation(
-                    child: StackLayout(children: [
-              Window(
-                  child: UnpackFromViewEvent(
-                      tagName: 'kraken',
-                      child: DrawUnitFactory(
-                          template: DrawUnit.template(child: Candlestick())))),
-              Window(
-                  child: UnpackFromViewEvent(
-                      tagName: 'kraken_volume',
-                      child: DrawUnitFactory(
-                          template: DrawUnit.template(child: Histogram())))),
-            ]))))
+                    child: Window(
+                        child: StackLayout(children: [
+              UnpackFromViewEvent(
+                  tagName: 'kraken',
+                  child: DrawUnitFactory(
+                      template: DrawUnit.template(child: Candlestick()))),
+              UnpackFromViewEvent(
+                  tagName: 'kraken_volume',
+                  child: YRange(
+                      child: ResizeDrawZone(
+                          height: 100,
+                          child: DrawUnitFactory(
+                              template:
+                                  DrawUnit.template(child: Histogram()))))),
+            ]))))),
       ])
     ]));
   }
