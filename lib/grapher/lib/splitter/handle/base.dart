@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '/kernel/drawEvent.dart';
 import '/kernel/propagator/endline.dart';
 import '/pointer/helper/drag.dart';
-import '/pointer/helper/hit.dart';
 
 abstract class Handle extends FlexObject with EndlinePropagator, DragHelper {
   static const double THICKNESS = 20;

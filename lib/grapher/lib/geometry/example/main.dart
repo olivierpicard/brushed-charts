@@ -18,12 +18,11 @@ import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/splitter/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
+import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tag.dart';
-import 'package:grapher/utils/misc.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
-import '../line.dart';
 import '/kernel/kernel.dart';
 import '/pointer/widget.dart';
 import 'json-oanda-ma.dart';
@@ -132,6 +131,7 @@ class App extends StatelessWidget {
                           yLabel: "volume",
                           child: Tag(
                               name: 'kraken_volume',
+                              property: TagProperty.neutralRange,
                               child: PipeIn(
                                   eventType: IncomingData,
                                   name: 'pipe_main_kraken')))),

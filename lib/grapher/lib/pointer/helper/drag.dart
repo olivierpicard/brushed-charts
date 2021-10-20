@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:grapher/kernel/drawable.dart';
-import 'hit.dart';
 
 mixin DragHelper on Drawable {
   bool isHold = false;

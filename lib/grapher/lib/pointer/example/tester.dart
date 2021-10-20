@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
-import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/pointer/helper/drag.dart';

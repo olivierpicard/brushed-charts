@@ -1,0 +1,1 @@
+enum TagProperty { basic, neutralRange }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/incoming-data.dart';
 import 'package:grapher/kernel/drawEvent.dart';
@@ -7,7 +5,7 @@ import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher/utils/range.dart';
+import 'package:grapher/utils/yrange.dart';
 import 'package:grapher/view/axis/unit-axis.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 
@@ -36,9 +34,9 @@ class View extends Drawable with SinglePropagator {
   }
 
   void onIncomingData(IncomingData event) {
-    if (event.content is! Iterable<Data2D>) return;
+    if (event.content is! Iterable<Data2D?>) return;
     inputData = event.content;
-    yAxis.virtualRange = getYRange(inputData!);
+    yAxis.virtualRange = YRange.process(inputData!);
     setState(this);
   }
 
@@ -55,14 +53,5 @@ class View extends Drawable with SinglePropagator {
     final maxChunk = (zoneSize.width / unitLength).ceil();
 
     return maxChunk;
-  }
-
-  Range getYRange(Iterable<Data2D> chain) {
-    double yMin = 999999, yMax = -99999;
-    chain.forEach((packet) {
-      yMin = min(packet.yMin, yMin);
-      yMax = max(packet.yMax, yMax);
-    });
-    return Range(yMin, yMax);
   }
 }

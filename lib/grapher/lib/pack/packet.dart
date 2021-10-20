@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:grapher/filter/dataStruct/data2D.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
+import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tagged-box.dart';
 
 class Packet extends Timeseries2D {
@@ -30,6 +31,7 @@ class Packet extends Timeseries2D {
   }
 
   void _updateYRange(TaggedBox tag) {
+    if (tag.property == TagProperty.neutralRange) return;
     final data2D = tag.content as Data2D;
     yMin = min(yMin, data2D.yMin);
     yMax = max(yMax, data2D.yMax);

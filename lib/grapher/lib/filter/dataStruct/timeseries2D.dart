@@ -2,7 +2,7 @@ import 'data2D.dart';
 
 abstract class Timeseries2D extends Data2D {
   final DateTime x;
-  final y;
+  final dynamic y;
   Timeseries2D(this.x, this.y);
 
   @override

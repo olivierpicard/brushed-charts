@@ -3,7 +3,6 @@ import 'package:flutter/src/gestures/drag_details.dart';
 import 'package:flutter/src/gestures/events.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/pointer/helper/drag.dart';
-import 'package:grapher/pointer/helper/hit.dart';
 import 'package:grapher/pointer/helper/scroll.dart';
 import 'package:grapher/view/view.dart';
 

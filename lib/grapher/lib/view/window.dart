@@ -3,6 +3,7 @@ import 'package:grapher/kernel/drawEvent.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
+import 'package:grapher/utils/yrange.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/boundary.dart';
 
@@ -23,7 +24,7 @@ class Window extends Boundary with SinglePropagator {
 
   void drawOnValidInput(DrawEvent drawEvent) {
     final cuttedChain = inputData!.skip(lower).take(length);
-    yAxis.virtualRange = getYRange(cuttedChain);
+    yAxis.virtualRange = YRange.process(cuttedChain);
     propagate(ViewEvent(drawEvent, xAxis, yAxis, cuttedChain));
   }
 
