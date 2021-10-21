@@ -30,7 +30,7 @@ class VAlignDrawZone extends GraphObject with SinglePropagator {
 
   void _alignTop() {
     final top = originalZone.toRect.top + bias;
-    final left = originalZone.toRect.left;
+    final left = zone.toRect.left;
     final position = Offset(left, top);
     zone.position = position;
   }
@@ -38,7 +38,7 @@ class VAlignDrawZone extends GraphObject with SinglePropagator {
   void _alignBottom() {
     final bottom = originalZone.toRect.bottom - bias;
     final top = bottom - zone.size.height;
-    final left = originalZone.toRect.left;
+    final left = zone.toRect.left;
     final position = Offset(left, top);
     zone.position = position;
   }

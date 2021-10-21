@@ -30,7 +30,7 @@ class HAlignDrawZone extends GraphObject with SinglePropagator {
 
   void _alignLeft() {
     final left = originalZone.toRect.left + bias;
-    final top = originalZone.toRect.top;
+    final top = zone.toRect.top;
     final position = Offset(left, top);
     zone.position = position;
   }
@@ -38,7 +38,7 @@ class HAlignDrawZone extends GraphObject with SinglePropagator {
   void _alignRight() {
     final right = originalZone.toRect.right - bias;
     final left = right - zone.size.width;
-    final top = originalZone.toRect.top;
+    final top = zone.toRect.top;
     final position = Offset(left, top);
     zone.position = position;
   }
