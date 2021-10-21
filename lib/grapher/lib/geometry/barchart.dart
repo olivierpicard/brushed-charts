@@ -4,15 +4,14 @@ import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/geometry/geometry.dart';
 import 'package:grapher/utils/misc.dart';
 
-class Histogram extends Geometry {
+class BarChart extends Geometry {
   static const double BODY_PERCENT = 60;
   static const double WICK_WIDTH = 1;
 
   late final double bodyWidth;
   Paint paint = Paint()..color = Misc.randomColor();
 
-  Histogram({Paint? paint, DrawUnitObject? child})
-      : super(BODY_PERCENT, child) {
+  BarChart({Paint? paint, DrawUnitObject? child}) : super(BODY_PERCENT, child) {
     if (paint != null) this.paint = paint;
   }
 
@@ -35,5 +34,5 @@ class Histogram extends Geometry {
 
   @override
   DrawUnitObject instanciate() =>
-      Histogram(paint: paint, child: child?.instanciate());
+      BarChart(paint: paint, child: child?.instanciate());
 }

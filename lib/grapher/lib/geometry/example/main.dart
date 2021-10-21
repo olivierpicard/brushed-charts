@@ -10,7 +10,7 @@ import 'package:grapher/filter/json/extract.dart';
 import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/filter/json/to-point2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
-import 'package:grapher/geometry/histogram.dart';
+import 'package:grapher/geometry/barchart.dart';
 import 'package:grapher/geometry/line.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/pack/example/json-kraken.dart';
@@ -159,7 +159,7 @@ class App extends StatelessWidget {
                           vBias: 3,
                           child: DrawUnitFactory(
                               template: DrawUnit.template(
-                                  child: Histogram(
+                                  child: BarChart(
                                       paint: Paint()..color = Colors.blue)))))),
             ]))))),
       ])
