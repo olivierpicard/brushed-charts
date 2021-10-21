@@ -5,7 +5,7 @@ import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher/utils/yrange.dart';
+import 'package:grapher/utils/y-virtual-range.dart';
 import 'package:grapher/view/axis/unit-axis.dart';
 import 'package:grapher/view/axis/virtual-axis.dart';
 
@@ -36,7 +36,7 @@ class View extends Drawable with SinglePropagator {
   void onIncomingData(IncomingData event) {
     if (event.content is! Iterable<Data2D?>) return;
     inputData = event.content;
-    yAxis.virtualRange = YRange.process(inputData!);
+    yAxis.virtualRange = YVirtualRangeUpdate.process(inputData!);
     setState(this);
   }
 

@@ -7,14 +7,14 @@ import 'package:grapher/utils/range.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
 
-class YRange extends Viewable with SinglePropagator {
+class YVirtualRangeUpdate extends Viewable with SinglePropagator {
   final GraphObject? child;
 
-  YRange({this.child});
+  YVirtualRangeUpdate({this.child});
 
   void draw(ViewEvent viewEvent) {
     super.draw(viewEvent);
-    final range = YRange.process(viewEvent.chainData);
+    final range = YVirtualRangeUpdate.process(viewEvent.chainData);
     final newEvent = updateViewEvent(viewEvent, range);
     propagate(newEvent);
   }

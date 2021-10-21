@@ -1,3 +1,5 @@
+import 'package:grapher/detachedPanel/align-options.dart';
+import 'package:grapher/detachedPanel/panel.dart';
 import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
@@ -9,6 +11,7 @@ import 'package:grapher/filter/json/to-candle2D.dart';
 import 'package:grapher/filter/json/to-point2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
 import 'package:grapher/geometry/histogram.dart';
+import 'package:grapher/geometry/line.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/pack/example/json-kraken.dart';
 import 'package:grapher/pack/example/json-oanda.dart';
@@ -17,13 +20,10 @@ import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/splitter/horizontal.dart';
-import 'package:grapher/staticLayout/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
-import 'package:grapher/staticLayout/vertical.dart';
 import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tag.dart';
-import 'package:grapher/utils/resize-zone.dart';
-import 'package:grapher/utils/yrange.dart';
+import 'package:grapher/utils/y-virtual-range.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';
@@ -111,7 +111,7 @@ class App extends StatelessWidget {
               UnpackFromViewEvent(
                   tagName: 'moving_average',
                   child: DrawUnitFactory(
-                      template: DrawUnit.template(child: Histogram()))),
+                      template: DrawUnit.template(child: Line()))),
             ])))))
       ]),
       StackLayout(children: [
@@ -152,12 +152,15 @@ class App extends StatelessWidget {
                       template: DrawUnit.template(child: Candlestick()))),
               UnpackFromViewEvent(
                   tagName: 'kraken_volume',
-                  child: YRange(
-                      child: ResizeDrawZone(
-                          height: 100,
+                  child: YVirtualRangeUpdate(
+                      child: DetachedPanel(
+                          height: 70,
+                          vAlignment: VAlign.bottom,
+                          vBias: 3,
                           child: DrawUnitFactory(
-                              template:
-                                  DrawUnit.template(child: Histogram()))))),
+                              template: DrawUnit.template(
+                                  child: Histogram(
+                                      paint: Paint()..color = Colors.blue)))))),
             ]))))),
       ])
     ]));
