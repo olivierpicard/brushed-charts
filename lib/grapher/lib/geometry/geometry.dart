@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/drawUnit/unit-drawable.dart';
@@ -11,6 +13,7 @@ abstract class Geometry extends UnitDrawable
   final double widthPercent;
   late final VirtualAxis yAxis;
   late final UnitAxis xAxis;
+  Rect? hitZone;
 
   Geometry(this.widthPercent, this.child);
 
@@ -19,5 +22,10 @@ abstract class Geometry extends UnitDrawable
     super.draw(event);
     yAxis = event.yAxis;
     xAxis = event.xAxis;
+  }
+
+  bool isHit(Offset point) {
+    if (hitZone == null) return false;
+    return hitZone!.contains(point);
   }
 }

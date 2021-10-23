@@ -24,6 +24,7 @@ class Line extends Geometry {
   void drawLine(DrawUnitEvent event) {
     final prevPosition = previousPosition(event);
     final selfPosition = calculatePosition(event);
+    hitZone = makeContactZone(prevPosition, selfPosition);
     canvas!.drawLine(selfPosition, prevPosition, paint);
   }
 
@@ -42,6 +43,13 @@ class Line extends Geometry {
     final prevPosition = Offset(xCenter, yPixel);
 
     return prevPosition;
+  }
+
+  Rect? makeContactZone(Offset prev, Offset current) {
+    final yDistance = (current.dy - prev.dy).abs();
+    final width = baseDrawEvent!.drawZone.size.width;
+    return Rect.fromCenter(
+        center: current, width: width, height: yDistance * 2);
   }
 
   @override

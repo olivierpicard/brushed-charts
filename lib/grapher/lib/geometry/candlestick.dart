@@ -11,6 +11,7 @@ class Candlestick extends Geometry {
 
   late final double bodyWidth;
   late final OHLC ohlc;
+  Rect? wick, body;
 
   Candlestick({DrawUnitObject? child}) : super(BODY_PERCENT, child);
 
@@ -25,10 +26,10 @@ class Candlestick extends Geometry {
   void drawBody(DrawUnitEvent event) {
     final left = event.drawZone.toRect.left;
     final right = event.drawZone.toRect.right;
-    final bodyRect = Rect.fromLTRB(
+    body = Rect.fromLTRB(
         left, yAxis.toPixel(ohlc.close), right, yAxis.toPixel(ohlc.open));
     final paint = Paint()..color = getCandleColor(ohlc);
-    canvas!.drawRect(bodyRect, paint);
+    canvas!.drawRect(body!, paint);
   }
 
   void drawWick(DrawUnitEvent event) {
@@ -36,9 +37,9 @@ class Candlestick extends Geometry {
     final right = _wickRightSide;
     final high = yAxis.toPixel(ohlc.high);
     final low = yAxis.toPixel(ohlc.low);
-    final bodyRect = Rect.fromLTRB(left, high, right, low);
+    wick = Rect.fromLTRB(left, high, right, low);
     final paint = Paint()..color = getCandleColor(ohlc);
-    canvas!.drawRect(bodyRect, paint);
+    canvas!.drawRect(wick!, paint);
   }
 
   double get _wickLeftSide {
@@ -60,6 +61,11 @@ class Candlestick extends Geometry {
   MaterialColor getCandleColor(OHLC ohlc) {
     if (ohlc.open > ohlc.close) return Colors.red;
     return Colors.green;
+  }
+
+  Rect? makeContactZone() {
+    if (body == null || wick == null) return null;
+    return body!.expandToInclude(wick!);
   }
 
   @override

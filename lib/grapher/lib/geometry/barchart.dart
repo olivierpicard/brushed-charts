@@ -19,6 +19,7 @@ class BarChart extends Geometry {
   void draw(DrawUnitEvent event) {
     super.draw(event);
     final bar = make(event);
+    hitZone = bar;
     canvas!.drawRect(bar, paint);
   }
 

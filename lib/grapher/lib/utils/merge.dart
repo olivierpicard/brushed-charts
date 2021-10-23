@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:grapher/drawUnit/draw-unit-object.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
@@ -13,4 +15,9 @@ class MergeBranches extends UnitDrawable with SinglePropagator, DrawUnitObject {
 
   @override
   double get widthPercent => 0;
+
+  @override
+  bool isHit(Offset hitPoint) {
+    throw UnimplementedError();
+  }
 }
