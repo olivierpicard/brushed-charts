@@ -14,9 +14,10 @@ class CellEvent {
   final dynamic rawPointerEvent;
   final PointerSummary pointer;
   final DateTime? datetime;
+  final DrawUnitObject? objectHit;
   late final double virtualY;
 
-  CellEvent(this.cell, this.rawPointerEvent)
+  CellEvent(this.cell, this.rawPointerEvent, this.objectHit)
       : viewEvent = cell.baseDrawEvent! as ViewEvent,
         drawZone = cell.baseDrawEvent!.drawZone,
         data = cell.metadata.data as Timeseries2D,

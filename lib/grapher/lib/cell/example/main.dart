@@ -1,5 +1,6 @@
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/cell/event.dart';
+import 'package:grapher/cell/example/basic-geometry.dart';
 import 'package:grapher/cell/example/tester.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
@@ -82,7 +83,7 @@ class App extends StatelessWidget {
                           tagName: 'oanda',
                           child: DrawUnitFactory(
                               template: Cell.template(
-                                  template: Candlestick(
+                                  template: BasicGeometry(
                                       child: MergeBranches(
                                           child: PipeIn(
                                               name: 'pipe_cell',

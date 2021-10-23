@@ -9,6 +9,6 @@ class Tester extends GraphObject with EndlinePropagator {
 
   void handleCellEvent(CellEvent event) {
     print(
-        '${event.datetime} -- ${event.pointer.type} -- ${event.pointer.position} -- vY: ${event.virtualY} -- close: ${event.data?.y.close}');
+        '${event.datetime} -- ${event.pointer.type} -- ${event.pointer.position} -- vY: ${event.virtualY} -- close: ${event.data?.y.close} -- objectHit: ${event.objectHit}');
   }
 }

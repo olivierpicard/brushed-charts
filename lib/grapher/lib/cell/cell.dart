@@ -24,14 +24,15 @@ class Cell extends DrawUnit with HitHelper, HoverHelper {
   @override
   void onHover(PointerHoverEvent event) {
     if (!isTappingOnSelf(event.position)) return;
-    final cellEvent = CellEvent(this, event);
+    final cellEvent = CellEvent(this, event, null);
     propagate(cellEvent);
   }
 
   @override
   void onTapDown(covariant TapDownDetails event) {
     if (!isTappingOnSelf(event.globalPosition)) return;
-    final cellEvent = CellEvent(this, event);
+    final hitObject = getHitChild(event.globalPosition);
+    final cellEvent = CellEvent(this, event, hitObject);
     propagate(cellEvent);
   }
 
@@ -39,5 +40,10 @@ class Cell extends DrawUnit with HitHelper, HoverHelper {
     if (baseDrawEvent == null) return false;
     if (!isHit(position)) return false;
     return true;
+  }
+
+  DrawUnitObject? getHitChild(Offset position) {
+    if (child.isHit(position)) return child;
+    return null;
   }
 }
