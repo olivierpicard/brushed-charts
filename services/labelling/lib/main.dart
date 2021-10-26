@@ -13,7 +13,7 @@ class Labeller extends StatelessWidget {
     return MaterialApp(
       title: 'Labeller',
       theme: ThemeData(
-        colorScheme: ColorScheme.dark(),
+        colorScheme: const ColorScheme.dark(),
       ),
       home: const MainView(),
     );
@@ -23,10 +23,11 @@ class Labeller extends StatelessWidget {
 class MainView extends StatelessWidget {
   const MainView({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
-      ToolBar(key: this.key),
+      ToolBar(key: key),
       Expanded(child: Container(color: Colors.red)),
     ]));
   }
