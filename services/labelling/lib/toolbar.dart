@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:labelling/events/download.dart';
 
 class ToolBar extends StatefulWidget {
   final double textFieldLength = 100;
-  const ToolBar({Key? key}) : super(key: key);
+  final Function(DownloadEvent) downloadCallback;
+  const ToolBar({Key? key, required this.downloadCallback}) : super(key: key);
 
   @override
   _ToolBarState createState() => _ToolBarState();
@@ -38,7 +40,7 @@ class _ToolBarState extends State<ToolBar> {
       ),
       const SizedBox(width: 30),
       DropdownButton(
-          onChanged: (e) => {},
+          onChanged: onInterval,
           value: interval,
           items: <String>[
             '1s',
@@ -69,10 +71,22 @@ class _ToolBarState extends State<ToolBar> {
         context: context,
         firstDate: DateTime(2018),
         lastDate: DateTime.now().add(const Duration(days: 2)));
+    emitDownloadEvent();
   }
 
-  void onInterval() {}
+  void onInterval(String? interval) {
+    if (interval == null) return;
+    this.interval = interval;
+    emitDownloadEvent();
+  }
+
   void onSelectMode() {
     setState(() => isSelectMode = !isSelectMode);
+  }
+
+  void emitDownloadEvent() {
+    if (dateRange == null) return;
+    final event = DownloadEvent(dateRange!, interval);
+    widget.downloadCallback(event);
   }
 }

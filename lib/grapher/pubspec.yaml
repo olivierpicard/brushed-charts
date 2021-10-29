@@ -1,8 +1,6 @@
 name: grapher
 description: A grapher library base on canvas, that allow to draw, layout and interact with chart
 version: 1.0.0
-author: Olivier Picard
-homepage:
 
 publish_to: none
 

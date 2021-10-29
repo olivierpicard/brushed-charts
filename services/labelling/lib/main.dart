@@ -27,7 +27,10 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
-      ToolBar(key: key),
+      ToolBar(
+        key: key,
+        downloadCallback: (e) => null,
+      ),
       Expanded(child: Container(color: Colors.red)),
     ]));
   }
