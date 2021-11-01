@@ -5,7 +5,6 @@ import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/drawUnit/unit-drawable.dart';
 import 'package:grapher/filter/dataStruct/ohlc.dart';
 import 'package:grapher/kernel/propagator/single.dart';
-import 'package:grapher/staticLayout/example/circleLeft.dart';
 import 'package:grapher/view/view-event.dart';
 
 class BasicGeometry extends UnitDrawable with SinglePropagator, DrawUnitObject {

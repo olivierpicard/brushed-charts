@@ -1,9 +1,7 @@
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/cell/event.dart';
 import 'package:grapher/cell/example/basic-geometry.dart';
-import 'package:grapher/cell/example/tester.dart';
 import 'package:grapher/cursor/haircross.dart';
-import 'package:grapher/drawUnit/unit-draw-event.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';
@@ -20,7 +18,6 @@ import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/tag/tag.dart';
 import 'package:grapher/utils/merge.dart';
-import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/window.dart';
 
 import 'package:flutter/material.dart';

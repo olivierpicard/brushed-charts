@@ -4,7 +4,6 @@ import 'package:grapher/detachedPanel/example/backgound-red.dart';
 import 'package:grapher/detachedPanel/example/backgound-yellow.dart';
 import 'package:grapher/detachedPanel/panel.dart';
 import 'package:grapher/kernel/widget.dart';
-import 'package:grapher/pointer/example/tester.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import '/kernel/kernel.dart';
 

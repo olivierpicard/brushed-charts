@@ -1,5 +1,4 @@
 import 'package:grapher/kernel/drawable.dart';
-import 'package:grapher/kernel/object.dart';
 import 'package:flutter/material.dart';
 import '/kernel/drawEvent.dart';
 import '/kernel/propagator/single.dart';
