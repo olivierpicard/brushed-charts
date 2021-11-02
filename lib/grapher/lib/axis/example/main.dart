@@ -115,12 +115,12 @@ class App extends StatelessWidget {
               ])))))
         ]),
         SizedObject(
-            length: HorizontalAxis.DEFAULT_LENGTH,
-            child: PipeOut(name: 'pipe_axis', child: HorizontalAxis())),
+            length: VerticalAxis.DEFAULT_LENGTH,
+            child: PipeOut(name: 'pipe_axis', child: VerticalAxis())),
       ]),
       SizedObject(
-          length: VerticalAxis.DEFAULT_LENGTH,
-          child: PipeOut(name: 'pipe_axis', child: VerticalAxis())),
+          length: HorizontalAxis.DEFAULT_LENGTH,
+          child: PipeOut(name: 'pipe_axis', child: HorizontalAxis())),
     ]));
   }
 }
