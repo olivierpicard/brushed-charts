@@ -9,7 +9,6 @@ class VerticalAxis extends AxisObject with SinglePropagator {
   static const double TEXT_HEIGHT = 70;
   final int maxDigit = 8;
   final int margin = 5;
-  final double fontSize = 10;
 
   VerticalAxis({GraphObject? child}) : super(child);
 
