@@ -11,11 +11,13 @@ import 'package:grapher/view/viewable.dart';
 
 //TODO: Should be DrawUnit drawable to work but it's not appropriate
 class HairCross extends Viewable with SinglePropagator {
+  final Paint paint;
   GraphObject? child;
   Offset? position;
   Cell? cell;
 
-  HairCross({this.child}) {
+  HairCross({Paint? paint, this.child})
+      : this.paint = paint ?? (Paint()..color = Color(0x50ffffff)) {
     eventRegistry.add(CellEvent, (e) => onCellEvent(e as CellEvent));
   }
 
@@ -55,7 +57,7 @@ class HairCross extends Viewable with SinglePropagator {
   }
 
   void paintCrossHair(Line hline, Line vline) {
-    Paint paint = Paint()..color = Color(0x40FFFFFF);
+    print(paint.color.toString());
     canvas!.drawLine(hline.p1, hline.p2, paint);
     canvas!.drawLine(vline.p1, vline.p2, paint);
   }
