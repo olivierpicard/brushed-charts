@@ -20,6 +20,7 @@ import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/pipe/pipeOut.dart';
 import 'package:grapher/reactive-axis/haxis.dart';
+import 'package:grapher/reactive-axis/vaxis.dart';
 import 'package:grapher/staticLayout/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/staticLayout/vertical.dart';
@@ -132,7 +133,10 @@ class App extends StatelessWidget {
         ]),
         SizedObject(
             length: VerticalAxis.DEFAULT_LENGTH,
-            child: PipeOut(name: 'pipe_axis', child: VerticalAxis())),
+            child: PipeOut(
+                name: 'pipe_axis',
+                child:
+                    PipeOut(name: 'pipe_cell_event', child: ReactiveVAxis()))),
       ]),
       SizedObject(
           length: HorizontalAxis.DEFAULT_LENGTH,
