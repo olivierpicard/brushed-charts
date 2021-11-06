@@ -57,7 +57,6 @@ class HairCross extends Viewable with SinglePropagator {
   }
 
   void paintCrossHair(Line hline, Line vline) {
-    print(paint.color.toString());
     canvas!.drawLine(hline.p1, hline.p2, paint);
     canvas!.drawLine(vline.p1, vline.p2, paint);
   }
