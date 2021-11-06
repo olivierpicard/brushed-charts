@@ -5,10 +5,9 @@ import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 
 class VerticalAxis extends AxisObject with SinglePropagator {
-  static const DEFAULT_LENGTH = '60px';
+  static const DEFAULT_LENGTH = '80px';
   static const double TEXT_HEIGHT = 70;
   final int maxDigit = 8;
-  final int margin = 5;
 
   VerticalAxis({GraphObject? child}) : super(child);
 
@@ -47,9 +46,9 @@ class VerticalAxis extends AxisObject with SinglePropagator {
         text: text, style: TextStyle(color: Colors.white, fontSize: fontSize));
     final painter = TextPainter(
         text: span,
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr);
-    painter.layout();
-    painter.paint(viewEvent!.canvas, Offset(x + margin, yPos));
+    painter.layout(minWidth: baseDrawEvent!.drawZone.size.width);
+    painter.paint(viewEvent!.canvas, Offset(x, yPos));
   }
 }

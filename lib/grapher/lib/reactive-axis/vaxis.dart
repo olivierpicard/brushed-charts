@@ -31,25 +31,26 @@ class ReactiveVAxis extends VerticalAxis with SinglePropagator {
   Rect prepareCursorTag() {
     final axisZone = baseDrawEvent!.drawZone.toRect;
     final cursorY = cellEvent!.pointer.position.dy;
-    final top = cursorY - VerticalAxis.TEXT_HEIGHT / 2;
-    final bottom = cursorY + VerticalAxis.TEXT_HEIGHT / 2;
+    final top = cursorY - VerticalAxis.TEXT_HEIGHT / 4;
+    final bottom = cursorY + VerticalAxis.TEXT_HEIGHT / 4;
     final tagRect = Rect.fromLTRB(axisZone.left, top, axisZone.right, bottom);
     return tagRect;
   }
 
   void drawTagBackground(Rect tagRect) {
-    final paint = Paint()..color = Colors.white;
+    final paint = Paint()..color = Colors.grey.shade800;
     canvas!.drawRect(tagRect, paint);
   }
 
   void drawTagText(Rect tagRect, String tagText) {
-    final style = TextStyle(color: Colors.black, fontSize: fontSize);
+    final style = TextStyle(color: Colors.white, fontSize: fontSize);
     final span = TextSpan(text: tagText, style: style);
     final painter = TextPainter(
         text: span,
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr);
-    painter.layout();
-    painter.paint(viewEvent!.canvas, tagRect.topLeft);
+    painter.layout(minWidth: tagRect.width);
+    painter.paint(
+        viewEvent!.canvas, Offset(tagRect.left, tagRect.center.dy - 8));
   }
 }

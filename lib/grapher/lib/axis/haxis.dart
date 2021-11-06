@@ -8,9 +8,9 @@ import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/utils/range.dart';
 
 class HorizontalAxis extends AxisObject with SinglePropagator {
-  static const DEFAULT_LENGTH = '30px';
-  final margin = 50;
-  final double textWidth = 150;
+  static const DEFAULT_LENGTH = '35px';
+  final topMargin = 2;
+  final double occupiedSpace = 170;
 
   HorizontalAxis({GraphObject? child}) : super(child);
 
@@ -26,12 +26,12 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
     final incrementRate = getTimestampIncrementRate(dateRange);
     for (double d = dateRange.min, p = pRange.min;
         p < pRange.max;
-        d += incrementRate, p += textWidth) {
+        d += incrementRate, p += occupiedSpace) {
       final dt = DateTime.fromMillisecondsSinceEpoch(
         d.round(),
         isUtc: true,
       );
-      final formattedDate = format(dt);
+      final formattedDate = this.format(dt);
       drawText(formattedDate, p);
     }
   }
@@ -44,7 +44,7 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
   }
 
   int getTimestampIncrementRate(Range dateRange) {
-    final labelCount = viewEvent!.xAxis.pixelRange.length / textWidth;
+    final labelCount = viewEvent!.xAxis.pixelRange.length / occupiedSpace;
     final timestampIncrement = dateRange.length / labelCount;
     return timestampIncrement.round();
   }
@@ -57,15 +57,15 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
   }
 
   void drawText(String text, double xPos) {
-    final y = viewEvent!.drawZone.toRect.bottom;
+    final y = viewEvent!.drawZone.toRect.bottom + topMargin;
     final span = TextSpan(
         text: text, style: TextStyle(color: Colors.white, fontSize: fontSize));
     final painter = TextPainter(
         text: span,
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.center,
         textDirection: TextDirection.ltr);
     painter.layout(
-        minWidth: textWidth.toDouble(), maxWidth: textWidth.toDouble());
+        minWidth: occupiedSpace.toDouble(), maxWidth: occupiedSpace.toDouble());
     painter.paint(viewEvent!.canvas, Offset(xPos, y));
   }
 }

@@ -8,7 +8,7 @@ import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/view/view-event.dart';
 
 abstract class AxisObject extends Drawable with SinglePropagator {
-  final double fontSize = 10;
+  final double fontSize = 13;
   final GraphObject? child;
 
   ViewEvent? viewEvent;
