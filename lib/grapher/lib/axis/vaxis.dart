@@ -28,17 +28,17 @@ class VerticalAxis extends AxisObject with SinglePropagator {
     for (double v = vRange.min, p = pRange.max;
         p > pRange.min;
         v += vincrement_rate, p -= TEXT_HEIGHT) {
-      final formatedPrice = formatPrice(v, vRange.max);
+      final formatedPrice = format(v);
       drawText(formatedPrice, p);
     }
   }
 
-  String formatPrice(double rawPrice, double originalprice) {
-    final strPrice = originalprice.toString();
-    if (!strPrice.contains('.')) return rawPrice.toString();
-    final intPartCount = int.parse(rawPrice.toString().split('.')[0]);
-    final desiredDecimalLen = maxDigit - intPartCount;
-    return rawPrice.toStringAsFixed(desiredDecimalLen);
+  String format(double price) {
+    final intPartStr = price.toString().split('.')[0];
+    final intDigitCount = intPartStr.length;
+    final maxDecimalDigit = maxDigit - intDigitCount;
+    final fixedPriceLen = price.toStringAsFixed(maxDecimalDigit);
+    return fixedPriceLen;
   }
 
   void drawText(String text, double yPos) {
