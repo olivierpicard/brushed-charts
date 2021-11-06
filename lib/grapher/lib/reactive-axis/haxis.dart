@@ -15,7 +15,6 @@ class ReactiveHAxis extends HorizontalAxis with SinglePropagator {
 
   void onCellEvent(CellEvent event) {
     cellEvent = event;
-    print("sdsd");
     setState(this);
   }
 
