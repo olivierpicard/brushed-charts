@@ -82,7 +82,7 @@ class App extends StatelessWidget {
                           tagName: 'oanda',
                           child: DrawUnitFactory(
                               template: Cell.template(
-                                  template: BasicGeometry(
+                                  child: BasicGeometry(
                                       child: MergeBranches(
                                           child: PipeIn(
                                               name: 'pipe_cell',

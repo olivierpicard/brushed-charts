@@ -10,7 +10,7 @@ import 'package:grapher/utils/range.dart';
 class HorizontalAxis extends AxisObject with SinglePropagator {
   static const DEFAULT_LENGTH = '30px';
   final margin = 50;
-  final textWidth = 150;
+  final double textWidth = 150;
 
   HorizontalAxis({GraphObject? child}) : super(child);
 
@@ -27,11 +27,33 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
     for (double d = dateRange.min, p = pRange.min;
         p < pRange.max;
         d += incrementRate, p += textWidth) {
-      final dateTime =
-          DateTime.fromMillisecondsSinceEpoch((d as int), isUtc: true);
-      final formatedDate = dateTime.toIso8601String();
-      drawText(formatedDate, p);
+      final formattedDate = format(d);
+      drawText(formattedDate, p);
     }
+  }
+
+  Range makeDateRange() {
+    final first = (viewEvent!.chainData.first as Timeseries2D).timestamp;
+    final last = (viewEvent!.chainData.last as Timeseries2D).timestamp;
+    final dateRange = Range(first, last);
+    return dateRange;
+  }
+
+  int getTimestampIncrementRate(Range dateRange) {
+    final labelCount = viewEvent!.xAxis.pixelRange.length / textWidth;
+    final timestampIncrement = dateRange.length / labelCount;
+    return timestampIncrement.round();
+  }
+
+  String format(double timestamp) {
+    final dt = DateTime.fromMillisecondsSinceEpoch(
+      timestamp.round(),
+      isUtc: true,
+    );
+    final strDate = dt.toIso8601String();
+    final multiline = strDate.replaceAll('T', '\n');
+    final withoutFraction = multiline.split('.')[0];
+    return withoutFraction;
   }
 
   void drawText(String text, double xPos) {
@@ -42,20 +64,8 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
         text: span,
         textAlign: TextAlign.left,
         textDirection: TextDirection.ltr);
-    painter.layout();
+    painter.layout(
+        minWidth: textWidth.toDouble(), maxWidth: textWidth.toDouble());
     painter.paint(viewEvent!.canvas, Offset(xPos, y));
-  }
-
-  int getTimestampIncrementRate(Range dateRange) {
-    final labelCount = (viewEvent!.xAxis.pixelRange.length as int) / textWidth;
-    final timestampIncrement = dateRange.length.toInt() / labelCount;
-    return timestampIncrement.toInt();
-  }
-
-  Range makeDateRange() {
-    final first = (viewEvent!.chainData.first as Timeseries2D).timestamp;
-    final last = (viewEvent!.chainData.first as Timeseries2D).timestamp;
-    final dateRange = Range(first, last);
-    return dateRange;
   }
 }

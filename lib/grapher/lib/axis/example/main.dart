@@ -1,5 +1,6 @@
 import 'package:grapher/axis/haxis.dart';
 import 'package:grapher/axis/vaxis.dart';
+import 'package:grapher/cell/cell.dart';
 import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
@@ -107,11 +108,11 @@ class App extends StatelessWidget {
                 UnpackFromViewEvent(
                     tagName: 'oanda',
                     child: DrawUnitFactory(
-                        template: DrawUnit.template(child: Candlestick()))),
+                        template: Cell.template(child: Candlestick()))),
                 UnpackFromViewEvent(
                     tagName: 'moving_average',
                     child: DrawUnitFactory(
-                        template: DrawUnit.template(child: Line()))),
+                        template: Cell.template(child: Line()))),
               ])))))
         ]),
         SizedObject(

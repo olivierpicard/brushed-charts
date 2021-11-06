@@ -14,8 +14,7 @@ class Cell extends DrawUnit with HitHelper, HoverHelper {
     hoverAddEventListeners();
   }
 
-  Cell.template({required DrawUnitObject template})
-      : super.template(child: template);
+  Cell.template({required DrawUnitObject child}) : super.template(child: child);
 
   Cell instanciate(DrawUnitMetadata metadata) {
     return Cell(metadata, child);
