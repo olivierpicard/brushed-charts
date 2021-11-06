@@ -27,7 +27,11 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
     for (double d = dateRange.min, p = pRange.min;
         p < pRange.max;
         d += incrementRate, p += textWidth) {
-      final formattedDate = format(d);
+      final dt = DateTime.fromMillisecondsSinceEpoch(
+        d.round(),
+        isUtc: true,
+      );
+      final formattedDate = format(dt);
       drawText(formattedDate, p);
     }
   }
@@ -45,11 +49,7 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
     return timestampIncrement.round();
   }
 
-  String format(double timestamp) {
-    final dt = DateTime.fromMillisecondsSinceEpoch(
-      timestamp.round(),
-      isUtc: true,
-    );
+  String format(DateTime dt) {
     final strDate = dt.toIso8601String();
     final multiline = strDate.replaceAll('T', '\n');
     final withoutFraction = multiline.split('.')[0];
