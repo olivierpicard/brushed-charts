@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:labelling/events/download.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ToolBar extends StatefulWidget {
-  final double textFieldLength = 100;
   final Function(DownloadEvent) downloadCallback;
   const ToolBar({Key? key, required this.downloadCallback}) : super(key: key);
 
@@ -11,9 +11,34 @@ class ToolBar extends StatefulWidget {
 }
 
 class _ToolBarState extends State<ToolBar> {
+  static const String _DEFAULT_INTERVAL = '30m';
   DateTimeRange? dateRange;
-  String interval = '30m';
+  String interval = _DEFAULT_INTERVAL;
   bool isSelectMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadStoredData();
+  }
+
+  void loadStoredData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final strDateFrom = prefs.getString('dateFrom');
+    final strDateTo = prefs.getString('dateTo');
+    setState(() {
+      interval = prefs.getString('interval') ?? _DEFAULT_INTERVAL;
+      dateRange = makeDatetimeRange(strDateFrom, strDateTo);
+    });
+  }
+
+  DateTimeRange? makeDatetimeRange(String? strFrom, String? strTo) {
+    if (strFrom == null || strTo == null) return null;
+    final from = DateTime.parse(strFrom);
+    final to = DateTime.parse(strTo);
+    final datetimeRange = DateTimeRange(start: from, end: to);
+    return datetimeRange;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +91,41 @@ class _ToolBarState extends State<ToolBar> {
     ]);
   }
 
+  void onSelectMode() {
+    setState(() => isSelectMode = !isSelectMode);
+  }
+
   void onCalendar() async {
     dateRange = await showDateRangePicker(
         context: context,
+        initialDateRange: dateRange,
         firstDate: DateTime(2018),
         lastDate: DateTime.now().add(const Duration(days: 2)));
-    emitDownloadEvent();
+    downloadIfReady();
   }
 
   void onInterval(String? interval) {
     if (interval == null) return;
-    this.interval = interval;
+    setState(() {
+      this.interval = interval;
+    });
+    downloadIfReady();
+  }
+
+  void downloadIfReady() async {
+    await saveParam();
+    if (dateRange == null) return;
     emitDownloadEvent();
   }
 
-  void onSelectMode() {
-    setState(() => isSelectMode = !isSelectMode);
+  Future<void> saveParam() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('interval', interval);
+    if (dateRange != null) {
+      prefs.setString('dateFrom', dateRange!.start.toString());
+      prefs.setString('dateTo', dateRange!.end.toString());
+    }
+    return Future<void>.value();
   }
 
   void emitDownloadEvent() {
