@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:labelling/events/download.dart';
 import 'package:labelling/toolbar/calendar.dart';
+import 'package:labelling/toolbar/download_info.dart';
 import 'package:labelling/toolbar/interval.dart';
 import 'package:labelling/toolbar/selection.dart';
 
 class ToolBar extends StatefulWidget {
-  final void Function(DownloadEvent) downloadCallback;
-  // final void Function(bool) onSelectionMode;
-  const ToolBar({Key? key, required this.downloadCallback}) : super(key: key);
+  final void Function(DownloadEvent) onDownloadReady;
+  final void Function(bool) onSelectionMode;
+  const ToolBar(
+      {Key? key, required this.onDownloadReady, required this.onSelectionMode})
+      : super(key: key);
 
   @override
   _ToolBarState createState() => _ToolBarState();
@@ -17,32 +20,24 @@ class ToolBar extends StatefulWidget {
 }
 
 class _ToolBarState extends State<ToolBar> {
-  static const _defaultInterval = '30m';
+  final downloadInfo = DownloadInfo();
   bool isSelected = false;
-  DateTimeRange? dateRange;
-  String interval = _defaultInterval;
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       const SizedBox(width: 30),
-      const SelectionMode(),
+      SelectionMode(onSelect: widget.onSelectionMode),
       const SizedBox(width: 30),
-      CalendarWidget(onUpdate: downloadIfReady),
+      CalendarWidget(data: downloadInfo, onUpdate: emitDownloadEvent),
       const SizedBox(width: 30),
-      IntervalWidget(onUpdate: downloadIfReady),
+      IntervalSelector(data: downloadInfo, onUpdate: emitDownloadEvent),
     ]);
   }
 
-  void update(void Function() updateRaison) => setState(updateRaison);
-
-  void downloadIfReady() {
-    emitDownloadEvent();
-  }
-
   void emitDownloadEvent() {
-    if (dateRange == null) return;
-    final event = DownloadEvent(dateRange!, interval);
-    widget.downloadCallback(event);
+    if (downloadInfo.dateRange == null) return;
+    final event = DownloadEvent(downloadInfo.dateRange!, downloadInfo.interval);
+    widget.onDownloadReady(event);
   }
 }

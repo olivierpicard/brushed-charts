@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:labelling/toolbar/download_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class IntervalWidget extends StatefulWidget {
+class IntervalSelector extends StatefulWidget {
   final void Function() onUpdate;
-  const IntervalWidget({required this.onUpdate, Key? key}) : super(key: key);
+  final DownloadInfo data;
+
+  const IntervalSelector({required this.data, required this.onUpdate, Key? key})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _IntervalWidget();
+  State<StatefulWidget> createState() => _IntervalSelector();
 }
 
-class _IntervalWidget extends State<IntervalWidget> {
-  static const String _defaultInterval = '30m';
-  String interval = _defaultInterval;
-
+class _IntervalSelector extends State<IntervalSelector> {
   @override
   void initState() {
     super.initState();
     _loadPref();
   }
 
-  void _loadPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      interval = prefs.getString('interval') ?? _defaultInterval;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
         onChanged: _onInterval,
-        value: interval,
+        value: widget.data.interval,
         items: <String>[
           '1s',
           '2s',
@@ -54,17 +48,22 @@ class _IntervalWidget extends State<IntervalWidget> {
             .toList());
   }
 
-  void _onInterval(String? interval) {
-    if (interval == null) return;
-    setState(() async {
-      this.interval = interval;
-      await _savePref();
+  Future<void> _loadPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedInterval = prefs.getString('interval');
+    setState(() {
+      widget.data.interval = savedInterval ?? DownloadInfo.defaultInterval;
     });
-    widget.onUpdate();
+  }
+
+  void _onInterval(String? interval) async {
+    if (interval == null) return;
+    setState(() => widget.data.interval = interval);
+    await _savePref();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('interval', interval);
+    await prefs.setString('interval', widget.data.interval);
   }
 }

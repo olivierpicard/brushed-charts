@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/toolbar.dart';
 
-class SelectionMode extends StatelessWidget {
-  const SelectionMode({Key? key}) : super(key: key);
+class SelectionMode extends StatefulWidget {
+  final void Function(bool) onSelect;
+
+  const SelectionMode({required this.onSelect, Key? key}) : super(key: key);
+
+  @override
+  _SelectionModeState createState() => _SelectionModeState();
+}
+
+class _SelectionModeState extends State<SelectionMode> {
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () => onSelectMode(context),
+        onPressed: () => _onButtonPressed(context),
         iconSize: 30,
         icon: Icon(
           Icons.touch_app_sharp,
-          color: getIconColor(context),
+          color: _getIconColor(context),
         ));
   }
 
-  void onSelectMode(BuildContext context) {
-    final toolBar = ToolBar.of(context)!;
-    toolBar.update(() => toolBar.isSelected = !toolBar.isSelected);
+  void _onButtonPressed(BuildContext context) {
+    setState(() => isSelected = !isSelected);
+    widget.onSelect(isSelected);
   }
 
-  Color getIconColor(BuildContext context) {
-    bool isSelected = ToolBar.of(context)!.isSelected;
-    print(isSelected);
+  Color _getIconColor(BuildContext context) {
     return isSelected
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).disabledColor;

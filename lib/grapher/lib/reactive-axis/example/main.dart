@@ -3,7 +3,6 @@ import 'package:grapher/axis/vaxis.dart';
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/cell/event.dart';
 import 'package:grapher/cursor/haircross.dart';
-import 'package:grapher/drawUnit/drawunit.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/filter/data-injector.dart';

@@ -9,7 +9,6 @@ import 'package:grapher/utils/line.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/viewable.dart';
 
-//TODO: Should be DrawUnit drawable to work but it's not appropriate
 class HairCross extends Viewable with SinglePropagator {
   final Paint paint;
   GraphObject? child;

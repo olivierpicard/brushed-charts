@@ -29,7 +29,8 @@ class MainView extends StatelessWidget {
         body: Column(children: [
       ToolBar(
         key: key,
-        downloadCallback: (e) => null,
+        onDownloadReady: (e) => {},
+        onSelectionMode: (e) => {},
       ),
       Expanded(child: Container(color: Colors.red)),
     ]));

@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:labelling/toolbar/download_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CalendarWidget extends StatefulWidget {
+class CalendarWidget extends StatelessWidget {
   final void Function() onUpdate;
-  const CalendarWidget({required this.onUpdate, Key? key}) : super(key: key);
+  final DownloadInfo data;
+  const CalendarWidget({required this.data, required this.onUpdate, Key? key})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CalendarWidget();
-}
-
-class _CalendarWidget extends State<CalendarWidget> {
-  DateTimeRange? dateRange;
-
-  @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
     _loadPref();
+    return IconButton(
+      onPressed: () => _onCalendar(context),
+      iconSize: 30,
+      icon: Icon(
+        Icons.calendar_today_sharp,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+    );
   }
 
   void _loadPref() async {
     final prefs = await SharedPreferences.getInstance();
     final strDateFrom = prefs.getString('dateFrom');
     final strDateTo = prefs.getString('dateTo');
-    dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
+    data.dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
   }
 
   DateTimeRange? _makeDatetimeRange(String? strFrom, String? strTo) {
@@ -33,32 +36,19 @@ class _CalendarWidget extends State<CalendarWidget> {
     return datetimeRange;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: _onCalendar,
-      iconSize: 30,
-      icon: Icon(
-        Icons.calendar_today_sharp,
-        color: Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
-
-  void _onCalendar() async {
-    dateRange = await showDateRangePicker(
+  void _onCalendar(BuildContext context) async {
+    data.dateRange = await showDateRangePicker(
         context: context,
-        initialDateRange: dateRange,
+        initialDateRange: data.dateRange,
         firstDate: DateTime(2018),
         lastDate: DateTime.now());
-    _savePref();
-    widget.onUpdate();
+    await _savePref();
   }
 
   Future<void> _savePref() async {
-    if (dateRange?.start == null || dateRange?.end == null) return;
+    if (data.dateRange?.start == null || data.dateRange?.end == null) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('dateFrom', dateRange!.start.toIso8601String());
-    await prefs.setString('dateTo', dateRange!.end.toIso8601String());
+    await prefs.setString('dateFrom', data.dateRange!.start.toIso8601String());
+    await prefs.setString('dateTo', data.dateRange!.end.toIso8601String());
   }
 }
