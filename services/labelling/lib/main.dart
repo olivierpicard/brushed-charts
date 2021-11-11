@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/toolbar.dart';
+import 'package:labelling/toolbar/toolbar.dart';
 
 void main() {
   runApp(const Labeller());

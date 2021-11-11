@@ -60,6 +60,7 @@ class _IntervalSelector extends State<IntervalSelector> {
     if (interval == null) return;
     setState(() => widget.data.interval = interval);
     await _savePref();
+    widget.onUpdate();
   }
 
   Future<void> _savePref() async {

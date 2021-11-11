@@ -43,6 +43,7 @@ class CalendarWidget extends StatelessWidget {
         firstDate: DateTime(2018),
         lastDate: DateTime.now());
     data.dateRange = range ?? DownloadInfo.defaultTimeRange;
+    onUpdate();
     await _savePref();
   }
 
