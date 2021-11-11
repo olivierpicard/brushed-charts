@@ -36,8 +36,7 @@ class _ToolBarState extends State<ToolBar> {
   }
 
   void emitDownloadEvent() {
-    if (downloadInfo.dateRange == null) return;
-    final event = DownloadEvent(downloadInfo.dateRange!, downloadInfo.interval);
+    final event = DownloadEvent(downloadInfo.dateRange, downloadInfo.interval);
     widget.onDownloadReady(event);
   }
 }

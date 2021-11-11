@@ -28,8 +28,8 @@ class CalendarWidget extends StatelessWidget {
     data.dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
   }
 
-  DateTimeRange? _makeDatetimeRange(String? strFrom, String? strTo) {
-    if (strFrom == null || strTo == null) return null;
+  DateTimeRange _makeDatetimeRange(String? strFrom, String? strTo) {
+    if (strFrom == null || strTo == null) return DownloadInfo.defaultTimeRange;
     final from = DateTime.parse(strFrom);
     final to = DateTime.parse(strTo);
     final datetimeRange = DateTimeRange(start: from, end: to);
@@ -37,18 +37,18 @@ class CalendarWidget extends StatelessWidget {
   }
 
   void _onCalendar(BuildContext context) async {
-    data.dateRange = await showDateRangePicker(
+    final range = await showDateRangePicker(
         context: context,
         initialDateRange: data.dateRange,
         firstDate: DateTime(2018),
         lastDate: DateTime.now());
+    data.dateRange = range ?? DownloadInfo.defaultTimeRange;
     await _savePref();
   }
 
   Future<void> _savePref() async {
-    if (data.dateRange?.start == null || data.dateRange?.end == null) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('dateFrom', data.dateRange!.start.toIso8601String());
-    await prefs.setString('dateTo', data.dateRange!.end.toIso8601String());
+    await prefs.setString('dateFrom', data.dateRange.start.toIso8601String());
+    await prefs.setString('dateTo', data.dateRange.end.toIso8601String());
   }
 }

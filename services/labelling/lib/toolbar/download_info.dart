@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 class DownloadInfo {
   static const defaultInterval = '30m';
-  DateTimeRange? dateRange;
+  static final defaultTimeRange = DateTimeRange(
+      start: DateTime.now().toUtc().subtract(const Duration(days: 3)),
+      end: DateTime.now().toUtc());
+  DateTimeRange dateRange = defaultTimeRange;
   String interval = defaultInterval;
 }
