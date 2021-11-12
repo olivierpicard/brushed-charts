@@ -1,5 +1,5 @@
 {
-  "name": "oanda_graphql",
+  "name": "graphql",
   "version": "1.0.0",
   "description": "A platform unified request between many brushed-charts's linked services",
   "main": "src/index.js",

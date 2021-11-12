@@ -1,4 +1,4 @@
 #!/bin/zsh 
 
-docker stop graphql_local
-docker rm graphql_local
+docker stop graphql_local > /dev/null
+docker rm graphql_local > /dev/null
