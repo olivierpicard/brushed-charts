@@ -12,6 +12,5 @@ module.exports.prepare_ouput = (source, rows) => {
       break;
   }
 
-  console.log(output)
   return output;
 }
