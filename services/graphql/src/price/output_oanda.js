@@ -7,6 +7,7 @@ module.exports.prepare_oanda_output = (result) => {
     parse_granularity(row);
     rename_volume_to_trade_count(row)
     rename_instrument_to_asset(row)
+    add_field_uniform_volume(row)
   }
 
   return result;
@@ -63,4 +64,8 @@ function rename_instrument_to_asset(row) {
   let instrument = row['instrument']
   instrument = instrument.replace('_', '/')
   row['asset'] = instrument
+}
+
+function add_field_uniform_volume(row) {
+  row['uniform_volume'] = row['trade_count']
 }

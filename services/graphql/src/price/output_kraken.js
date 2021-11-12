@@ -5,6 +5,7 @@ module.exports.prepare_kraken_output = (result) => {
     parse_granularity(row)
     make_parse(row)
     rename_assetpair_to_asset(row)
+    add_field_uniform_volume(row)
   }
   
   return result
@@ -38,4 +39,8 @@ function make_parse(row) {
 
 function rename_assetpair_to_asset(row) {
   row['asset'] = row['asset_pair']
+}
+
+function add_field_uniform_volume(row) {
+  row['uniform_volume'] = row['volume']
 }

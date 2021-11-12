@@ -18,8 +18,9 @@ module.exports.typeDefs = gql`
     granularity: Int!
     price: OHLC!
     spread: OHLC
-    trade_count: Int!
+    trade_count: Int
     volume: Float
+    uniform_volume: Float
     vwap: Float
   }
 
