@@ -1,15 +1,10 @@
-const { prepare_input } = require("./prepare_input")
-const { prepare_ouput } = require("./prepare_output")
-
 var dateFrom, dateTo, granularity, asset, source, mode, columns
 
 
 module.exports.query_maker = (args) => {
   assign_args_to_vars(args)
-  args = prepare_input(args)
   query = query_maker_dispatch(source)
   options = add_options(query)
-  
   return options
 }
 

@@ -25,11 +25,11 @@ function format_granularity(args) {
 
 
 function format_columns(args) {
+  if(args['columns'] == null) return args;
+
   const columns = args['columns']
   const index = columns.indexOf('datetime')
-  if (index != -1) {
-    columns[index] = 'date'
-  }
+  if (index != -1) columns[index] = 'date'
   args['columns'] = columns
   
   return args
