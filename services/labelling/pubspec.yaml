@@ -32,6 +32,8 @@ dependencies:
   shared_preferences: ^2.0.8
   graphql_flutter: ^5.0.0
   hive: ^2.0.4
+  grapher:
+    path: ../../lib/grapher
 
 
   # The following adds the Cupertino Icons font to your application.

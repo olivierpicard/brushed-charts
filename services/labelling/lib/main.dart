@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:labelling/chart/chart.dart';
 import 'package:labelling/graphql/main.dart';
 import 'package:labelling/toolbar/toolbar.dart';
 
@@ -38,7 +39,7 @@ class MainView extends StatelessWidget {
         onDownloadReady: Graphql.of(context)!.price.onDownloadEvent,
         onSelectionMode: (e) => {},
       ),
-      Expanded(child: Container(color: Colors.red)),
+      Chart(),
     ]));
   }
 }

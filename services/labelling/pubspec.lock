@@ -205,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  grapher:
+    dependency: "direct main"
+    description:
+      path: "../../lib/grapher"
+      relative: true
+    source: path
+    version: "1.0.0"
   graphql:
     dependency: transitive
     description:
