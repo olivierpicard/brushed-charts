@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:labelling/toolbar/download_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AssetSelector extends StatefulWidget {
+class AssetField extends StatefulWidget {
   final DownloadInfo data;
   final double width;
   final void Function() onUpdate;
-  const AssetSelector(
+  const AssetField(
       {required this.data, required this.onUpdate, this.width = 90, Key? key})
       : super(key: key);
 
   @override
-  _AssetSelectorState createState() => _AssetSelectorState();
+  _AssetFieldState createState() => _AssetFieldState();
 }
 
-class _AssetSelectorState extends State<AssetSelector> {
+class _AssetFieldState extends State<AssetField> {
   final _controller = TextEditingController(text: DownloadInfo.defaultAsset);
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labelling/events/download.dart';
-import 'package:labelling/toolbar/asset_selection.dart';
+import 'package:labelling/toolbar/asset.dart';
 import 'package:labelling/toolbar/calendar.dart';
 import 'package:labelling/toolbar/download_info.dart';
 import 'package:labelling/toolbar/interval.dart';
@@ -27,7 +27,7 @@ class _ToolBarState extends State<ToolBar> {
   Widget build(BuildContext context) {
     return Row(children: [
       const SizedBox(width: 30),
-      AssetSelector(data: downloadInfo, onUpdate: emitDownloadEvent, width: 70),
+      AssetField(data: downloadInfo, onUpdate: emitDownloadEvent, width: 150),
       const SizedBox(width: 30),
       IntervalSelector(data: downloadInfo, onUpdate: emitDownloadEvent),
       const SizedBox(width: 30),
@@ -38,7 +38,11 @@ class _ToolBarState extends State<ToolBar> {
   }
 
   void emitDownloadEvent() {
-    final event = DownloadEvent(downloadInfo.dateRange, downloadInfo.interval);
+    final assetSource = downloadInfo.asset;
+    final source = assetSource.split(':')[0];
+    final asset = assetSource.split(':')[1];
+    final event = DownloadEvent(
+        downloadInfo.dateRange, downloadInfo.interval, asset, source);
     widget.onDownloadReady(event);
   }
 }
