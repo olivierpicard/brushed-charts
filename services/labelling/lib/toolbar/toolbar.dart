@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/events/download.dart';
+import 'package:labelling/toolbar/download_event.dart';
 import 'package:labelling/toolbar/asset.dart';
 import 'package:labelling/toolbar/calendar.dart';
 import 'package:labelling/toolbar/download_info.dart';

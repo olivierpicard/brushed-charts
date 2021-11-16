@@ -39,7 +39,7 @@ class MainView extends StatelessWidget {
         onDownloadReady: Graphql.of(context)!.price.onDownloadEvent,
         onSelectionMode: (e) => {},
       ),
-      Chart(),
+      Chart(loadingComponent: Graphql.of(context)!.price),
     ]));
   }
 }

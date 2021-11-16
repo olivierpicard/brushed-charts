@@ -1,12 +1,9 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:labelling/events/download.dart';
+import 'package:labelling/graphql/async_loading_base.dart';
+import 'package:labelling/toolbar/download_event.dart';
 
-class PriceFetcher {
+class PriceFetcher with AsyncLoadingComponent {
   final GraphQLClient client;
-  void Function(Map<String, dynamic>?)? onDownloadFinished;
-  void Function(OperationException?)? onException;
-  void Function()? onLoading;
-
   PriceFetcher(this.client);
 
   final String templateQuery = """
@@ -23,7 +20,7 @@ class PriceFetcher {
       }
     }
 }
-  """;
+""";
 
   void onDownloadEvent(DownloadEvent event) async {
     onLoading?.call();
@@ -42,6 +39,16 @@ class PriceFetcher {
     return queryWithAliasName;
   }
 
+  void callbackOnException(QueryResult response) {
+    if (!response.hasException) return;
+    onException?.call(response.exception);
+  }
+
+  void callbackOnCorrectResponse(QueryResult response) {
+    if (response.hasException) return;
+    onDownloadFinished?.call(response.data);
+  }
+
   Map<String, dynamic> makeVariables(DownloadEvent event) {
     return {
       "sourceSelector": {
@@ -52,15 +59,5 @@ class PriceFetcher {
         "source": event.source.toLowerCase()
       }
     };
-  }
-
-  void callbackOnException(QueryResult response) {
-    if (!response.hasException) return;
-    onException?.call(response.exception);
-  }
-
-  void callbackOnCorrectResponse(QueryResult response) {
-    if (response.hasException) return;
-    onDownloadFinished?.call(response.data);
   }
 }
