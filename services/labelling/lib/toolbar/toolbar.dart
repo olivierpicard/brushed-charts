@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/toolbar/download_event.dart';
-import 'package:labelling/toolbar/asset.dart';
+import 'package:labelling/services/source.dart';
+import 'package:labelling/toolbar/source_field.dart';
 import 'package:labelling/toolbar/calendar.dart';
-import 'package:labelling/toolbar/download_info.dart';
 import 'package:labelling/toolbar/interval.dart';
 import 'package:labelling/toolbar/selection.dart';
 
 class ToolBar extends StatefulWidget {
-  final void Function(DownloadEvent) onDownloadReady;
-  final void Function(bool) onSelectionMode;
-  const ToolBar(
-      {Key? key, required this.onDownloadReady, required this.onSelectionMode})
-      : super(key: key);
+  const ToolBar({Key? key}) : super(key: key);
 
   @override
   _ToolBarState createState() => _ToolBarState();
@@ -21,28 +16,17 @@ class ToolBar extends StatefulWidget {
 }
 
 class _ToolBarState extends State<ToolBar> {
-  final downloadInfo = DownloadInfo();
-
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       const SizedBox(width: 30),
-      AssetField(data: downloadInfo, onUpdate: emitDownloadEvent, width: 150),
+      const SourceField(width: 150),
       const SizedBox(width: 30),
-      IntervalSelector(data: downloadInfo, onUpdate: emitDownloadEvent),
+      const IntervalSelector(),
       const SizedBox(width: 30),
-      CalendarWidget(data: downloadInfo, onUpdate: emitDownloadEvent),
+      CalendarWidget(),
       const SizedBox(width: 30),
-      SelectionMode(onSelect: widget.onSelectionMode),
+      const SelectionMode(),
     ]);
-  }
-
-  void emitDownloadEvent() {
-    final assetSource = downloadInfo.asset;
-    final source = assetSource.split(':')[0];
-    final asset = assetSource.split(':')[1];
-    final event = DownloadEvent(
-        downloadInfo.dateRange, downloadInfo.interval, asset, source);
-    widget.onDownloadReady(event);
   }
 }

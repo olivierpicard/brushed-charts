@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/toolbar/download_info.dart';
+import 'package:labelling/services/source.dart';
+// ignore: implementation_imports
+import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IntervalSelector extends StatefulWidget {
-  final void Function() onUpdate;
-  final DownloadInfo data;
-
-  const IntervalSelector({required this.data, required this.onUpdate, Key? key})
-      : super(key: key);
+  const IntervalSelector({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _IntervalSelector();
 }
 
 class _IntervalSelector extends State<IntervalSelector> {
+  late final SourceService source = context.read<SourceService>();
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +24,7 @@ class _IntervalSelector extends State<IntervalSelector> {
   Widget build(BuildContext context) {
     return DropdownButton(
         onChanged: _onInterval,
-        value: widget.data.interval,
+        value: source.interval,
         items: <String>[
           '1s',
           '2s',
@@ -52,19 +52,19 @@ class _IntervalSelector extends State<IntervalSelector> {
     final prefs = await SharedPreferences.getInstance();
     final savedInterval = prefs.getString('interval');
     setState(() {
-      widget.data.interval = savedInterval ?? DownloadInfo.defaultInterval;
+      source.interval = savedInterval ?? SourceService.defaultInterval;
     });
   }
 
-  void _onInterval(String? interval) async {
+  void _onInterval(String? interval) {
     if (interval == null) return;
-    setState(() => widget.data.interval = interval);
-    await _savePref();
-    widget.onUpdate();
+    setState(() => source.interval = interval);
+    _savePref();
+    source.update();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('interval', widget.data.interval);
+    await prefs.setString('interval', source.interval);
   }
 }

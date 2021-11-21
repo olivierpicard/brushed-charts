@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/toolbar/download_info.dart';
+import 'package:labelling/services/source.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CalendarWidget extends StatelessWidget {
-  final void Function() onUpdate;
-  final DownloadInfo data;
-  const CalendarWidget({required this.data, required this.onUpdate, Key? key})
-      : super(key: key);
+  // ignore: prefer_const_constructors_in_immutables
+  CalendarWidget({Key? key}) : super(key: key);
+
+  late final SourceService source;
 
   @override
   Widget build(BuildContext context) {
+    source = context.read<SourceService>();
     _loadPref();
     return IconButton(
       onPressed: () => _onCalendar(context),
@@ -25,11 +27,11 @@ class CalendarWidget extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     final strDateFrom = prefs.getString('dateFrom');
     final strDateTo = prefs.getString('dateTo');
-    data.dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
+    source.dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
   }
 
   DateTimeRange _makeDatetimeRange(String? strFrom, String? strTo) {
-    if (strFrom == null || strTo == null) return DownloadInfo.defaultTimeRange;
+    if (strFrom == null || strTo == null) return SourceService.defaultTimeRange;
     final from = DateTime.parse(strFrom);
     final to = DateTime.parse(strTo);
     final datetimeRange = DateTimeRange(start: from, end: to);
@@ -39,17 +41,22 @@ class CalendarWidget extends StatelessWidget {
   void _onCalendar(BuildContext context) async {
     final range = await showDateRangePicker(
         context: context,
-        initialDateRange: data.dateRange,
+        initialDateRange: source.dateRange,
         firstDate: DateTime(2018),
         lastDate: DateTime.now());
-    data.dateRange = range ?? DownloadInfo.defaultTimeRange;
-    onUpdate();
-    await _savePref();
+    saveIfDateIsCorrect(range);
+  }
+
+  void saveIfDateIsCorrect(DateTimeRange? range) {
+    if (range == null) return;
+    source.dateRange = range;
+    _savePref();
+    source.update();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('dateFrom', data.dateRange.start.toIso8601String());
-    await prefs.setString('dateTo', data.dateRange.end.toIso8601String());
+    await prefs.setString('dateFrom', source.dateRange.start.toIso8601String());
+    await prefs.setString('dateTo', source.dateRange.end.toIso8601String());
   }
 }

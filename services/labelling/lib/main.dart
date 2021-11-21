@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:labelling/chart/chart.dart';
-import 'package:labelling/graphql/main.dart';
+import 'package:labelling/graphql/graphql.dart';
+import 'package:labelling/services/appmode.dart';
+import 'package:labelling/services/source.dart';
 import 'package:labelling/toolbar/toolbar.dart';
+import 'package:provider/provider.dart';
+
+import 'composer/composer.dart';
 
 Future<void> main() async {
   final gqlClient = await Graphql.init();
@@ -33,13 +37,16 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      ToolBar(
-        key: key,
-        onDownloadReady: Graphql.of(context)!.price.onDownloadEvent,
-        onSelectionMode: (e) => {},
-      ),
-      Chart(loadingComponent: Graphql.of(context)!.price),
-    ]));
+        body: MultiProvider(
+            providers: [
+          ChangeNotifierProvider(create: (context) => SourceService()),
+          ChangeNotifierProvider(create: (context) => AppModeService())
+        ],
+            child: Column(children: [
+              ToolBar(
+                key: key,
+              ),
+              GraphComposer(),
+            ])));
   }
 }

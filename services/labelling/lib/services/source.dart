@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 
-class DownloadEvent {
-  final String interval;
-  final DateTimeRange dateRange;
-  final String asset;
-  final String source;
-  DownloadEvent(this.dateRange, this.interval, this.asset, this.source);
+class SourceService extends ChangeNotifier {
+  static const defaultRawSource = 'OANDA:EUR_USD';
+  static const defaultInterval = '30m';
+  static final defaultTimeRange = DateTimeRange(
+      start: DateTime.now().toUtc().subtract(const Duration(days: 3)),
+      end: DateTime.now().toUtc());
 
+  DateTimeRange dateRange = defaultTimeRange;
+  String interval = defaultInterval;
+  String _rawSource = defaultRawSource;
+  String _broker = defaultRawSource.split(':')[0];
+  String _asset = defaultRawSource.split(':')[1];
+
+  void update() => notifyListeners();
+
+  set rawSource(String val) {
+    _rawSource = val;
+    _broker = val.split(':')[0].toLowerCase();
+    _asset = val.split(':')[1].toLowerCase();
+  }
+
+  String get rawSource => _rawSource;
+  String get broker => _broker;
+  String get asset => _asset;
   String get dateFrom => dateRange.start.toIso8601String().split('.')[0];
   String get dateTo => dateRange.end.toIso8601String().split('.')[0];
 

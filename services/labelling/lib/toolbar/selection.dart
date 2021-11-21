@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:labelling/services/appmode.dart';
+import 'package:labelling/services/source.dart';
+import 'package:provider/provider.dart';
 
 class SelectionMode extends StatefulWidget {
-  final void Function(bool) onSelect;
-
-  const SelectionMode({required this.onSelect, Key? key}) : super(key: key);
+  const SelectionMode({Key? key}) : super(key: key);
 
   @override
   _SelectionModeState createState() => _SelectionModeState();
@@ -11,6 +12,7 @@ class SelectionMode extends StatefulWidget {
 
 class _SelectionModeState extends State<SelectionMode> {
   bool isSelected = false;
+  late final appMode = context.read<AppModeService>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class _SelectionModeState extends State<SelectionMode> {
 
   void _onButtonPressed(BuildContext context) {
     setState(() => isSelected = !isSelected);
-    widget.onSelect(isSelected);
+    appMode.mode = (isSelected) ? AppMode.selection : AppMode.free;
   }
 
   Color _getIconColor(BuildContext context) {
