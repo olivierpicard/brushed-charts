@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/graphql/async_loading.dart';
+import 'package:labelling/services/source.dart';
 
 class PriceFetcher with AsyncLoadingComponent {
   final GraphQLClient client;
@@ -21,42 +22,43 @@ class PriceFetcher with AsyncLoadingComponent {
 }
 """;
 
-  // void onDownloadEvent(DownloadEvent event) async {
-  //   onLoading?.call();
-  //   final resp = await client.query(makeQueryOption(event));
-  //   callbackOnException(resp);
-  //   callbackOnCorrectResponse(resp, event);
-  // }
+  void onDownloadEvent(SourceService source) async {
+    onLoading?.call();
+    final sourceCopy = SourceService.copy(source);
+    final resp = await client.query(makeQueryOption(sourceCopy));
+    callbackOnException(resp);
+    callbackOnCorrectResponse(resp, source);
+  }
 
-  // QueryOptions makeQueryOption(DownloadEvent event) {
-  //   final query = prepareQuery(event.rawSource);
-  //   return QueryOptions(document: gql(query), variables: makeVariables(event));
-  // }
+  QueryOptions makeQueryOption(SourceService source) {
+    final query = prepareQuery(source.broker);
+    return QueryOptions(document: gql(query), variables: makeVariables(source));
+  }
 
-  // String prepareQuery(String source) {
-  //   final queryWithAliasName = templateQuery.replaceAll('{{alias}}', source);
-  //   return queryWithAliasName;
-  // }
+  String prepareQuery(String broker) {
+    final queryWithAliasName = templateQuery.replaceAll('{{alias}}', broker);
+    return queryWithAliasName;
+  }
 
-  // void callbackOnException(QueryResult response) {
-  //   if (!response.hasException) return;
-  //   onException?.call(response.exception);
-  // }
+  void callbackOnException(QueryResult response) {
+    if (!response.hasException) return;
+    onException?.call(response.exception);
+  }
 
-  // void callbackOnCorrectResponse(QueryResult response, DownloadEvent metadata) {
-  //   if (response.hasException) return;
-  //   onDownloadFinished?.call(response.data, metadata);
-  // }
+  void callbackOnCorrectResponse(QueryResult response, SourceService metadata) {
+    if (response.hasException) return;
+    onDownloadFinished?.call(response.data, metadata);
+  }
 
-  // Map<String, dynamic> makeVariables(DownloadEvent event) {
-  //   return {
-  //     "sourceSelector": {
-  //       "dateFrom": event.dateFrom,
-  //       "dateTo": event.dateTo,
-  //       "asset": event.asset,
-  //       "granularity": event.intervalToSeconds,
-  //       "source": event.rawSource.toLowerCase()
-  //     }
-  //   };
-  // }
+  Map<String, dynamic> makeVariables(SourceService source) {
+    return {
+      "sourceSelector": {
+        "dateFrom": source.dateFrom,
+        "dateTo": source.dateTo,
+        "asset": source.asset,
+        "granularity": source.intervalToSeconds,
+        "source": source.rawSource.toLowerCase()
+      }
+    };
+  }
 }

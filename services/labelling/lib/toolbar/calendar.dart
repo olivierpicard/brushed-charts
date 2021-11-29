@@ -15,7 +15,7 @@ class CalendarWidget extends StatelessWidget {
     _loadPref();
     return IconButton(
       onPressed: () => _onCalendar(context),
-      iconSize: 30,
+      iconSize: 25,
       icon: Icon(
         Icons.calendar_today_sharp,
         color: Theme.of(context).colorScheme.primary,

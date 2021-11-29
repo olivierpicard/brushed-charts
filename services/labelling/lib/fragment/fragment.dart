@@ -1,31 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:grapher/filter/data-injector.dart';
-import 'package:grapher/filter/incoming-data.dart';
-import 'package:grapher/filter/json/explode.dart';
-import 'package:grapher/filter/json/extract.dart';
-import 'package:grapher/filter/json/to-candle2D.dart';
-import 'package:grapher/kernel/kernel.dart';
-import 'package:grapher/pipe/pipeIn.dart';
-import 'package:grapher/pointer/widget.dart';
-import 'package:grapher/staticLayout/stack.dart';
-import 'package:grapher/tag/tag.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:labelling/fragment/struct.dart';
+import 'package:labelling/grapherExtension/centered_text.dart';
 import 'package:labelling/graphql/async_loading.dart';
+import 'package:labelling/services/source.dart';
 
-import 'state_builder.dart';
+abstract class GraphFragment {
+  SourceService? source;
 
-class FragmentPrice extends StatefulWidget {
-  final AsyncLoadingComponent loadingComponent;
-  const FragmentPrice({required this.loadingComponent, Key? key})
-      : super(key: key);
+  GraphFragment(this.source) {
+    final gqlFetcher = getGraphqlFetcher();
+    gqlFetcher.onDownloadFinished = onReady;
+    gqlFetcher.onLoading = onLoading;
+    gqlFetcher.onException = onError;
+  }
 
-  @override
-  State<StatefulWidget> createState() => FragmentPriceState();
-}
+  AsyncLoadingComponent getGraphqlFetcher();
+  FragmentStruct onReady(Map<String, dynamic>? data, SourceService source);
 
-class FragmentPriceState extends FragmentBasicBuilder {
-  @override
-  Widget buildGraph(BuildContext context) {
-    // TODO: implement buildGraph
-    throw UnimplementedError();
+  FragmentStruct onError(OperationException? exception) {
+    const message = "An error ocurred";
+    return FragmentStruct(visualisation: [CenteredText(message)]);
+  }
+
+  FragmentStruct onLoading() {
+    const message = "Loading...\nPlease wait";
+    return FragmentStruct(visualisation: [CenteredText(message)]);
   }
 }

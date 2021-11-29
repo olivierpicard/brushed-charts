@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labelling/services/source.dart';
+import 'package:labelling/toolbar/indicator.dart';
 import 'package:labelling/toolbar/source_field.dart';
 import 'package:labelling/toolbar/calendar.dart';
 import 'package:labelling/toolbar/interval.dart';
@@ -25,6 +26,8 @@ class _ToolBarState extends State<ToolBar> {
       const IntervalSelector(),
       const SizedBox(width: 30),
       CalendarWidget(),
+      const SizedBox(width: 30),
+      const FunctionWidget(),
       const SizedBox(width: 30),
       const SelectionMode(),
     ]);

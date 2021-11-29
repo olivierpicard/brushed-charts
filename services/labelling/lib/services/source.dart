@@ -13,6 +13,13 @@ class SourceService extends ChangeNotifier {
   String _broker = defaultRawSource.split(':')[0];
   String _asset = defaultRawSource.split(':')[1];
 
+  SourceService();
+
+  SourceService.copy(SourceService original)
+      : dateRange = original.dateRange,
+        interval = original.interval,
+        _rawSource = original._rawSource;
+
   void update() => notifyListeners();
 
   set rawSource(String val) {

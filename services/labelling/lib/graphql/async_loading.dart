@@ -1,9 +1,10 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:labelling/services/source.dart';
 
 enum LoadingState { rest, loading, ready }
 
 abstract class AsyncLoadingComponent {
-  // void Function(Map<String, dynamic>?, DownloadEvent)? onDownloadFinished;
+  void Function(Map<String, dynamic>?, SourceService)? onDownloadFinished;
   void Function(OperationException?)? onException;
   void Function()? onLoading;
 }

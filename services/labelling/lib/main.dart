@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/graphql/graphql.dart';
 import 'package:labelling/services/appmode.dart';
+import 'package:labelling/services/fragments.dart';
+// import 'package:labelling/services/fragments.dart';
 import 'package:labelling/services/source.dart';
 import 'package:labelling/toolbar/toolbar.dart';
 import 'package:provider/provider.dart';
 
-import 'composer/composer.dart';
+// import 'composer/composer.dart';
 
 Future<void> main() async {
   final gqlClient = await Graphql.init();
@@ -39,14 +41,15 @@ class MainView extends StatelessWidget {
     return Scaffold(
         body: MultiProvider(
             providers: [
-          ChangeNotifierProvider(create: (context) => SourceService()),
-          ChangeNotifierProvider(create: (context) => AppModeService())
+          ChangeNotifierProvider(create: (_) => SourceService()),
+          ChangeNotifierProvider(create: (_) => AppModeService()),
+          ChangeNotifierProxyProvider<SourceService, FragmentModel>(
+              create: (context) => FragmentModel(context.read<SourceService>()),
+              update: (_, source, __) =>
+                  FragmentModel(source)
         ],
             child: Column(children: [
-              ToolBar(
-                key: key,
-              ),
-              GraphComposer(),
+              ToolBar(key: key), /*GraphComposer(key: key)*/
             ])));
   }
 }
