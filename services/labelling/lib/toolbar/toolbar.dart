@@ -27,7 +27,7 @@ class _ToolBarState extends State<ToolBar> {
       const SizedBox(width: 30),
       CalendarWidget(),
       const SizedBox(width: 30),
-      const FunctionWidget(),
+      const IndicatorWidget(),
       const SizedBox(width: 30),
       const SelectionMode(),
     ]);

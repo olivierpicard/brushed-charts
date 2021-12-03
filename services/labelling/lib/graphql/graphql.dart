@@ -3,12 +3,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/graphql/price.dart';
 
 class Graphql extends InheritedWidget {
-  final PriceFetcher price;
+  static late Graphql instance;
   final ValueNotifier<GraphQLClient> client;
 
   Graphql({required this.client, required Widget child, Key? key})
-      : price = PriceFetcher(client.value),
-        super(child: GraphQLProvider(child: child, client: client), key: key);
+      : super(child: GraphQLProvider(child: child, client: client), key: key) {
+    instance = this;
+  }
 
   static Future<ValueNotifier<GraphQLClient>> init() async {
     await initHiveForFlutter();

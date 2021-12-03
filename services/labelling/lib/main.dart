@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/graphql/graphql.dart';
 import 'package:labelling/services/appmode.dart';
-import 'package:labelling/services/fragments.dart';
+import 'package:labelling/services/fragments_model.dart';
 // import 'package:labelling/services/fragments.dart';
 import 'package:labelling/services/source.dart';
 import 'package:labelling/toolbar/toolbar.dart';
 import 'package:provider/provider.dart';
+
+import 'chart/chart.dart';
 
 // import 'composer/composer.dart';
 
@@ -39,17 +41,12 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: MultiProvider(
-            providers: [
-          ChangeNotifierProvider(create: (_) => SourceService()),
-          ChangeNotifierProvider(create: (_) => AppModeService()),
-          ChangeNotifierProxyProvider<SourceService, FragmentModel>(
-              create: (context) => FragmentModel(context.read<SourceService>()),
-              update: (_, source, __) =>
-                  FragmentModel(source)
-        ],
-            child: Column(children: [
-              ToolBar(key: key), /*GraphComposer(key: key)*/
-            ])));
+        body: MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => SourceService()),
+      ChangeNotifierProvider(create: (_) => AppModeService()),
+      ChangeNotifierProxyProvider<SourceService, FragmentModel>(
+          create: (context) => FragmentModel(context.read<SourceService>()),
+          update: (_, source, oldModel) => FragmentModel(source, oldModel))
+    ], child: Column(children: [ToolBar(key: key), const Chart()])));
   }
 }

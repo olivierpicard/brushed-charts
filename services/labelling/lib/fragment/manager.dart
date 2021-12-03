@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/fragment/price.dart';
-import 'package:labelling/services/source.dart';
+import 'package:grapher/staticLayout/stack.dart';
+import 'package:labelling/fragment/fragment.dart';
+import 'package:labelling/fragment/fragment_contract.dart';
+import 'package:labelling/fragment/no_data.dart';
+import 'package:labelling/services/fragments_model.dart';
 
 class FragmentManager {
-  final fragments = <PriceFragment>[];
-  BuildContext? context;
+  final fragments = <FragmentContract>[];
+  final FragmentModel model;
 
-  void updateSource(SourceService source) {
-    for (var frag in fragments) {
-      frag.updateSource(source);
+  FragmentManager(this.model) {
+    if (model.metadata.isEmpty) {
+      addDefaultFragment();
+      return;
     }
+  }
+
+  void addDefaultFragment() {
+    fragments.add(NoDataFragment());
   }
 }
