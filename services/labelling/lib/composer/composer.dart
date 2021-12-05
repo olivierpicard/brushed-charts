@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
+import 'package:grapher/kernel/widget.dart';
 import 'package:grapher/pointer/widget.dart';
 import 'package:grapher/staticLayout/horizontal.dart';
 import 'package:grapher/staticLayout/stack.dart';
@@ -21,13 +22,15 @@ class GraphComposer extends StatefulWidget {
 }
 
 class _GraphComposerState extends State<GraphComposer> {
-  late List<FragmentContract> fragments;
+  late List<FragmentContract>? fragments;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<FragmentManager>(
+      key: widget.key,
       builder: (context, manager, child) {
         fragments = manager.fragments;
+        print('compose update');
         return compose();
       },
     );
@@ -49,7 +52,7 @@ class _GraphComposerState extends State<GraphComposer> {
 
   GraphObject stackVisualSubgraph() {
     final subgraph = <GraphObject>[];
-    for (final fragment in fragments) {
+    for (final fragment in fragments!) {
       final visualObject = fragment.subgraph.visualisation;
       if (visualObject == null) continue;
       subgraph.add(visualObject);
@@ -60,7 +63,7 @@ class _GraphComposerState extends State<GraphComposer> {
 
   GraphObject stackParserSubgraph() {
     final subgraph = <GraphObject>[];
-    for (final fragment in fragments) {
+    for (final fragment in fragments!) {
       final parserObject = fragment.subgraph.visualisation;
       if (parserObject == null) continue;
       subgraph.add(parserObject);
@@ -71,7 +74,7 @@ class _GraphComposerState extends State<GraphComposer> {
 
   GraphObject stackInteractionSubgraph() {
     final subgraph = <GraphObject>[];
-    for (final fragment in fragments) {
+    for (final fragment in fragments!) {
       final visualObject = fragment.subgraph.visualisation;
       if (visualObject == null) continue;
       subgraph.add(visualObject);

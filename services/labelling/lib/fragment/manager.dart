@@ -1,22 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:grapher/staticLayout/stack.dart';
-import 'package:labelling/fragment/fragment.dart';
 import 'package:labelling/fragment/fragment_contract.dart';
 import 'package:labelling/fragment/no_data.dart';
+import 'package:labelling/fragment/price.dart';
 import 'package:labelling/services/fragments_model.dart';
 
-class FragmentManager {
-  final fragments = <FragmentContract>[];
+class FragmentManager extends ChangeNotifier {
+  late final List<FragmentContract> fragments;
   final FragmentModel model;
 
-  FragmentManager(this.model) {
-    if (model.metadata.isEmpty) {
-      addDefaultFragment();
+  FragmentManager(this.model, [FragmentManager? oldManager]) {
+    if (!shouldUpdate(oldManager)) {
+      print("should'nt update");
+      fragments = oldManager!.fragments;
       return;
+    }
+    if (model.metadata.isEmpty) {
+      print("update");
+      fragments = buildDefaultFragment();
+      return;
+    }
+    print("build");
+    fragments = buildFragments();
+  }
+
+  bool shouldUpdate(FragmentManager? oldManager) {
+    if (oldManager == null) return true;
+    if (oldManager.model == model) return false;
+    if (!model.source.isValid()) return false;
+    return true;
+  }
+
+  List<FragmentContract> buildDefaultFragment() {
+    return [NoDataFragment()];
+  }
+
+  List<FragmentContract> buildFragments() {
+    final fragments = <FragmentContract>[];
+    for (final meta in model.metadata) {
+      fragments.add(getFragmentTypeByMetadata(meta));
+    }
+    return fragments;
+  }
+
+  FragmentContract getFragmentTypeByMetadata(FragmentMetadata metadata) {
+    switch (metadata.name) {
+      case 'price':
+        return PriceFragment(metadata, model.source, updateState);
+      default:
+        throw Exception('No type was found for the given metadata');
     }
   }
 
-  void addDefaultFragment() {
-    fragments.add(NoDataFragment());
+  void updateState() {
+    notifyListeners();
   }
 }

@@ -28,10 +28,12 @@ class CalendarWidget extends StatelessWidget {
     final strDateFrom = prefs.getString('dateFrom');
     final strDateTo = prefs.getString('dateTo');
     source.dateRange = _makeDatetimeRange(strDateFrom, strDateTo);
+    source.update();
   }
 
   DateTimeRange _makeDatetimeRange(String? strFrom, String? strTo) {
     if (strFrom == null || strTo == null) return SourceService.defaultTimeRange;
+    if (strFrom == '' || strTo == '') return SourceService.defaultTimeRange;
     final from = DateTime.parse(strFrom);
     final to = DateTime.parse(strTo);
     final datetimeRange = DateTimeRange(start: from, end: to);
@@ -50,13 +52,15 @@ class CalendarWidget extends StatelessWidget {
   void saveIfDateIsCorrect(DateTimeRange? range) {
     if (range == null) return;
     source.dateRange = range;
-    _savePref();
     source.update();
+    _savePref();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('dateFrom', source.dateRange.start.toIso8601String());
-    await prefs.setString('dateTo', source.dateRange.end.toIso8601String());
+    await prefs.setString(
+        'dateFrom', source.dateRange?.start.toIso8601String() ?? '');
+    await prefs.setString(
+        'dateTo', source.dateRange?.end.toIso8601String() ?? '');
   }
 }

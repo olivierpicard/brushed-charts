@@ -8,27 +8,34 @@ import 'package:labelling/services/fragments_model.dart';
 import 'package:labelling/services/source.dart';
 
 abstract class GraphFragment implements FragmentContract {
+  final void Function() updateStateCallback;
+
   @override
-  final subgraph = FragmentStruct();
+  var subgraph = FragmentStruct();
   final FragmentMetadata metadata;
-  GraphFragment(this.metadata, SourceService source) {
+  GraphFragment(this.metadata, SourceService source, this.updateStateCallback) {
     final client = Graphql.instance.client.value;
     final gqlFetcher = getGraphqlFetcher(client);
     gqlFetcher.onDownloadFinished = onReady;
     gqlFetcher.onLoading = onLoading;
     gqlFetcher.onException = onError;
+    gqlFetcher.sendQuery(source);
   }
 
   AsyncLoadingComponent getGraphqlFetcher(GraphQLClient client);
-  FragmentStruct onReady(Map<String, dynamic>? data, SourceService source);
+  void onReady(Map<String, dynamic>? data, SourceService source);
 
-  FragmentStruct onError(OperationException? exception) {
+  void onError(OperationException? exception) {
+    print("fragment error: $exception");
     const message = "An error ocurred";
-    return FragmentStruct(visualisation: CenteredText(message));
+    subgraph = FragmentStruct(visualisation: CenteredText(message));
+    updateStateCallback();
   }
 
-  FragmentStruct onLoading() {
-    const message = "Loading...\nPlease wait";
-    return FragmentStruct(visualisation: CenteredText(message));
+  void onLoading() {
+    print("loading");
+    const message = "Loading... Please wait";
+    subgraph = FragmentStruct(visualisation: CenteredText(message));
+    updateStateCallback();
   }
 }

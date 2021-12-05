@@ -12,8 +12,7 @@ class SourceField extends StatefulWidget {
 }
 
 class _SourceFieldState extends State<SourceField> {
-  final _controller =
-      TextEditingController(text: SourceService.defaultRawSource);
+  final _controller = TextEditingController();
   late final SourceService source = context.read<SourceService>();
 
   @override
@@ -24,10 +23,11 @@ class _SourceFieldState extends State<SourceField> {
 
   Future<void> _loadPref() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedSource = prefs.getString('rawSource');
+    var savedSource = prefs.getString('rawSource');
+    savedSource ??= SourceService.defaultRawSource;
     setState(() {
-      source.rawSource = savedSource ?? SourceService.defaultRawSource;
-      _controller.text = source.rawSource;
+      source.rawSource = savedSource!;
+      _controller.text = source.rawSource!;
     });
   }
 
@@ -36,20 +36,21 @@ class _SourceFieldState extends State<SourceField> {
     return SizedBox(
         width: widget.width,
         child: TextField(
+          decoration: const InputDecoration(
+              isDense: true, contentPadding: EdgeInsets.fromLTRB(0, 12, 0, 10)),
           onSubmitted: _onEdited,
           controller: _controller,
         ));
   }
 
-  void _onEdited(String? rawSource) {
-    rawSource ??= SourceService.defaultRawSource;
-    setState(() => source.rawSource = rawSource!);
+  void _onEdited(String rawSource) {
+    setState(() => source.rawSource = rawSource);
     source.update();
     _savePref();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('rawSource', source.rawSource);
+    await prefs.setString('rawSource', source.rawSource ?? '');
   }
 }

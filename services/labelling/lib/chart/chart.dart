@@ -10,8 +10,10 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // return Container();
-    return ProxyProvider<FragmentModel, FragmentManager>(
-      update: (_, fragmentModel, __) => FragmentManager(fragmentModel),
+    return ChangeNotifierProxyProvider<FragmentModel, FragmentManager>(
+      create: (context) => FragmentManager(context.read<FragmentModel>()),
+      update: (_, fragmentModel, oldManager) =>
+          FragmentManager(fragmentModel, oldManager),
       child: Expanded(child: GraphComposer(key: key)),
     );
   }

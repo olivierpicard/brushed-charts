@@ -7,13 +7,16 @@ class FragmentMetadata {
 }
 
 class FragmentModel extends ChangeNotifier {
-  final SourceService _source;
+  final SourceService source;
   final List<FragmentMetadata> metadata;
 
-  FragmentModel(this._source, [FragmentModel? old])
-      : metadata = old?.metadata ?? [];
+  FragmentModel(this.source, [FragmentModel? old])
+      : metadata = old?.metadata ?? [] {
+    add('price');
+  }
 
   void add(String name) {
+    if (metadataContains(name) || !source.isValid()) return;
     metadata.add(FragmentMetadata(name));
     notifyListeners();
   }
@@ -21,5 +24,12 @@ class FragmentModel extends ChangeNotifier {
   void remove(String name) {
     metadata.removeWhere((item) => item.name == name);
     notifyListeners();
+  }
+
+  bool metadataContains(String name) {
+    for (final mdata in metadata) {
+      if (mdata.name == name) return true;
+    }
+    return false;
   }
 }

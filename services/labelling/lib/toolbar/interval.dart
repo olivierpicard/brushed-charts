@@ -50,21 +50,23 @@ class _IntervalSelector extends State<IntervalSelector> {
 
   Future<void> _loadPref() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedInterval = prefs.getString('interval');
+    var savedInterval = prefs.getString('interval');
+    savedInterval ??= SourceService.defaultInterval;
     setState(() {
-      source.interval = savedInterval ?? SourceService.defaultInterval;
+      source.interval = savedInterval!;
     });
+    source.update();
   }
 
   void _onInterval(String? interval) {
     if (interval == null) return;
     setState(() => source.interval = interval);
-    _savePref();
     source.update();
+    _savePref();
   }
 
   Future<void> _savePref() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('interval', source.interval);
+    await prefs.setString('interval', source.interval ?? '');
   }
 }

@@ -7,36 +7,30 @@ class SourceService extends ChangeNotifier {
       start: DateTime.now().toUtc().subtract(const Duration(days: 3)),
       end: DateTime.now().toUtc());
 
-  DateTimeRange dateRange = defaultTimeRange;
-  String interval = defaultInterval;
-  String _rawSource = defaultRawSource;
-  String _broker = defaultRawSource.split(':')[0];
-  String _asset = defaultRawSource.split(':')[1];
+  DateTimeRange? dateRange;
+  String? interval, rawSource;
 
   SourceService();
 
   SourceService.copy(SourceService original)
       : dateRange = original.dateRange,
         interval = original.interval,
-        _rawSource = original._rawSource;
+        rawSource = original.rawSource;
 
-  void update() => notifyListeners();
-
-  set rawSource(String val) {
-    _rawSource = val;
-    _broker = val.split(':')[0].toLowerCase();
-    _asset = val.split(':')[1].toLowerCase();
+  void update() {
+    if (!isValid()) return;
+    notifyListeners();
   }
 
-  String get rawSource => _rawSource;
-  String get broker => _broker;
-  String get asset => _asset;
-  String get dateFrom => dateRange.start.toIso8601String().split('.')[0];
-  String get dateTo => dateRange.end.toIso8601String().split('.')[0];
+  String? get broker => rawSource?.split(':')[0].toLowerCase();
+  String? get asset => rawSource?.split(':')[1].toLowerCase();
+  String? get dateFrom => dateRange?.start.toIso8601String().split('.')[0];
+  String? get dateTo => dateRange?.end.toIso8601String().split('.')[0];
 
-  int get intervalToSeconds {
-    final number = int.parse(interval.substring(0, interval.length - 1));
-    final unit = interval[interval.length - 1];
+  int? get intervalToSeconds {
+    if (interval == null) return null;
+    final number = int.parse(interval!.substring(0, interval!.length - 1));
+    final unit = interval![interval!.length - 1];
     switch (unit) {
       case 's':
         return number;
@@ -55,5 +49,13 @@ class SourceService extends ChangeNotifier {
       default:
         throw Exception('Interval has not the right syntax ($interval)');
     }
+  }
+
+  bool isValid() {
+    if (rawSource == null || rawSource!.isEmpty) return false;
+    if (!rawSource!.contains(':')) return false;
+    if (dateRange == null) return false;
+    if (interval == null || interval!.isEmpty) return false;
+    return true;
   }
 }

@@ -17,6 +17,7 @@ class HorizontalAxis extends AxisObject with SinglePropagator {
   @override
   void draw(DrawEvent event) {
     super.draw(event);
+    if (viewEvent == null) return;
     drawAxis();
   }
 

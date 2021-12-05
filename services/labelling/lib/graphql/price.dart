@@ -22,17 +22,20 @@ class PriceFetcher with AsyncLoadingComponent {
 }
 """;
 
-  void onDownloadEvent(SourceService source) async {
+  @override
+  void sendQuery(SourceService source) async {
     onLoading?.call();
     final sourceCopy = SourceService.copy(source);
-    final resp = await client.query(makeQueryOption(sourceCopy));
+    final options = makeQueryOption(sourceCopy);
+    final resp = await client.query(options);
     callbackOnException(resp);
     callbackOnCorrectResponse(resp, source);
   }
 
   QueryOptions makeQueryOption(SourceService source) {
-    final query = prepareQuery(source.broker);
-    return QueryOptions(document: gql(query), variables: makeVariables(source));
+    final query = prepareQuery(source.broker!);
+    final vars = makeVariables(source);
+    return QueryOptions(document: gql(query), variables: vars);
   }
 
   String prepareQuery(String broker) {
@@ -57,7 +60,7 @@ class PriceFetcher with AsyncLoadingComponent {
         "dateTo": source.dateTo,
         "asset": source.asset,
         "granularity": source.intervalToSeconds,
-        "source": source.rawSource.toLowerCase()
+        "source": source.broker!.toLowerCase()
       }
     };
   }

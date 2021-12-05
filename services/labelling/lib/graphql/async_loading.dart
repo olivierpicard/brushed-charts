@@ -7,4 +7,5 @@ abstract class AsyncLoadingComponent {
   void Function(Map<String, dynamic>?, SourceService)? onDownloadFinished;
   void Function(OperationException?)? onException;
   void Function()? onLoading;
+  void sendQuery(SourceService source);
 }
