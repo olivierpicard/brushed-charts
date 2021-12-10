@@ -1,4 +1,6 @@
+import 'abstractKernel.dart';
+
 class KernelLinkEvent {
-  final kernel;
+  final AbstractKernel kernel;
   KernelLinkEvent(this.kernel);
 }

@@ -14,7 +14,7 @@ class PipeIn extends GraphObject with SinglePropagator {
 
   void onIncomingEvent(dynamic inputEvent) {
     final pipeEvent = makeEvent(inputEvent);
-    kernel!.propagate(pipeEvent);
+    kernel!.handleEvent(pipeEvent);
   }
 
   PipeEvent makeEvent(dynamic inputEvent) => PipeEvent(name, inputEvent);

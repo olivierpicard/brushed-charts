@@ -32,6 +32,6 @@ class DrawUnitFactory extends Viewable with MultiPropagator {
       drawUnit.handleEvent(metadata.viewEvent);
       children.add(drawUnit);
     });
-    propagate(KernelLinkEvent(kernel));
+    propagate(KernelLinkEvent(kernel!));
   }
 }

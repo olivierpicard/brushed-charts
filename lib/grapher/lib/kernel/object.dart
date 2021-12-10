@@ -1,11 +1,13 @@
+import 'package:grapher/kernel/abstractKernel.dart';
+
 import 'linkEvent.dart';
 import 'propagator/base.dart';
 import 'eventRegistry.dart';
 import 'kernel.dart';
 
 abstract class GraphObject implements Propagator {
-  GraphKernel? kernel;
-  GraphKernel? root;
+  AbstractKernel? kernel;
+  AbstractKernel? root;
 
   final eventRegistry = EventRegistry();
 
@@ -21,9 +23,13 @@ abstract class GraphObject implements Propagator {
 
   void listenSpecialEvent(dynamic event) {
     if (event is KernelLinkEvent) {
-      kernel = event.kernel;
+      onKernelLinkEvent(event);
     }
   }
 
-  void setState(GraphObject object) => kernel!.setState(object);
+  void onKernelLinkEvent(KernelLinkEvent event) {
+    kernel = event.kernel;
+  }
+
+  void setState(GraphObject object) => kernel?.setState(object);
 }

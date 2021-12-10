@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:grapher/kernel/abstractKernel.dart';
 import 'linkEvent.dart';
 import 'propagator/single.dart';
 import 'drawZone.dart';
@@ -7,17 +8,10 @@ import 'misc/Init.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 
-class GraphKernel extends ChangeNotifier
-    with SinglePropagator, GraphObject
-    implements CustomPainter {
+class GraphKernel extends AbstractKernel {
   GraphObject? _objectToRepaint;
 
-  GraphKernel({GraphObject? child}) {
-    Init.child(this, child);
-    kernel = this;
-    propagate(KernelLinkEvent(this));
-  }
-
+  GraphKernel({GraphObject? child}) : super(child);
   @override
   void paint(Canvas canvas, Size size) {
     final drawZone = new DrawZone(Offset.zero, size);
@@ -32,6 +26,7 @@ class GraphKernel extends ChangeNotifier
     return true;
   }
 
+  @override
   setState(GraphObject object) {
     notifyListeners();
     _objectToRepaint = object;
