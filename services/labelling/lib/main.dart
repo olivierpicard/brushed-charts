@@ -9,7 +9,7 @@ import 'package:labelling/toolbar/toolbar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'chart/chart.dart';
+import 'composer/chart.dart';
 
 // import 'composer/composer.dart';
 
