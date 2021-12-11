@@ -43,7 +43,7 @@ class FragmentManager extends ChangeNotifier {
   }
 
   FragmentContract getFragmentTypeByMetadata(FragmentMetadata metadata) {
-    switch (metadata.name) {
+    switch (metadata.fragmentName) {
       case 'price':
         return PriceFragment(metadata, model.source, updateState);
       default:

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:labelling/services/source.dart';
 
 class FragmentMetadata {
-  final String name;
-  FragmentMetadata(this.name);
+  final String fragmentName;
+  FragmentMetadata(this.fragmentName);
 }
 
 class FragmentModel extends ChangeNotifier {
@@ -22,13 +22,13 @@ class FragmentModel extends ChangeNotifier {
   }
 
   void remove(String name) {
-    metadata.removeWhere((item) => item.name == name);
+    metadata.removeWhere((item) => item.fragmentName == name);
     notifyListeners();
   }
 
   bool metadataContains(String name) {
     for (final mdata in metadata) {
-      if (mdata.name == name) return true;
+      if (mdata.fragmentName == name) return true;
     }
     return false;
   }

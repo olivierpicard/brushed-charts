@@ -9,11 +9,12 @@ import 'package:labelling/services/source.dart';
 
 abstract class GraphFragment implements FragmentContract {
   final void Function() updateStateCallback;
+  final SourceService source;
 
   @override
   var subgraph = FragmentStruct();
   final FragmentMetadata metadata;
-  GraphFragment(this.metadata, SourceService source, this.updateStateCallback) {
+  GraphFragment(this.metadata, this.source, this.updateStateCallback) {
     final client = Graphql.instance.client.value;
     final gqlFetcher = getGraphqlFetcher(client);
     gqlFetcher.onDownloadFinished = onReady;
