@@ -62,7 +62,7 @@ class App extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              child: Graph(kernel: graph),
+              child: GraphPointer(kernel: graph),
             )
           ],
         ),

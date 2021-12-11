@@ -41,7 +41,6 @@ class SubGraphKernel extends AbstractKernel {
 
   void releaseStoredEventToRootKernel() {
     for (final retainedEvent in eventToPropagate) {
-      print("sdsd");
       kernel!.propagate(retainedEvent);
     }
   }
