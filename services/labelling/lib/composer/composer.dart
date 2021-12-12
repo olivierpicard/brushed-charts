@@ -3,6 +3,7 @@ import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/pointer/widget.dart';
 import 'package:grapher/staticLayout/stack.dart';
+import 'package:grapher/subgraph/subgraph-kernel.dart';
 import 'package:labelling/fragment/fragment_contract.dart';
 import 'package:labelling/fragment/manager.dart';
 import 'package:labelling/fragment/struct.dart';
@@ -28,6 +29,8 @@ class _GraphComposerState extends State<GraphComposer> {
       builder: (context, manager, child) {
         print('composer update');
         fragments = manager.fragments;
+        // if (fragments != null && fragments!.isNotEmpty)
+        //   print((fragments?[0].subgraph.visualisation as SubGraphKernel).child);
         return compose();
       },
     );

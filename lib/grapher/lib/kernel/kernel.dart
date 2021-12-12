@@ -12,6 +12,7 @@ class GraphKernel extends AbstractKernel {
   GraphObject? _objectToRepaint;
 
   GraphKernel({GraphObject? child}) : super(child);
+
   @override
   void paint(Canvas canvas, Size size) {
     final drawZone = new DrawZone(Offset.zero, size);

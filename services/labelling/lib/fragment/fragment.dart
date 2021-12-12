@@ -1,3 +1,4 @@
+import 'package:grapher/subgraph/subgraph-kernel.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/fragment/fragment_contract.dart';
 import 'package:labelling/fragment/struct.dart';
@@ -26,14 +27,16 @@ abstract class GraphFragment implements FragmentContract {
 
   void onError(OperationException? exception) {
     const message = "An error ocurred";
-    subgraph = FragmentStruct(visualisation: CenteredText(message));
+    subgraph = FragmentStruct(
+        visualisation: SubGraphKernel(child: CenteredText(message)));
     updateStateCallback();
   }
 
   void onLoading() {
     const message = "Loading... Please wait";
     print("loading: $message");
-    subgraph = FragmentStruct(visualisation: CenteredText(message));
+    subgraph = FragmentStruct(
+        visualisation: SubGraphKernel(child: CenteredText(message)));
     updateStateCallback();
   }
 }
