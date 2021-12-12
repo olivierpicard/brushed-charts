@@ -58,7 +58,7 @@ class PriceFetcher with AsyncLoadingComponent {
       "sourceSelector": {
         "dateFrom": source.dateFrom,
         "dateTo": source.dateTo,
-        "asset": source.asset,
+        "asset": source.asset?.toUpperCase(),
         "granularity": source.intervalToSeconds,
         "source": source.broker!.toLowerCase()
       }

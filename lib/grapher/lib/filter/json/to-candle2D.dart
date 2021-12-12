@@ -10,7 +10,8 @@ class ToCandle2D extends ToTimeseries2D {
       : super(xLabel, yLabel, child);
 
   @override
-  Timeseries2D instanciate(DateTime dateTime, dynamic y) {
+  Timeseries2D instanciate(
+      DateTime dateTime, covariant Map<String, dynamic> y) {
     final ohlc = OHLC(y);
     final candle = Candle2D(dateTime, ohlc);
     return candle;

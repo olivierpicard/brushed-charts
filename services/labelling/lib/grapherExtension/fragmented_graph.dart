@@ -1,6 +1,5 @@
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/kernel/object.dart';
-import 'package:grapher/kernel/propagator/endline.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/pack/pack.dart';
 import 'package:grapher/pipe/pipeIn.dart';

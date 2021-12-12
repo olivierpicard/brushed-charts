@@ -31,7 +31,7 @@ class PriceFragment extends GraphFragment {
 
   @override
   AsyncLoadingComponent getGraphqlFetcher(GraphQLClient client) =>
-      MockPriceFetcher(client);
+      PriceFetcher(client);
 
   @override
   void onReady(Map<String, dynamic>? data, SourceService source) {
@@ -44,11 +44,12 @@ class PriceFragment extends GraphFragment {
 
   GraphObject createParser(Map jsonInput) {
     print(source.broker);
+    print(jsonInput);
     return SubGraphKernel(
         child: DataInjector(
             stream: mapToStream(jsonInput),
             child: Extract(
-                options: "data.${source.broker!}",
+                options: source.broker!,
                 child: Explode(
                     child: ToCandle2D(
                         xLabel: "datetime",
