@@ -4,6 +4,6 @@ import 'package:labelling/fragment/struct.dart';
 
 class NoDataFragment implements FragmentContract {
   @override
-  final subgraph = FragmentStruct(
+  var subgraph = FragmentStruct(
       visualisation: CenteredText('There is no data to display'));
 }

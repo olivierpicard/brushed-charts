@@ -10,10 +10,8 @@ import 'package:labelling/services/source.dart';
 abstract class GraphFragment implements FragmentContract {
   final void Function() updateStateCallback;
   final SourceService source;
-
-  @override
-  var subgraph = FragmentStruct();
   final FragmentMetadata metadata;
+
   GraphFragment(this.metadata, this.source, this.updateStateCallback) {
     final client = Graphql.instance.client.value;
     final gqlFetcher = getGraphqlFetcher(client);
@@ -27,15 +25,14 @@ abstract class GraphFragment implements FragmentContract {
   void onReady(Map<String, dynamic>? data, SourceService source);
 
   void onError(OperationException? exception) {
-    print("fragment error: $exception");
     const message = "An error ocurred";
     subgraph = FragmentStruct(visualisation: CenteredText(message));
     updateStateCallback();
   }
 
   void onLoading() {
-    print("loading");
     const message = "Loading... Please wait";
+    print("loading: $message");
     subgraph = FragmentStruct(visualisation: CenteredText(message));
     updateStateCallback();
   }

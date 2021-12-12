@@ -18,33 +18,33 @@ import 'package:labelling/fragment/fragment.dart';
 import 'package:labelling/fragment/struct.dart';
 import 'package:labelling/grapherExtension/centered_text.dart';
 import 'package:labelling/graphql/async_loading.dart';
-import 'package:labelling/graphql/fake_price.dart';
+import 'package:labelling/graphql/mock_price.dart';
 import 'package:labelling/graphql/price.dart';
 import 'package:labelling/services/fragments_model.dart';
 import 'package:labelling/services/source.dart';
 import 'package:labelling/utils/map_to_stream.dart';
 
 class PriceFragment extends GraphFragment {
+  @override
+  var subgraph = FragmentStruct();
+
   PriceFragment(FragmentMetadata metadata, SourceService source,
       void Function() updateStateCallback)
       : super(metadata, source, updateStateCallback);
 
   @override
   AsyncLoadingComponent getGraphqlFetcher(GraphQLClient client) =>
-      PriceFetcher(client);
+      MockPriceFetcher(client);
 
   @override
   void onReady(Map<String, dynamic>? data, SourceService source) {
     if (data == null) return;
-    print("ready");
     subgraph = FragmentStruct(
         parser: createParser(data), visualisation: createVisual());
     updateStateCallback();
   }
 
   GraphObject createParser(Map jsonInput) {
-    print(source.broker);
-    print(jsonInput);
     return SubGraphKernel(
         child: DataInjector(
             stream: mapToStream(jsonInput),

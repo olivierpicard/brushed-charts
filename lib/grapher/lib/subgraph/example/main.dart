@@ -78,7 +78,7 @@ class App extends StatelessWidget {
   }
 
   GraphKernel createGraph() {
-    print(parserOandaPrice);
+    (parserOandaPrice);
     return GraphKernel(
         child: VerticalLayout(children: [
       HorizontalLayout(children: [

@@ -3,6 +3,8 @@ import 'package:flutter/src/rendering/custom_paint.dart';
 import 'dart:ui';
 
 import 'package:grapher/kernel/abstractKernel.dart';
+import 'package:grapher/kernel/drawEvent.dart';
+import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/linkEvent.dart';
 import 'package:grapher/kernel/object.dart';
 
@@ -31,6 +33,7 @@ class SubGraphKernel extends AbstractKernel {
   void onKernelLinkEvent(KernelLinkEvent event) {
     super.onKernelLinkEvent(event);
     releaseRetainedEvents();
+    setState(this);
   }
 
   void releaseRetainedEvents() {
@@ -49,7 +52,7 @@ class SubGraphKernel extends AbstractKernel {
   bool? hitTest(Offset position) {}
 
   @override
-  void paint(Canvas canvas, Size size) {}
+  void paint(Canvas canvas, Size size) => null;
 
   SemanticsBuilderCallback? get semanticsBuilder => null;
 

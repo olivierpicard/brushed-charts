@@ -10,16 +10,13 @@ class FragmentManager extends ChangeNotifier {
 
   FragmentManager(this.model, [FragmentManager? oldManager]) {
     if (!shouldUpdate(oldManager)) {
-      print("should'nt update");
       fragments = oldManager!.fragments;
       return;
     }
     if (model.metadata.isEmpty) {
-      print("update");
       fragments = buildDefaultFragment();
       return;
     }
-    print("build");
     fragments = buildFragments();
   }
 

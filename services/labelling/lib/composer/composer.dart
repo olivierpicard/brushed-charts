@@ -26,7 +26,7 @@ class _GraphComposerState extends State<GraphComposer> {
     return Consumer<FragmentManager>(
       key: widget.key,
       builder: (context, manager, child) {
-        print('composer refresh');
+        print('composer update');
         fragments = manager.fragments;
         return compose();
       },
