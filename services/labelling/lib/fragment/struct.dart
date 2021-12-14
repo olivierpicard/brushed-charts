@@ -1,7 +1,7 @@
 import 'package:grapher/kernel/object.dart';
 
 class FragmentStruct {
-  final GraphObject? parser, visualisation, iteraction;
+  final GraphObject? parser, visualisation, interaction;
 
-  FragmentStruct({this.parser, this.visualisation, this.iteraction});
+  FragmentStruct({this.parser, this.visualisation, this.interaction});
 }
