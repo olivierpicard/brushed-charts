@@ -10,9 +10,7 @@ class MockPriceFetcher with AsyncLoadingComponent {
 
   @override
   void sendQuery(SourceService source) async {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      onLoading?.call();
-    });
+    onLoading?.call();
     Future.delayed(const Duration(seconds: 2), () {
       onDownloadFinished?.call(oandaJSON, source);
     });
