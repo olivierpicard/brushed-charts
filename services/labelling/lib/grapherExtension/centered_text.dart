@@ -13,7 +13,6 @@ class CenteredText extends Drawable with EndlinePropagator {
   @override
   void draw(dynamic event) {
     event = event as DrawEvent;
-    print('centred text paint');
     super.draw(event);
     _paintText();
   }

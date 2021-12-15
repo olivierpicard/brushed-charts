@@ -8,6 +8,7 @@ import 'package:grapher/staticLayout/stack.dart';
 import 'package:grapher/view/view-event.dart';
 import 'package:grapher/view/window.dart';
 import 'package:labelling/fragment/struct.dart';
+import 'package:labelling/utils/null_graph_object.dart';
 
 class FragmentedGraph extends GraphObject with SinglePropagator {
   FragmentedGraph({required FragmentStruct struct}) {
@@ -29,7 +30,7 @@ class FragmentedGraph extends GraphObject with SinglePropagator {
                 child: Window(
                     child: StackLayout(children: [
           PipeIn(name: 'pipe_axis', eventType: ViewEvent),
-          struct.visualisation ?? StackLayout(children: [])
+          struct.visualisation ?? NullGraphObject()
         ])))));
   }
 }

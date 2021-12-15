@@ -34,7 +34,6 @@ abstract class GraphFragment implements FragmentContract {
 
   void onLoading() {
     const message = "Loading... Please wait";
-    print("loading: $message");
     subgraph = FragmentStruct(
         visualisation: SubGraphKernel(child: CenteredText(message)));
     updateStateCallback();
