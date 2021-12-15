@@ -19,19 +19,19 @@ class PointerSummary {
   }
 
   summarizeHover(PointerHoverEvent event) {
-    position = event.position;
+    position = event.localPosition;
     delta = event.delta;
     type = PointerType.Hover;
   }
 
   summarizeTap(TapDownDetails event) {
-    position = event.globalPosition;
+    position = event.localPosition;
     delta = null;
     type = PointerType.Tap;
   }
 
   summarizeDrag(DragUpdateDetails event) {
-    position = event.globalPosition;
+    position = event.localPosition;
     delta = event.delta;
     type = PointerType.Drag;
   }

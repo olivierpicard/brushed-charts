@@ -1,3 +1,4 @@
+import 'package:grapher/cursor/haircross.dart';
 import 'package:grapher/filter/accumulate-sorted.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
@@ -30,7 +31,8 @@ class FragmentedGraph extends GraphObject with SinglePropagator {
                 child: Window(
                     child: StackLayout(children: [
           PipeIn(name: 'pipe_axis', eventType: ViewEvent),
-          struct.visualisation ?? NullGraphObject()
+          struct.visualisation ?? NullGraphObject(),
+          PipeOut(name: 'pipe_cell_event', child: HairCross()),
         ])))));
   }
 }

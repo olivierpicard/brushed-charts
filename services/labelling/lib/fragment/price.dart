@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:grapher/cell/cell.dart';
+import 'package:grapher/cell/event.dart';
 import 'package:grapher/factory/factory.dart';
 import 'package:grapher/filter/data-injector.dart';
 import 'package:grapher/filter/incoming-data.dart';
@@ -13,6 +14,7 @@ import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';
 import 'package:grapher/subgraph/subgraph-kernel.dart';
 import 'package:grapher/tag/tag.dart';
+import 'package:grapher/utils/merge.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/fragment/fragment.dart';
 import 'package:labelling/fragment/struct.dart';
@@ -66,6 +68,11 @@ class PriceFragment extends GraphFragment {
         child: UnpackFromViewEvent(
             tagName: source.broker!,
             child: DrawUnitFactory(
-                template: Cell.template(child: Candlestick()))));
+                template: Cell.template(
+                    child: Candlestick(
+                        child: MergeBranches(
+                            child: PipeIn(
+                                name: 'pipe_cell_event',
+                                eventType: CellEvent)))))));
   }
 }
