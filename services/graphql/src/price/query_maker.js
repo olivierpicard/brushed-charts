@@ -42,17 +42,18 @@ function query_maker_dispatch(source) {
 }
 
 function make_oanda_query() {
-  tablename = 'brushed-charts.prod.oanda_prices'
-
   const query = `
-  SELECT
+  DECLARE lower_bound TIMESTAMP;
+  DECLARE upper_bound TIMESTAMP;
+  SET lower_bound = TIMESTAMP("${dateFrom}");
+  SET upper_bound = TIMESTAMP("${dateTo}");
+
+  SELECT 
     ${columns},
     UNIX_SECONDS(TIMESTAMP(date)) AS timestamp
-  FROM \`${tablename}\` 
-  WHERE 
-    granularity = "${granularity}" AND 
-    instrument = "${asset}" AND 
-    date >= "${dateFrom}" AND date < "${dateTo}"
+  FROM prod.oanda_prices_interval(${granularity}, lower_bound, upper_bound)
+  WHERE
+      instrument = "${asset}"
   ORDER BY date DESC
   `
   return query
@@ -60,20 +61,20 @@ function make_oanda_query() {
 
 
 function make_kraken_query() {
-  tablename = 'brushed-charts.prod.kraken_ohlc'
-
   const query = `
-  SELECT
+  DECLARE lower_bound TIMESTAMP;
+  DECLARE upper_bound TIMESTAMP;
+  SET lower_bound = TIMESTAMP("${dateFrom}");
+  SET upper_bound = TIMESTAMP("${dateTo}");
+
+  SELECT 
     ${columns},
     UNIX_SECONDS(TIMESTAMP(datetime)) AS timestamp
-  FROM \`${tablename}\` 
+  FROM prod.kraken_ohlc_interval(${granularity}, lower_bound, upper_bound)
   WHERE 
-    granularity = ${granularity} AND 
-    asset_pair = "${asset}" AND 
-    datetime >= "${dateFrom}" AND datetime < "${dateTo}"
-    ORDER BY datetime DESC
+      asset_pair = "${asset}"
+  ORDER BY datetime DESC
   `
-
   return query
 }
 
