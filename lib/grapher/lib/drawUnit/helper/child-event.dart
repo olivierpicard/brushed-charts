@@ -19,11 +19,8 @@ class ChildUnitEvent {
 
   static DrawUnitEvent? toDrawUnitEvent(
       ViewEvent baseEvent, DrawUnitMetadata metadata) {
-    return DrawUnitEvent(
-      baseEvent,
-      metadata.data!,
-      metadata.previous?.child,
-    );
+    return DrawUnitEvent(baseEvent, metadata.data!, metadata.previous?.child,
+        metadata.logicalPrevious?.child);
   }
 
   static ViewEvent prepareChildEvent(

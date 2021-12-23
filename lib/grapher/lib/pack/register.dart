@@ -25,7 +25,6 @@ class PacketRegister {
   }
 
   void removeTags(String tagName) {
-    print(tagName);
     _storage.forEach((key, value) {
       value.yTags.removeWhere((element) => element.name == tagName);
     });

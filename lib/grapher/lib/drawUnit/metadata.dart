@@ -6,6 +6,8 @@ class DrawUnitMetadata {
   final ViewEvent viewEvent;
   final Data2D? data;
   final DrawUnit? previous;
+  final DrawUnit? logicalPrevious;
 
-  DrawUnitMetadata(this.viewEvent, this.data, this.previous);
+  DrawUnitMetadata(
+      this.viewEvent, this.data, this.previous, this.logicalPrevious);
 }

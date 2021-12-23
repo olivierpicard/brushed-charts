@@ -10,7 +10,9 @@ class MetadataHelper {
   static DrawUnitMetadata make(DrawUnitFactory fact, Data2D? item) {
     final viewEvent = _updateViewEvent(fact);
     final previous = _getPrevious(fact);
-    final metadata = DrawUnitMetadata(viewEvent, item, previous);
+    final logicalPrevious = _getLogicalPrevious(fact);
+    final metadata =
+        DrawUnitMetadata(viewEvent, item, previous, logicalPrevious);
 
     return metadata;
   }
@@ -28,5 +30,14 @@ class MetadataHelper {
     final previousChunk = fact.children.last as DrawUnit;
 
     return previousChunk;
+  }
+
+  static DrawUnit? _getLogicalPrevious(DrawUnitFactory fact) {
+    if (fact.children.length == 0) return null;
+    final previous = fact.children.cast<DrawUnit?>().lastWhere(
+        (drawUnit) => drawUnit!.metadata.data != null,
+        orElse: () => null);
+
+    return previous;
   }
 }
