@@ -1,5 +1,6 @@
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/pack/packet.dart';
+import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tagged-box.dart';
 
 class PacketRegister {
@@ -18,9 +19,16 @@ class PacketRegister {
   }
 
   void _updateIfContainKey(int timestamp, TaggedBox tag) {
-    if (!_storage.containsKey(timestamp)) return null;
+    if (!_storage.containsKey(timestamp)) return;
     final packet = _storage[timestamp]!;
     packet.upsert(tag);
+  }
+
+  void removeTags(String tagName) {
+    print(tagName);
+    _storage.forEach((key, value) {
+      value.yTags.removeWhere((element) => element.name == tagName);
+    });
   }
 
   Packet? elementAt(DateTime dateTime) =>

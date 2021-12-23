@@ -4,6 +4,7 @@ import 'package:grapher/kernel/misc/Init.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/pack/packet.dart';
+import 'package:grapher/pack/prune-event.dart';
 import 'package:grapher/pack/register.dart';
 import 'package:grapher/tag/tagged-box.dart';
 
@@ -14,6 +15,12 @@ class Pack extends GraphObject with SinglePropagator {
   Pack({this.child}) {
     Init.child(this, child);
     eventRegistry.add(IncomingData, (e) => onIncommingEvent(e as IncomingData));
+    eventRegistry.add(
+        PrunePacketEvent, (e) => onPrunePacket(e as PrunePacketEvent));
+  }
+
+  void onPrunePacket(PrunePacketEvent event) {
+    packetRegistry.removeTags(event.tagNameToPrune);
   }
 
   void onIncommingEvent(IncomingData event) {
@@ -46,7 +53,6 @@ class Pack extends GraphObject with SinglePropagator {
     final datetime = (tag.content as Timeseries2D).x;
     final packet = packetRegistry.elementAt(datetime)!;
     packet.unlink();
-
     return packet;
   }
 
