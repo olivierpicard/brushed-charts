@@ -6,7 +6,7 @@ enum PointerType { Tap, Drag, Hover }
 class PointerSummary {
   late final Offset position;
   late final Offset? delta;
-  late final type;
+  late final PointerType type;
 
   PointerSummary(dynamic pointerEvent) {
     if (pointerEvent is PointerHoverEvent) {
