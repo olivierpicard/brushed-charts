@@ -9,16 +9,21 @@ class OandaTester extends Viewable with EndlinePropagator {
   void draw(ViewEvent event) {
     final chain = event.chainData;
     int counter = 0;
+    int nullCount = 0;
 
     for (final item in chain) {
       final close = item?.y.close;
-      if (close == null) continue;
+      if (close == null) {
+        nullCount++;
+        continue;
+      }
       if (close > 3) {
         print('oanda test fail');
         return;
       }
       counter++;
     }
-    print('oanda test succeed: ($counter)');
+    print(
+        'oanda test succeed: with $counter real number and $nullCount null element');
   }
 }

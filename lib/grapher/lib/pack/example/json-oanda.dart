@@ -16,32 +16,6 @@ Map getMockOandaJSON() {
           }
         },
         {
-          "datetime": "2021-08-11T23:58:00.000Z",
-          "trade_count": 17,
-          "volume": null,
-          "timestamp": 1628726280,
-          "asset": "EUR/USD",
-          "price": {
-            "open": 1.1742,
-            "high": 1.1742,
-            "low": 1.17413,
-            "close": 1.17414
-          }
-        },
-        {
-          "datetime": "2021-08-11T23:57:00.000Z",
-          "trade_count": 7,
-          "volume": null,
-          "timestamp": 1628726220,
-          "asset": "EUR/USD",
-          "price": {
-            "open": 1.17416,
-            "high": 1.17418,
-            "low": 1.17416,
-            "close": 1.17418
-          }
-        },
-        {
           "datetime": "2021-08-11T23:56:00.000Z",
           "trade_count": 8,
           "volume": null,
