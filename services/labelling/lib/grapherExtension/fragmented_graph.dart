@@ -18,21 +18,30 @@ class FragmentedGraph extends GraphObject with SinglePropagator {
 
   GraphObject buildCoreGraph(FragmentStruct fragmentStruct) {
     return StackLayout(children: [
-      fragmentStruct.parser ?? StackLayout(children: []),
-      buildMainPipe(fragmentStruct),
+      buildParser(fragmentStruct),
+      buildVisualization(fragmentStruct),
+      buildInteraction(fragmentStruct),
     ]);
   }
 
-  GraphObject buildMainPipe(FragmentStruct struct) {
+  GraphObject buildParser(FragmentStruct struct) {
+    return struct.parser ?? NullGraphObject();
+  }
+
+  GraphObject buildVisualization(FragmentStruct struct) {
     return PipeOut(
         name: 'pipe_main',
         child: Pack(
             child: SortAccumulation(
                 child: Window(
                     child: StackLayout(children: [
-          PipeIn(name: 'pipe_axis', eventType: ViewEvent),
           struct.visualisation ?? NullGraphObject(),
+          PipeIn(name: 'pipe_view_event', eventType: ViewEvent),
           PipeOut(name: 'pipe_cell_event', child: HairCross()),
         ])))));
+  }
+
+  GraphObject buildInteraction(FragmentStruct struct) {
+    return struct.interaction ?? NullGraphObject();
   }
 }
