@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grapher/kernel/kernel.dart';
-import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/widget.dart';
 import 'package:grapher/pointer/widget.dart';
-import 'package:grapher/staticLayout/stack.dart';
-import 'package:grapher/subgraph/subgraph-kernel.dart';
+import 'package:labelling/grapherExtension/selectionRange/aggregate.dart';
 import 'package:labelling/composer/unifyFragment.dart';
 import 'package:labelling/fragment/fragment_contract.dart';
 import 'package:labelling/fragment/manager.dart';
@@ -38,10 +36,11 @@ class _GraphComposerState extends State<GraphComposer> {
   }
 
   Widget getAppropriateComposition() {
-    final unifiedFragment = UnifyFragment(fragments!).get;
+    var unifiedFragment = UnifyFragment(fragments!).get;
     if (unifiedFragment.parser is NullGraphObject) {
       return noAxisView(unifiedFragment);
     }
+    SelectionRangeComposer(unifiedFragment).aggregate();
     return axedView(unifiedFragment);
   }
 
