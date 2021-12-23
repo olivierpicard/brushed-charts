@@ -10,8 +10,7 @@ class SelectionRangeView extends Geometry {
   void draw(DrawUnitEvent event) {
     super.draw(event);
     drawVerticalLine();
-    // if (event.previous == null) return;
-    // print(event.unitData.y);
+    drawRangeBackground(event.logicalPrevious);
   }
 
   void drawVerticalLine() {
@@ -20,6 +19,22 @@ class SelectionRangeView extends Geometry {
     final bottomCenter = drawZoneRect.bottomCenter;
     final paint = Paint()..color = Colors.red;
     canvas!.drawLine(topCenter, bottomCenter, paint);
+  }
+
+  bool isRangeValid(DrawUnitObject? logicalPrevious) {
+    if (logicalPrevious == null) {
+      return false;
+    }
+    return true;
+  }
+
+  void drawRangeBackground(DrawUnitObject? logicalPrevious) {
+    if (!isRangeValid(logicalPrevious)) return;
+    final previous = logicalPrevious as SelectionRangeView;
+    final topLeft = baseDrawEvent!.drawZone.toRect.topCenter;
+    final bottomRight = previous.baseDrawEvent!.drawZone.toRect.bottomCenter;
+    final paint = Paint()..color = Colors.white24;
+    canvas!.drawRect(Rect.fromPoints(topLeft, bottomRight), paint);
   }
 
   @override

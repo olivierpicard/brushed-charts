@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 
 import 'composer/chart.dart';
 
-// import 'composer/composer.dart';
-
 Future<void> main() async {
   final gqlClient = await Graphql.init();
   runApp(Labeller(graphqlClient: gqlClient));
