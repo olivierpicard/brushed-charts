@@ -22,7 +22,7 @@ class YVirtualRangeUpdate extends Viewable with SinglePropagator {
   static Range process(Iterable<Data2D?> chain) {
     double yMin = 999999, yMax = -99999;
     for (final item in chain) {
-      if (item == null) continue;
+      if (item == null || item.y == null) continue;
       yMin = min(item.yMin, yMin);
       yMax = max(item.yMax, yMax);
     }

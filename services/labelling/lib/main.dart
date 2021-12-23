@@ -3,11 +3,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:labelling/graphql/graphql.dart';
 import 'package:labelling/services/appmode.dart';
 import 'package:labelling/services/fragments_model.dart';
-// import 'package:labelling/services/fragments.dart';
 import 'package:labelling/services/source.dart';
 import 'package:labelling/toolbar/toolbar.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'composer/chart.dart';
 
