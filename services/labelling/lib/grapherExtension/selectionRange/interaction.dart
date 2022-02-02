@@ -7,6 +7,7 @@ import 'package:labelling/grapherExtension/selectionRange/event.dart';
 class SelectionRangeInteraction extends GraphObject with SinglePropagator {
   static const int _selectionIsOver = 2;
   static const int _readyToReselect = 3;
+  // ignore: annotate_overrides, overridden_fields
   GraphObject? child;
   final range = List<DateTime?>.filled(2, null);
   var indexPointer = 0;

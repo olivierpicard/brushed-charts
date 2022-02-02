@@ -36,6 +36,7 @@ class _SourceFieldState extends State<SourceField> {
     return SizedBox(
         width: widget.width,
         child: TextField(
+          autofocus: true,
           decoration: const InputDecoration(
               isDense: true, contentPadding: EdgeInsets.fromLTRB(0, 12, 0, 10)),
           onSubmitted: _onEdited,

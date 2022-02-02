@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grapher/kernel/kernel.dart';
 import 'package:grapher/kernel/widget.dart';
-import 'package:grapher/pointer/widget.dart';
+import 'package:grapher/interaction/widget.dart';
 import 'package:labelling/grapherExtension/selectionRange/aggregate.dart';
 import 'package:labelling/composer/unifyFragment.dart';
 import 'package:labelling/fragment/fragment_contract.dart';
@@ -49,7 +49,7 @@ class _GraphComposerState extends State<GraphComposer> {
   }
 
   Widget axedView(FragmentStruct unifiedFragment) {
-    return GraphPointer(
+    return GraphFullInteraction(
         kernel: GraphKernel(
             child: AxedGraph(graph: FragmentedGraph(struct: unifiedFragment))));
   }
