@@ -3,26 +3,32 @@
 dirpath=$(dirname $(which $0))
 cd "$dirpath"/..
 
-creddir="/etc/brushed-charts"
-localcred="./etc"
-fname="backend-institution_account-service.json"
+etcdir="/etc/brushed-charts"
+google_cred_filename="backend-institution_account-service.json"
+oci_key_filename="oci_key_brushed-charts-app.pem"
+oci_config_filename="oci-brushed-charts-app-config"
 
-# Load the variables in the .env file if exist
-if [ -f ".env" ]; then
-    export $(cat .env | sed 's/#.*//g' | xargs)
-fi 
+export $(cat .vscode/.env | sed 's/#.*//g' | xargs)
+mkdir -p $etcdir
 
-# Decrypt into local credential dir using a passphrase, 
-gpg --quiet --batch --yes --decrypt \
-    --passphrase="$BACKEND_INSTITUTION_CREDENTIAL_PASS" \
-    --output "${localcred}/${fname}" \
-    "${localcred}/${fname}.gpg"
+# Decrypt gcloud key into local credential dir using a passphrase, 
+echo -e "$PASSWORD_FOR_GPG_FILES" | gpg \
+--quiet --batch --yes \
+    --passphrase-fd 0 --decrypt \
+    --output "$etcdir/$google_cred_filename" \
+    ./etc/$google_cred_filename.gpg && echo "✅ gcloud key decrypted"
 
-# Create directory with correct owner name. It will be use mostly
-# on dev computer
-if [ ! -d $creddir ]; then 
-    sudo mkdir -p $creddir
-fi
+# Decrypt Oracle cloud key into local credential dir using a passphrase, 
+echo -e "$PASSWORD_FOR_GPG_FILES" | gpg \
+    --quiet --batch --yes \
+    --passphrase-fd 0 --decrypt \
+    --output "$etcdir/$oci_key_filename" \
+    ./etc/$oci_key_filename.gpg && echo "✅ oracle key decrypted"
 
-# Move the local credential to 'etc' dir 
-sudo mv "${localcred}/${fname}" "${creddir}/${fname}"
+# Decrypt Oracle cloud config file into local credential dir using a passphrase, 
+echo -e "$PASSWORD_FOR_GPG_FILES" | gpg \
+    --quiet --batch --yes \
+    --passphrase-fd 0 --decrypt \
+    --output "$etcdir/$oci_config_filename" \
+    ./etc/$oci_config_filename.gpg && echo "✅ oracle config file decrypted"
+

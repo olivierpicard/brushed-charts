@@ -9,14 +9,16 @@
             "type": "python",
             "request": "launch",
             "module": "flask",
-            "cwd": "${workspaceFolder}/service/health_check",
+            "cwd": "${fileDirname}",
             "env": {
                 "FLASK_APP": "app.py",
                 "FLASK_ENV": "development"
             },
+            "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env",
             "args": [
                 "run"
             ],
+            "console": "internalConsole",
             "jinja": true
         },
         {
@@ -24,6 +26,7 @@
             "type": "python",
             "request": "launch",
             "program": "${fileDirname}/main.py",
+            // "program": "${file}",
             "console": "internalConsole",
             "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env"
         },

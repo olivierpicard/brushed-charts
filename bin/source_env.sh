@@ -13,7 +13,6 @@ dirpath=$(dirname $(which $0))
 cd $dirpath/../env
 
 set -o allexport
-source presence_shortterm.env
 source services.env
 source services.dev.env
 source secrets.env
