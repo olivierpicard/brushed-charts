@@ -284,3 +284,26 @@ services:
       resources:
         limits:
           memory: 70M
+
+  binance_websocket_fetch:
+    build: ./services/binance_websocket_fetch
+    image: eu.gcr.io/brushed-charts/binance_websocket_fetch:${PROFIL}-latest
+    restart: on-failure
+    container_name: binance_websocket_fetch
+    env_file:
+      - ./env/services.env
+      - ./env/services.${PROFIL}.env
+      - ./env/secrets.env
+    volumes:
+      - type: bind
+        source: /etc/brushed-charts/
+        target: /etc/brushed-charts/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
+    deploy:
+      resources:
+        limits:
+          memory: 70M

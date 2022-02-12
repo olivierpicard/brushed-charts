@@ -1,0 +1,6 @@
+confluent-kafka==1.*            # 1.8.2
+google-cloud-logging==2.*       # 3.7.0
+binance-connector==1.*          # 1.10.0
+certifi==2021.*                 # 2021.10.8
+oci==2.*                        # 2.55.1
+
