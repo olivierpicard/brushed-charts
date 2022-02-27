@@ -18,7 +18,7 @@ if [[ -z $PROFIL ]]; then
 fi
 
 dirpath=$(dirname $(which $0))
-cd "$dirpath"/..
+cd "$dirpath"/../..
 
 cd services
 list_of_dockerfile=$(find . -type f -name 'Dockerfile')

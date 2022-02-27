@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dirpath=$(dirname $(which $0))
-cd "$dirpath"/..
+cd "$dirpath"/../..
 
 BUILD_DIR="/tmp/buildk8s"
 REMOTE_REGISTRY='eu.gcr.io/brushed-charts'
