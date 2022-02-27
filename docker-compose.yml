@@ -4,8 +4,8 @@ services:
   mongodb:
     image: mongo:4.4
     restart: on-failure
-    container_name: mongodb
-    hostname: mongodb
+    container_name: mongo
+    hostname: mongo
     ports:
       - 27017:27017
     volumes:

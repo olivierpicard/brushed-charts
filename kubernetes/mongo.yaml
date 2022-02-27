@@ -11,7 +11,6 @@ spec:
       targetPort: 27017
 
 ---
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -30,19 +29,27 @@ spec:
         app: mongo
     spec:
       containers:
-      - name: mongo
-        image: mongo:4.4
-        ports:
-        - containerPort: 27017
-        volumeMounts:
         - name: mongo
-          mountPath: /data/db
+          image: mongo:4.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: 300Mi
+            limits:
+              cpu: 250m
+              memory: 400Mi
+
   volumeClaimTemplates:
-  - metadata:
-      name: mongo
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "local-storage"
-      resources:
-        requests:
-          storage: 5Gi
+    - metadata:
+        name: mongo
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "local-storage"
+        resources:
+          requests:
+            storage: 5Gi
