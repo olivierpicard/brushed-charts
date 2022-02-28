@@ -30,5 +30,5 @@ for file in $list_of_dockerfile; do
         -t $REMOTE_REGISTRY/$service_name:prod-latest \
         -t $REMOTE_REGISTRY/$service_name:test-latest \
         -t $DEV_REGISTRY/$service_name:dev-latest \
-    && docker image push $DEV_REGISTRY/$service_name:dev-latest) &
+    && docker image push $DEV_REGISTRY/$service_name:dev-latest)
 done
