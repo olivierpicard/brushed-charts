@@ -53,4 +53,16 @@ microk8s kubectl create configmap watchlist \
     -o yaml \
     | microk8s kubectl apply -f -
 
+microk8s kubectl create secret generic env-secret \
+    --from-env-file=env/secrets.env \
+    --dry-run=client \
+    -o yaml \
+    | microk8s kubectl apply -f -
+
+microk8s kubectl create secret generic gcp-backend-institution-service-account \
+    --from-file=/etc/brushed-charts/backend-institution_account-service.json \
+    --dry-run=client \
+    -o yaml \
+    | microk8s kubectl apply -f -
+
 microk8s kubectl apply -f $BUILD_DIR/
