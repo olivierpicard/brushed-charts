@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo
+  name: mongodb
 spec:
   selector:
     app: mongo
@@ -18,7 +18,7 @@ metadata:
   labels:
     app: mongo
 spec:
-  serviceName: mongo
+  serviceName: mongodb
   replicas: 1
   selector:
     matchLabels:
