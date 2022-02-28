@@ -17,3 +17,15 @@ Thing to do with kubernetes:
 
 Things Tryed but not worked:
 - to build a secret use kustomisation file secret generator with file /etc/brushed-charts/...gcp-jsonkey. This methode don't work because the file specified is not in the same (or bellow) directory of kustomization.yaml
+- Why using a secret to store credentials and not use serviceAccount ? It seems that Service account in K8S is oriented to grant pod access in the k8s cluster. Secrets is more appropriate in this case
+- Use serviceName in statefulset to have a dns name. But the service have priority and the field {.metadata.name} match the real DNS name. 
+
+
+Question: 
+- Use encryption at rest for `etcd` or use `Vault by HashiCorp` ?
+- How to speed up pip install dependency ? 
+
+
+TODO: 
+- Put all of these file in namespace to separate test and prod
+- find a way to mount secret.env but share with pod only concerned secret
