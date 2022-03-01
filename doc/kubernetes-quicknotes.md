@@ -24,6 +24,7 @@ Things Tryed but not worked:
 Question: 
 - Use encryption at rest for `etcd` or use `Vault by HashiCorp` ?
 - How to speed up pip install dependency ? 
+- When you use a local persistent volume then delete it. When you recreate it, old content will be erased. There is a way to keep data even after delete the volume ?
 
 
 TODO: 
