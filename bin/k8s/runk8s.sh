@@ -49,6 +49,7 @@ microk8s kubectl create configmap prod-services \
 
 microk8s kubectl create configmap watchlist \
     --from-file=oanda=/etc/brushed-charts/oanda_watchlist.txt \
+    --from-file=kraken=/etc/brushed-charts/kraken_watchlist.txt \
     --dry-run=client \
     -o yaml \
     | microk8s kubectl apply -f -
