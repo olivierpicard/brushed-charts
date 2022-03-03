@@ -13,7 +13,8 @@ SECRET_NAME="$1"
 secret=$(gcloud secrets \
     versions access latest \
     --secret="$SECRET_NAME" \
-    --quiet
+    --quiet \
+    --project brushed-charts
 )
 
 [[ $? != 0 ]] && exit 1
