@@ -20,7 +20,7 @@ The process is describe in <a href='./setup-vscode.md'>./setup-vscode.md</a> doc
 
 ## Deploy
 When the app is ready, and you tested it locally using a traditionnal debugger (no docker). <br/>
-It's now time to deploy it locally using registry and docker.The app is working find on your computer with docker it's know time to deploy it in test mode on a real server and after some time swith it to the prod server.
+It's now time to deploy it locally using registry and docker.The app is working find on your computer with docker it's know time to deploy it in test mode on a real server and after some time it's time to deploy on prod server.
 
 
 

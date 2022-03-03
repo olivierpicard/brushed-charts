@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-mongo
+  labels:
+    app: health-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-mongo
+  template:
+    metadata:
+      labels:
+        app: health-mongo
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+      - name: health-mongo
+        image: '{{REGISTRY_URL}}/health_mongo:{{PROFIL}}-latest'
+        volumeMounts:
+        - name: gcp-service-account
+          mountPath: /etc/brushed-charts/
+          readOnly: true
+        envFrom:
+          - configMapRef:
+              name: general-services
+          - configMapRef:
+              name: "{{PROFIL}}-services"
+        resources:
+            limits:
+              cpu: 100m
+              memory: 80Mi
+      volumes:
+        - name: gcp-service-account
+          secret:
+            secretName: gcp-backend-institution-service-account
+          

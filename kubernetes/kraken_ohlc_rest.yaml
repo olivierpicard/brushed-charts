@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kraken-ohlc-rest
+  labels:
+    app: kraken-ohlc-rest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kraken-ohlc-rest
+  template:
+    metadata:
+      labels:
+        app: kraken-ohlc-rest
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+      - name: kraken-ohlc-rest
+        image: '{{REGISTRY_URL}}/kraken_ohlc_rest:{{PROFIL}}-latest'
+        volumeMounts:
+        - name: etc-volume
+          mountPath: /etc/brushed-charts/
+          readOnly: true
+        envFrom:
+          - configMapRef:
+              name: general-services
+          - configMapRef:
+              name: "{{PROFIL}}-services"
+        resources:
+            limits:
+              cpu: 100m
+              memory: 120Mi
+      volumes:
+      - name: etc-volume
+        projected:
+          sources:
+          - secret:
+              name: gcp-backend-institution-service-account
+          - configMap:
+              name: watchlist
+              items:
+                - key: kraken
+                  path: kraken_watchlist.txt
+          
