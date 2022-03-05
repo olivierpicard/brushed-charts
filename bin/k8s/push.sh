@@ -9,8 +9,7 @@
 # ----------------------------
 
 
-REMOTE_REGISTRY='eu.gcr.io/brushed-charts'
-DEV_REGISTRY='localhost:32000'
+REMOTE_REGISTRY='europe-docker.pkg.dev/brushed-charts/services'
 
 if [[ -z $PROFIL ]]; then
     echo '$PROFIL is not defined'
@@ -26,9 +25,6 @@ list_of_dockerfile=$(find . -type f -name 'Dockerfile')
 for file in $list_of_dockerfile; do
     service_path=$(dirname $file)
     service_name=$(basename $service_path)
-    (docker build $service_path \
-        -t $REMOTE_REGISTRY/$service_name:prod-latest \
-        -t $REMOTE_REGISTRY/$service_name:test-latest \
-        -t $DEV_REGISTRY/$service_name:dev-latest \
-    && docker image push $DEV_REGISTRY/$service_name:dev-latest)
+    version=$(cat $service_path/version)
+    docker push image $REMOTE_REGISTRY/$service_name:$version
 done

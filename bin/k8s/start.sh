@@ -4,7 +4,7 @@ dirpath=$(dirname $(which $0))
 cd "$dirpath"/../..
 
 BUILD_DIR="/tmp/buildk8s"
-REMOTE_REGISTRY='eu.gcr.io/brushed-charts'
+REMOTE_REGISTRY='europe-docker.pkg.dev\/brushed-charts\/services'
 DEV_REGISTRY='localhost:32000'
 context_registry=$DEV_REGISTRY
 
