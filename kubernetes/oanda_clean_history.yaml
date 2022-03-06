@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: oanda-clean-history
-        image: '{{REGISTRY_URL}}/oanda_clean_history:{{PROFIL}}-latest'
+        image: '{{REGISTRY_URL}}/oanda_clean_history:1.0'
         volumeMounts:
         - name: gcp-service-account
           mountPath: /etc/brushed-charts/
