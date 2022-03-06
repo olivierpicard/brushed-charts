@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: oanda-bigquery
-        image: '{{REGISTRY_URL}}/oanda_bigquery:{{PROFIL}}-latest'
+        image: '{{REGISTRY_URL}}/oanda_bigquery:1.0'
         volumeMounts:
         - name: gcp-service-account
           mountPath: /etc/brushed-charts/

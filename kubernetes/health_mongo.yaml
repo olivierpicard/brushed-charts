@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: health-mongo
-        image: '{{REGISTRY_URL}}/health_mongo:{{PROFIL}}-latest'
+        image: '{{REGISTRY_URL}}/health_mongo:1.0'
         volumeMounts:
         - name: gcp-service-account
           mountPath: /etc/brushed-charts/

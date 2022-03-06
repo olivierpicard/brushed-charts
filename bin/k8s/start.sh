@@ -4,15 +4,17 @@ dirpath=$(dirname $(which $0))
 cd "$dirpath"/../..
 
 BUILD_DIR="/tmp/buildk8s"
-REMOTE_REGISTRY='eu.gcr.io/brushed-charts'
+REMOTE_REGISTRY='europe-docker.pkg.dev\/brushed-charts\/services'
 DEV_REGISTRY='localhost:32000'
 context_registry=$DEV_REGISTRY
+pv_hostname='dev-1'
 
 if [[ -z $PROFIL ]]; then
     echo '$PROFIL is not defined'
     exit 1
 elif [[ $PROFIL != 'dev' ]]; then
     context_registry=$REMOTE_REGISTRY
+    pv_hostname='prod-de1'
 fi
 
 rm -rf $BUILD_DIR
@@ -21,6 +23,7 @@ cp -r kubernetes/* $BUILD_DIR/
 
 grep -Rl '{{PROFIL}}' $BUILD_DIR | xargs sed -i "s/{{PROFIL}}/$PROFIL/g" 
 grep -Rl '{{REGISTRY_URL}}' $BUILD_DIR | xargs sed -i "s/{{REGISTRY_URL}}/$context_registry/g" 
+grep -Rl '{{PV-HOSTNAME}}' $BUILD_DIR | xargs sed -i "s/{{PV-HOSTNAME}}/$pv_hostname/g" 
 
 
 microk8s kubectl create configmap general-services \

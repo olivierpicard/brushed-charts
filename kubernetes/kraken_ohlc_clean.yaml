@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: kraken-ohlc-clean
-        image: '{{REGISTRY_URL}}/kraken_ohlc_clean:{{PROFIL}}-latest'
+        image: '{{REGISTRY_URL}}/kraken_ohlc_clean:1.0'
         volumeMounts:
         - name: gcp-service-account
           mountPath: /etc/brushed-charts/
