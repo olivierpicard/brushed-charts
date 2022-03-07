@@ -13,3 +13,4 @@ node_modules
 *secret*.env
 *_account-service.json
 draft/
+*cache*
