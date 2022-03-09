@@ -31,6 +31,15 @@
             "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env",
         },
         {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${fileDirname}/main.py",
+            // "program": "${file}",
+            "console": "internalConsole",
+            "envFile": "/Users/olivierpicard/Documents/Projects/brushed-charts/.vscode/.env",
+        },
+        {
             "name": "Flutter",
             "type": "dart",
             "request": "launch",
