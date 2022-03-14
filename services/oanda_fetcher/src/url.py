@@ -3,12 +3,13 @@ from typing import List
 DOMAIN_NAME = 'https://stream-fxtrade.oanda.com'
 GENERIC_PATH = 'v3/accounts/{accountID}/pricing/stream'
 
+
 def build(account_id: str, pairs: List[str]) -> str:
     path = _make_path(account_id)
     options = _make_options(pairs)
     full_url = f'{DOMAIN_NAME}/{path}?{options}'
     return full_url
-    
+
 
 def _make_path(account_id: str) -> str:
     _raise_on_invalid_account_id(account_id)

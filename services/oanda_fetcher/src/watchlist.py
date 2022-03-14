@@ -1,11 +1,13 @@
 import json
 
-def __load__(path:str):
+
+def __load__(path: str):
     file = open(path)
     data = json.load(file)
     file.close()
     return data
 
-def load_pairs(path:str):
+
+def load_pairs(path: str):
     raw_data = __load__(path)
     return raw_data['pairs']
