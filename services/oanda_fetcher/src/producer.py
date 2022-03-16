@@ -2,6 +2,7 @@ import confluent_kafka as kafka
 import certifi
 import os
 
+
 PROFIL = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
 TOKEN = os.getenv('OCI_USER_TOKEN_BRUSHED_CHARTS_APP')
 TENANCY = os.getenv('OCI_TENANCY')
@@ -12,12 +13,12 @@ TOPIC = f'oanda-raw-prices-{PROFIL}'
 
 
 class Producer():
-    producer = None
+    kafka_producer = None
     error_callback = None
 
     def __init__(self, error_callback) -> None:
         self.error_callback = error_callback
-        self.producer = self.__create_producer__()
+        self.kafka_producer = self.__create_producer__()
 
     def __create_producer__(self):
         return kafka.Producer({
@@ -32,9 +33,9 @@ class Producer():
         })
 
     def diffuse(self, msg: str):
-        self.producer.produce(
+        self.kafka_producer.produce(
             TOPIC, value=msg, on_delivery=self.__delivery_report__)
-        self.producer.poll(0)
+        self.kafka_producer.poll(0)
 
     def __delivery_report__(self, err, _):
         if err is None:
@@ -42,5 +43,5 @@ class Producer():
         self.error_callback(err)
 
     def prepare_exit(self):
-        self.producer.flush()
-        self.producer.close()
+        self.kafka_producer.flush()
+        self.kafka_producer.close()
