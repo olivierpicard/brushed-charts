@@ -17,7 +17,3 @@ class TestWatchlist(unittest.TestCase):
     def test_raise_on_key_not_found(self, _):
         with self.assertRaises(KeyError):
             watchlist.load_pairs('/fake/path')
-
-
-if __name__ == '__main__':
-    unittest.main()

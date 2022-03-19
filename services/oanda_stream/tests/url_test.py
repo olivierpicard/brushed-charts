@@ -8,7 +8,7 @@ class TestUrlMaker(unittest.TestCase):
 
     def test_full_valid_url_is_valid(self):
         # pylama:ignore=E501
-        expected = 'https://stream-fxtrade.oanda.com/v3/accounts/1234-account_id-5432/pricing/stream?instruments=EUR_USD%2USD_JPY'
+        expected = 'https://stream-fxpractice.oanda.com/v3/accounts/1234-account_id-5432/pricing/stream?instruments=EUR_USD,USD_JPY'
         stream_url = url.build(self.valid_account_id, self.valid_pairs)
         assert stream_url == expected
 

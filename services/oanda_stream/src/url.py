@@ -1,6 +1,6 @@
 from typing import List
 
-DOMAIN_NAME = 'https://stream-fxtrade.oanda.com'
+DOMAIN_NAME = 'https://stream-fxpractice.oanda.com'
 GENERIC_PATH = 'v3/accounts/{accountID}/pricing/stream'
 
 
@@ -19,7 +19,7 @@ def _make_path(account_id: str) -> str:
 
 def _make_options(pairs: List[str]) -> str:
     _raise_on_invalid_pairs(pairs)
-    instru_list = '%2'.join(pairs)
+    instru_list = ','.join(pairs)
     option = f'instruments={instru_list}'
     return option
 

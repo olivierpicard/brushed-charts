@@ -1,15 +1,15 @@
+import json
 import confluent_kafka as kafka
 import certifi
 import os
 
 
-PROFIL = os.getenv("BRUSHED_CHARTS_ENVIRONMENT")
-TOKEN = os.getenv('OCI_USER_TOKEN_BRUSHED_CHARTS_APP')
-TENANCY = os.getenv('OCI_TENANCY')
-USERNAME = os.getenv('OCI_USER')
-STREAMING_POOL = os.getenv('OCI_STREAMING_POOL_BINANCE')
-STREAMING_SERVER = os.getenv('OCI_STREAMING_SERVER')
-TOPIC = f'oanda-raw-prices-{PROFIL}'
+TOKEN = os.environ['OCI_USER_TOKEN_BRUSHED_CHARTS_APP']
+TENANCY = os.environ['OCI_TENANCY']
+USERNAME = os.environ['OCI_USER']
+STREAMING_POOL = os.environ['OCI_STREAMING_POOL']
+STREAMING_SERVER = os.environ['OCI_STREAMING_SERVER']
+TOPIC = 'oanda-raw-prices'
 
 
 class Producer():
@@ -29,12 +29,19 @@ class Producer():
             'sasl.username': f'{TENANCY}/{USERNAME}/{STREAMING_POOL}',
             'sasl.password': TOKEN,
             'compression.type': 'snappy',
+            'request.timeout.ms': 5000,
+            'delivery.timeout.ms': 10000,
             'linger.ms': '200',
         })
 
-    def diffuse(self, msg: str):
+    def diffuse(self, msg: dict):
+        encoded_message = json.dumps(msg).encode('utf-8')
+        instrument = msg['instrument']
         self.kafka_producer.produce(
-            TOPIC, value=msg, on_delivery=self.__delivery_report__)
+            TOPIC, key=instrument,
+            value=encoded_message,
+            on_delivery=self.__delivery_report__
+        )
         self.kafka_producer.poll(0)
 
     def __delivery_report__(self, err, _):
@@ -44,4 +51,3 @@ class Producer():
 
     def prepare_exit(self):
         self.kafka_producer.flush()
-        self.kafka_producer.close()
