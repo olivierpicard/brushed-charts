@@ -1,4 +1,3 @@
-from asyncio.log import logger
 import time
 import traceback
 import cloud_logger
@@ -8,6 +7,7 @@ from book_snapshot import BookSnapshot
 from services.binance_rest_fetch.nodata_watcher import NoDataWatcher
 
 REFRESH_RATE = 30 * 60  # seconds
+
 
 def on_error(err, msg):
     log_body = {'error': str(err), 'message': msg}

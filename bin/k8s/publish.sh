@@ -33,9 +33,7 @@ function build_and_push {
 }
 
 function dev_push {
-    docker build $service_path \
-        --tag $DEV_REGISTRY/$service_name:$version
-    docker push $DEV_REGISTRY/$service_name:$version
+    docker build $service_path --tag $service_name:$version
 }
 
 function multi_architecture_push {
@@ -45,22 +43,32 @@ function multi_architecture_push {
         --tag $REMOTE_REGISTRY/$service_name:$version
 }
 
+function discover {
+    local file="$1"
+    service_path=$(dirname $file)
+    service_name=$(basename $service_path)
+    version=$(cat $service_path/version)
+}
+
 #--------- MAIN ----------
 
 REMOTE_REGISTRY='europe-docker.pkg.dev/brushed-charts/services'
-DEV_REGISTRY='localhost:32000'
 RELEASE_PROFILE="$1"
+SERVICE_TO_BUILD="$2"
 
 dirpath=$(dirname $(which $0))
 cd "$dirpath"/../..
 cd services
 
 check_environment_var
-list_of_dockerfile=$(find . -type f -name 'Dockerfile')
 
-for file in $list_of_dockerfile; do
-    service_path=$(dirname $file)
-    service_name=$(basename $service_path)
-    version=$(cat $service_path/version)
+if [[ -z SERVICE_TO_BUILD ]]; then
+    list_of_dockerfile=$(find . -type f -name 'Dockerfile')
+    for file in $list_of_dockerfile; do
+        discover $file
+        build_and_push
+    done
+else
+    discover $SERVICE_TO_BUILD/Dockerfile
     build_and_push
-done
+fi

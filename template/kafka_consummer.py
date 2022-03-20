@@ -5,23 +5,23 @@ import os
 TOKEN = os.getenv('OCI_USER_TOKEN_BRUSHED_CHARTS_APP')
 TENANCY = os.getenv('OCI_TENANCY')
 USERNAME = os.getenv('OCI_USER')
-STREAMING_POOL = os.getenv('OCI_STREAMING_POOL_BINANCE')
+STREAMING_POOL = os.getenv('OCI_STREAMING_POOL')
 STREAMING_SERVER = os.getenv('OCI_STREAMING_SERVER')
-TOPIC = 'raw-data'
+TOPIC = 'oanda-raw-prices'
 
-consumer = Consumer({  
+consumer = Consumer({
     'bootstrap.servers': STREAMING_SERVER,
     'security.protocol': 'SASL_SSL',
     'ssl.ca.location': certifi.where(),
     'sasl.mechanism': 'PLAIN',
     'sasl.username': f'{TENANCY}/{USERNAME}/{STREAMING_POOL}',
     'sasl.password': TOKEN,
-    'group.id': 'binance',
+    'group.id': 'end-to-end-tester',
     'auto.offset.reset': "earliest",
     'session.timeout.ms': "30000",
 })
 
-consumer.subscribe(["raw-data"])
+consumer.subscribe([TOPIC])
 
 # Process messages
 try:
@@ -33,7 +33,7 @@ try:
             print("Consumer error: {}".format(msg.error()))
             continue
         print('{}'.format(msg.value().decode('utf-8')))
-            
+
 except KeyboardInterrupt:
     pass
 finally:

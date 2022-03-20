@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:grapher/axis/base.dart';
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/kernel/drawEvent.dart';

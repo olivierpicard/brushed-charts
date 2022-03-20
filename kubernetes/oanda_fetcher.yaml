@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: oanda-fetcher
-        image: '{{REGISTRY_URL}}/oanda_fetcher:1.2'
+        image: '{{REGISTRY_URL}}oanda_fetcher:1.2'
         volumeMounts:
         - name: gcp-service-account
           mountPath: /etc/brushed-charts/

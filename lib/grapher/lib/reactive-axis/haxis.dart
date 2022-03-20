@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:grapher/axis/haxis.dart';
 import 'package:grapher/cell/event.dart';
 import 'package:grapher/kernel/drawEvent.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/gestures/events.dart';
 import 'package:grapher/cell/cell.dart';
 import 'package:grapher/cell/event.dart';
 import 'package:grapher/cell/pointer-summary.dart';
