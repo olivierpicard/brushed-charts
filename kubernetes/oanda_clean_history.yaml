@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oanda-clean-history
+  labels:
+    app: oanda-clean-history
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oanda-clean-history
+  template:
+    metadata:
+      labels:
+        app: oanda-clean-history
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+      - name: oanda-clean-history
+        image: '{{REGISTRY_URL}}/oanda_clean_history:1.0'
+        volumeMounts:
+        - name: gcp-service-account
+          mountPath: /etc/brushed-charts/
+          readOnly: true
+        envFrom:
+          - configMapRef:
+              name: general-services
+          - configMapRef:
+              name: "{{PROFIL}}-services"
+        resources:
+            limits:
+              cpu: 100m
+              memory: 80Mi
+      volumes:
+        - name: gcp-service-account
+          secret:
+            secretName: gcp-backend-institution-service-account

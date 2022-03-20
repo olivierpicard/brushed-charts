@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oanda-watchlist
+  labels:
+    app: oanda-watchlist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oanda-watchlist
+  template:
+    metadata:
+      labels:
+        app: oanda-watchlist
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+      - name: oanda-watchlist
+        image: '{{REGISTRY_URL}}/oanda_watchlist:1.0'
+        volumeMounts:
+        - name: etc-volume
+          mountPath: /etc/brushed-charts/
+          readOnly: true
+        envFrom:
+          - configMapRef:
+              name: general-services
+          - configMapRef:
+              name: "{{PROFIL}}-services"
+        resources:
+            limits:
+              cpu: 100m
+              memory: 80Mi
+      volumes:
+      - name: etc-volume
+        projected:
+          sources:
+          - secret:
+              name: gcp-backend-institution-service-account
+          - configMap:
+              name: watchlist
+              items:
+                - key: oanda
+                  path: oanda_watchlist.txt
