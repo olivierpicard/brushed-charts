@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:grapher/kernel/abstractKernel.dart';
-import 'linkEvent.dart';
-import 'propagator/single.dart';
 import 'drawZone.dart';
-import 'misc/Init.dart';
 import 'drawEvent.dart';
 import 'object.dart';
 

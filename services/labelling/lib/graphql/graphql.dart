@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:labelling/graphql/price.dart';
 
 class Graphql extends InheritedWidget {
   static late Graphql instance;

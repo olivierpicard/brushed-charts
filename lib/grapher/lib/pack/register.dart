@@ -1,6 +1,5 @@
 import 'package:grapher/filter/dataStruct/timeseries2D.dart';
 import 'package:grapher/pack/packet.dart';
-import 'package:grapher/tag/property.dart';
 import 'package:grapher/tag/tagged-box.dart';
 
 class PacketRegister {

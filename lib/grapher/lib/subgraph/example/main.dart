@@ -12,7 +12,6 @@ import 'package:grapher/filter/json/to-point2D.dart';
 import 'package:grapher/geometry/candlestick.dart';
 import 'package:grapher/geometry/line.dart';
 import 'package:grapher/kernel/kernel.dart';
-import 'package:grapher/kernel/widget.dart';
 import 'package:grapher/pack/pack.dart';
 import 'package:grapher/pack/unpack-view.dart';
 import 'package:grapher/pipe/pipeIn.dart';

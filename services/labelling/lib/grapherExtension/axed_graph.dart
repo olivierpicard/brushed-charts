@@ -1,6 +1,5 @@
 import 'package:grapher/axis/haxis.dart';
 import 'package:grapher/axis/vaxis.dart';
-import 'package:grapher/cursor/haircross.dart';
 import 'package:grapher/kernel/object.dart';
 import 'package:grapher/kernel/propagator/single.dart';
 import 'package:grapher/pipe/pipeOut.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:labelling/services/source.dart';
 import 'package:labelling/toolbar/indicator.dart';
 import 'package:labelling/toolbar/source_field.dart';
 import 'package:labelling/toolbar/calendar.dart';

@@ -1,10 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/src/rendering/custom_paint.dart';
 import 'dart:ui';
 
 import 'package:grapher/kernel/abstractKernel.dart';
-import 'package:grapher/kernel/drawEvent.dart';
-import 'package:grapher/kernel/drawable.dart';
 import 'package:grapher/kernel/linkEvent.dart';
 import 'package:grapher/kernel/object.dart';
 

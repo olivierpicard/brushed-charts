@@ -3,7 +3,6 @@ import 'package:grapher/kernel/abstractKernel.dart';
 import 'linkEvent.dart';
 import 'propagator/base.dart';
 import 'eventRegistry.dart';
-import 'kernel.dart';
 
 abstract class GraphObject implements Propagator {
   AbstractKernel? kernel;
