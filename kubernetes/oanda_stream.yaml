@@ -18,9 +18,9 @@ spec:
         - name: gcr-json-key
       containers:
       - name: oanda-stream
-        image: 'oanda_stream:1.0'
+        image: '{{REGISTRY_URL}}oanda_stream:1.0'
         volumeMounts:
-        - name: gcp-service-account
+        - name: etc-volume
           mountPath: /etc/brushed-charts/
           readOnly: true
         envFrom:
