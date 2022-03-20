@@ -5,7 +5,7 @@ import responses
 import unittest
 from unittest import mock
 from unittest.mock import MagicMock
-from src import stream
+import stream
 
 
 class TestStream(unittest.TestCase):

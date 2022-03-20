@@ -3,6 +3,8 @@ import os
 from typing import Callable
 import requests
 
+__session__ = requests.Session()
+
 
 def listen(url: str, callback: Callable):
     resp = __grab_response__(url)
@@ -12,8 +14,7 @@ def listen(url: str, callback: Callable):
 
 def __grab_response__(url: str) -> requests.Response:
     header = __make_header__()
-    session = requests.Session()
-    resp = session.get(url, headers=header, stream=True)
+    resp = __session__.get(url, headers=header, stream=True)
     return resp
 
 

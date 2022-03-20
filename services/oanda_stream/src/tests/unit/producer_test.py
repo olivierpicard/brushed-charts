@@ -18,7 +18,7 @@ class TestProducer(unittest.TestCase):
         on_delivery(err, value)
 
     def test_if_message_is_transmitted_to_kafka(self, _):
-        from src.producer import Producer
+        from producer import Producer
         error_callback = MagicMock()
         producer = Producer(error_callback)
         producer.diffuse(self.message_to_diffuse)
@@ -30,7 +30,7 @@ class TestProducer(unittest.TestCase):
         error_callback.assert_not_called()
 
     def test_callback_when_diffusion_return_error(self, _):
-        from src.producer import Producer
+        from producer import Producer
         error_callback = MagicMock()
         producer = Producer(error_callback)
         producer.kafka_producer.produce.side_effect = self.produce_send_error

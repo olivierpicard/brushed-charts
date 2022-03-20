@@ -1,5 +1,5 @@
 import sys
-from google.cloud import logging
+import google.cloud.logging as glogging
 import os
 
 
@@ -27,10 +27,9 @@ def logging_if_dev_profil(full_log: dict, severity: str) -> None:
     print(f'severity: {severity}', file=sys.stderr)
 
 
-
 def logging_if_not_dev_profil(full_log: dict, severity: str) -> None:
     if PROFIL == 'dev':
         return
-    logger = logging.Client().logger(LOG_NAME)
+    logger = glogging.Client().logger(LOG_NAME)
     logger.log_struct(
         full_log, severity=severity)

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import mock_open, patch
-from src import watchlist
+
+import watchlist
 
 
 class TestWatchlist(unittest.TestCase):

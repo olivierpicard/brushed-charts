@@ -1,5 +1,5 @@
 import unittest
-from src import url
+import url
 
 
 class TestUrlMaker(unittest.TestCase):

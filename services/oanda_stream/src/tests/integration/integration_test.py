@@ -4,10 +4,10 @@ import unittest
 import responses
 from unittest.mock import MagicMock, mock_open, patch, call
 
-import src.watchlist as watchlist
-import src.url as urlconfig
-import src.stream as stream
-import src.producer as producer
+import watchlist as watchlist
+import url as urlconfig
+import stream as stream
+import producer as producer
 
 
 @patch.dict('os.environ', {"OANDA_ACCOUNT_ID": "an-api-token"})
