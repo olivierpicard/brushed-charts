@@ -4,9 +4,8 @@ dirpath=$(dirname $(which $0))
 cd "$dirpath"/../..
 
 BUILD_DIR="/tmp/buildk8s"
-REMOTE_REGISTRY='europe-docker.pkg.dev\/brushed-charts\/services'
-DEV_REGISTRY='localhost:32000'
-context_registry=$DEV_REGISTRY
+REMOTE_REGISTRY='europe-docker.pkg.dev\/brushed-charts\/services\/'
+context_registry=''
 pv_hostname='dev-1'
 
 if [[ -z $PROFIL ]]; then
@@ -51,6 +50,7 @@ kubectl create configmap prod-services \
     | kubectl apply -f -
 
 kubectl create configmap watchlist \
+    --from-file=oanda-txt=/etc/brushed-charts/oanda_watchlist.txt \
     --from-file=oanda=/etc/brushed-charts/oanda_watchlist.json \
     --from-file=kraken=/etc/brushed-charts/kraken_watchlist.txt \
     --dry-run=client \
@@ -69,4 +69,4 @@ kubectl create secret generic gcp-backend-institution-service-account \
     -o yaml \
     | kubectl apply -f -
 
-# kubectl apply -f $BUILD_DIR/
+kubectl apply -f $BUILD_DIR/
