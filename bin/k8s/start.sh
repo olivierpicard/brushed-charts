@@ -24,6 +24,11 @@ grep -Rl '{{PROFIL}}' $BUILD_DIR | xargs sed -i '' "s/{{PROFIL}}/$PROFIL/g"
 grep -Rl '{{REGISTRY_URL}}' $BUILD_DIR | xargs sed -i '' "s/{{REGISTRY_URL}}/$context_registry/g" 
 grep -Rl '{{PV-HOSTNAME}}' $BUILD_DIR | xargs sed -i '' "s/{{PV-HOSTNAME}}/$pv_hostname/g" 
 
+shopt -s expand_aliases
+if [[ -f ~/.bash_aliases ]]; then
+    source ~/.bash_aliases
+fi
+
 
 kubectl create configmap general-services \
     --from-env-file=env/services.env \
