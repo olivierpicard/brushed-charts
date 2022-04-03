@@ -7,10 +7,16 @@ from unittest.mock import MagicMock, mock_open, patch, call
 import watchlist as watchlist
 import url as urlconfig
 import stream as stream
-import producer as producer
 
 
 @patch.dict('os.environ', {"OANDA_ACCOUNT_ID": "an-api-token"})
+@patch.dict('os.environ', {"BRUSHED_CHARTS_ENVIRONMENT": "dev"})
+@patch.dict('os.environ', {"OCI_USER_TOKEN_BRUSHED_CHARTS_APP": "oci-user-token"})
+@patch.dict('os.environ', {"OCI_TENANCY": "oci-tenancy"})
+@patch.dict('os.environ', {"OCI_USER": "oci-user"})
+@patch.dict('os.environ', {"OCI_STREAMING_POOL": "oci-streaming-pool"})
+@patch.dict('os.environ', {"OCI_STREAMING_SERVER": "oci-stream-server"})
+@patch.dict('os.environ', {"OANDA_API_TOKEN": "an-api-token"})
 class TestIntegration(unittest.TestCase):
     correct_url = 'https://stream-fxpractice.oanda.com/v3/accounts/an-api-token/pricing/stream?instruments=EUR_USD,EUR_GBP'
     mock_body = '{"type": "PRICE", "instrument": "EUR_USD", "price": 1.2345}\n\
@@ -38,6 +44,7 @@ class TestIntegration(unittest.TestCase):
     @responses.activate
     @patch('confluent_kafka.Producer')
     def test_integration_stream_producer(self, _):
+        import producer as producer
         self.make_mock_response(status=200)
         publisher = producer.Producer(MagicMock())
         stream.listen(self.correct_url, publisher.diffuse)

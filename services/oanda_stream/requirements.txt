@@ -1,8 +1,4 @@
 google-cloud-logging==3.*           # 3.0.0
 requests==2.*                       # 2.27.1
-responses==0.*                      # 0.20.0
 confluent-kafka==1.*                # 1.8.2 
 certifi==2021.*                     # 2021.10.8
-oci==2.*                            # 2.60.1
-pylama==8.*                         # 8.3.8
-pytest==7.*                         # 7.1.1
