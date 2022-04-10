@@ -18,7 +18,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: oanda-watchlist
-        image: '{{REGISTRY_URL}}oanda_watchlist:1.0'
+        image: '{{REGISTRY_URL}}oanda_watchlist:1.0.1'
         volumeMounts:
         - name: etc-volume
           mountPath: /etc/brushed-charts/
