@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: oanda-stream
+        tier: backend
+        
     spec:
       imagePullSecrets:
         - name: gcr-json-key
