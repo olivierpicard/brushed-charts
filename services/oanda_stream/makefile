@@ -1,19 +1,19 @@
 version=`cat version`
-container=oanda_stream
+container=oanda-stream
 
 .PHONY: unit-test linting build-and-push
 
 linting:
-	@docker build --tag oanda_stream:linting --target linting .
-	@docker run --rm -it oanda_stream:linting
+	@docker build --tag oanda-stream:linting --target linting .
+	@docker run --rm -it oanda-stream:linting
 
 unit-test:
-	@docker build --tag oanda_stream:unit-test --target unit-test .
-	@docker run --rm -it oanda_stream:unit-test
+	@docker build --tag oanda-stream:unit-test --target unit-test .
+	@docker run --rm -it oanda-stream:unit-test
 
 modules-integration-test:
-	@docker build --tag oanda_stream:modules-integration-test --target modules-integration-test .
-	@docker run --rm -it oanda_stream:modules-integration-test
+	@docker build --tag oanda-stream:modules-integration-test --target modules-integration-test .
+	@docker run --rm -it oanda-stream:modules-integration-test
 
-build-and-push:
-	@docker build --tag oanda_stream:${version} --target production .
+build:
+	@docker build --tag oanda-stream:${version} --target service .
