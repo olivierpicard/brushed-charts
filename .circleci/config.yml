@@ -3,22 +3,20 @@ orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
 
 jobs:
-  build-and-push:
-    executor: gcp-gcr/default
-    steps:
-      - checkout
-
   oanda-stream_build_amd64:
     docker:
       - image: cimg/base:2021.04
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
+    environment:
+      GOOGLE_PROJECT_ID: brushed-charts
+      GOOGLE_COMPUTE_REGION: europe-west1
     resource_class: medium+
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - gcp-gcr/gcr-auth:
+          registry-url: "eu.gcr.io/brushed-charts"
       - run:
           name: "oanda-stream: Build (amd64)"
           working_directory: services/oanda_stream
@@ -31,8 +29,6 @@ jobs:
           name: "oanda-stream: Unit Test (amd64)"
           working_directory: services/oanda_stream
           command: make unit-test
-      - gcp-gcr/gcr-auth:
-          registry-url: "eu.gcr.io/brushed-charts"
       - run: 
           name: "oanda-stream: push to registry (amd64)"
           working_directory: services/oanda_stream
@@ -51,6 +47,9 @@ jobs:
     machine:
       image: ubuntu-2004:current
     resource_class: arm.medium
+    environment:
+      GOOGLE_PROJECT_ID: brushed-charts
+      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
       - run:
