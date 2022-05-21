@@ -69,8 +69,8 @@ jobs:
             password: $DOCKER_PASSWORD
     resource_class: small
     steps:
-      - restore_cache
-        key: docker-save-images
+      - restore_cache:
+          key: docker-save-images
       - run:
         name: "list cache files"
         working_directory: /tmp/docker_save_path
