@@ -52,6 +52,8 @@ jobs:
       GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
+      - gcp-gcr/gcr-auth:
+          registry-url: "eu.gcr.io/brushed-charts" 
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
@@ -64,8 +66,6 @@ jobs:
           name: "oanda-stream: Unit Test (arm64)"
           working_directory: services/oanda_stream
           command: make unit-test
-      - gcp-gcr/gcr-auth:
-          registry-url: "eu.gcr.io/brushed-charts"
       - run: 
           name: "oanda-stream: push to registry (arm64)"
           working_directory: services/oanda_stream
