@@ -121,12 +121,14 @@ workflows:
       # - oanda-stream_build-push_amd64:
       #     context: brushed-charts
       - build-push:
+          name: oanda-stream_build-push_arm64
           context: brushed-charts
           image_name: oanda-stream 
           ressource: "arm.medium"
           architecture: "arm64"
           service_path: "services/oanda_stream"
       - build-push:
+          name: oanda-stream_build-push_amd64
           context: brushed-charts
           image_name: oanda-stream
           ressource: "medium"
@@ -137,4 +139,5 @@ workflows:
           service_path: "services/oanda_stream"
           image_name: oanda-stream
           requires:
-            - build-push
+            - oanda-stream_build-push_amd64
+            - oanda-stream_build-push_arm64
