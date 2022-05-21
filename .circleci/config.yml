@@ -82,7 +82,7 @@ jobs:
       - run:
           name: "list cache files"
           working_directory: /tmp/docker_save_path
-          command: ls -l
+          command: ls -l /tmp/docker_save_path ; ls -l /tmp/docker_save_path/docker_save_path
   
 
 
