@@ -31,10 +31,8 @@ jobs:
           name: "oanda-stream: list cache (amd64)"
           working_directory: /tmp/docker_save_path
           command: ls -l
-      - save_cache:
-          key: docker-save-images
-          paths:
-            - /tmp/docker_save_path
+      - persist_to_workspace:
+          root: /tmp/docker_save_path
       
 
 
@@ -44,6 +42,8 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
+      - persist_to_workspace:
+          root: /tmp/docker_save_path
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
@@ -64,10 +64,6 @@ jobs:
           name: "oanda-stream: list cache (arm64)"
           working_directory: /tmp/docker_save_path
           command: ls -l
-      - save_cache:
-          key: docker-save-images
-          paths:
-            - /tmp/docker_save_path
   
   push-multi-arch:
     docker:
@@ -77,6 +73,8 @@ jobs:
             password: $DOCKER_PASSWORD
     resource_class: small
     steps:
+      - attach_workspace:
+          at: /tmp/docker_save_path
       - restore_cache:
           key: docker-save-images
       - run:
