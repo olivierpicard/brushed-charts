@@ -37,13 +37,22 @@ jobs:
 
   oanda-stream_build-push_arm64:
     machine:
-      image: google/cloud-sdk
+      image: ubuntu-2004:current
     resource_class: arm.medium
     environment:
       GOOGLE_PROJECT_ID: brushed-charts
       GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
+      - run:
+          name: "Install gcloud via snap"
+          command: "snap install google-cloud-cli --classic"
+      - run:
+          name: "Init gcloud"
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet auth configure-docker europe-docker.pkg.dev
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
@@ -64,7 +73,7 @@ jobs:
 
   push-multi-arch:
     docker:
-      - image: cimg/base:2021.04
+      - image: google/cloud-sdk
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
@@ -74,7 +83,12 @@ jobs:
       GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
-      - run: export DOCKER_BUILDKIT=0
+      - run:
+          name: "Init gcloud"
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet auth configure-docker europe-docker.pkg.dev
       - run:
           name: "oanda-stream: create multi-arch manifest"
           working_directory: services/oanda_stream
