@@ -12,9 +12,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - save_cache:
-        key: docker-save-images
-        paths:
-          - /tmp/docker_save_path
+          key: docker-save-images
+          paths:
+            - /tmp/docker_save_path
       - run:
           name: "oanda-stream: Build (amd64)"
           working_directory: services/oanda_stream
