@@ -18,6 +18,7 @@ jobs:
       - setup_remote_docker
       - gcp-gcr/gcr-auth:
           registry-url: "europe-docker.pkg.dev/brushed-charts/services"
+      - run: export DOCKER_BUILDKIT=0
       - run:
           name: "oanda-stream: Build (amd64)"
           working_directory: services/oanda_stream
@@ -47,6 +48,7 @@ jobs:
       - checkout
       - gcp-gcr/gcr-auth:
           registry-url: "europe-docker.pkg.dev/brushed-charts/services" 
+      - run: export DOCKER_BUILDKIT=0
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
@@ -79,7 +81,7 @@ jobs:
       - checkout
       - gcp-gcr/gcr-auth:
           registry-url: "europe-docker.pkg.dev/brushed-charts/services" 
-      - run: DOCKER_BUILDKIT=0
+      - run: export DOCKER_BUILDKIT=0
       - run:
           name: "oanda-stream: create multi-arch manifest"
           working_directory: services/oanda_stream
