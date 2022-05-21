@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  oanda-stream_build-and-unit-test_amd64:
+  oanda-stream_build_amd64:
     docker:
       - image: cimg/base:2021.04
         auth:
@@ -11,41 +11,79 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - save_cache:
+        key: docker-save-images
+        paths:
+          - /tmp/docker_save_path
       - run:
           name: "oanda-stream: Build (amd64)"
           working_directory: services/oanda_stream
           command: make build
       - run:
-          name: "oanda-stream: Linting"
+          name: "oanda-stream: Linting (amd64)"
           working_directory: services/oanda_stream
           command: make linting
       - run:
-          name: "oanda-stream: Unit Test"
+          name: "oanda-stream: Unit Test (amd64)"
           working_directory: services/oanda_stream
           command: make unit-test
+      - run: 
+          name: "oanda-stream: Export to tar file (amd64)"
+          working_directory: services/oanda_stream
+          command: make save-amd64
+      
 
-  oanda-stream_build-and-unit-test_arm64:
+
+  oanda-stream_build_arm64:
     machine:
       image: ubuntu-2004:current
     resource_class: arm.medium
     steps:
       - checkout
+      - save_cache:
+          key: docker-save-images
+          paths:
+            - /tmp/docker_save_path
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
           command: make build
       - run:
-          name: "oanda-stream: Linting"
+          name: "oanda-stream: Linting (arm64)"
           working_directory: services/oanda_stream
           command: make linting
       - run:
-          name: "oanda-stream: Unit Test"
+          name: "oanda-stream: Unit Test (arm64)"
           working_directory: services/oanda_stream
           command: make unit-test
+      - run: 
+          name: "oanda-stream: Export to tar file (arm64)"
+          working_directory: services/oanda_stream
+          command: make save-arm64
+  
+  push-multi-arch:
+    docker:
+      - image: cimg/base:2021.04
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      - restore_cache
+        key: docker-save-images
+      - run:
+        name: "list cache files"
+        working_directory: /tmp/docker_save_path
+        command: ls -l
+  
 
 
 workflows:
   test_workflow:
     jobs:
-      - oanda-stream_build-and-unit-test_amd64
-      - oanda-stream_build-and-unit-test_arm64
+      - oanda-stream_build_amd64
+      - oanda-stream_build_arm64
+      - push-multi-arch
+          requires:
+            - oanda-stream_build_amd64
+            - oanda-stream_build_arm64
