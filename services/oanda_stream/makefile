@@ -27,6 +27,14 @@ save-arm64:
 	@docker tag ${image}:${version} ${image}:${version}-arm64
 	@docker save ${image}:${version}-arm64 > ${save-dir}/${image-only}.${version}-arm64.tar
 
+push-arm64:
+	@docker tag ${image}:${version} ${image}:${version}-arm64
+	@docker push ${image}:${version}-arm64 
+
+push-amd64:
+	@docker tag ${image}:${version} ${image}:${version}-amd64
+	@docker push ${image}:${version}-amd64 
+
 arch-fusion:
 	@docker load -i ${save-dir}/${image-only}.${version}-arm64.tar
 	@docker load -i ${save-dir}/${image-only}.${version}-amd64.tar

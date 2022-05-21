@@ -1,5 +1,13 @@
 version: 2.1
+orbs: 
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+
 jobs:
+  build-and-push:
+    executor: gcp-gcr/default
+    steps:
+      - checkout
+
   oanda-stream_build_amd64:
     docker:
       - image: cimg/base:2021.04
@@ -23,19 +31,20 @@ jobs:
           name: "oanda-stream: Unit Test (amd64)"
           working_directory: services/oanda_stream
           command: make unit-test
+      - gcp-gcr/gcr-auth:
+          registry-url: "eu.gcr.io/brushed-charts"
       - run: 
-          name: "oanda-stream: Export to tar file (amd64)"
+          name: "oanda-stream: push to registry (amd64)"
           working_directory: services/oanda_stream
-          command: make save-amd64
-      - run: 
-          name: "oanda-stream: list cache (amd64)"
-          working_directory: /tmp/docker_save_path
-          command: ls -l
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - docker_save_path/
-      
+          command: make push-amd64
+      # - run: 
+      #     name: "oanda-stream: Export to tar file (amd64)"
+      #     working_directory: services/oanda_stream
+      #     command: make save-amd64
+      # - persist_to_workspace:
+      #     root: /tmp
+      #     paths:
+      #       - docker_save_path/ 
 
 
   oanda-stream_build_arm64:
@@ -56,19 +65,22 @@ jobs:
           name: "oanda-stream: Unit Test (arm64)"
           working_directory: services/oanda_stream
           command: make unit-test
+      - gcp-gcr/gcr-auth:
+          registry-url: "eu.gcr.io/brushed-charts"
       - run: 
-          name: "oanda-stream: Export to tar file (arm64)"
+          name: "oanda-stream: push to registry (arm64)"
           working_directory: services/oanda_stream
-          command: make save-arm64
-      - run: 
-          name: "oanda-stream: list cache (arm64)"
-          working_directory: /tmp/docker_save_path
-          command: ls -l
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - docker_save_path/
+          command: make push-arm64
+      # - run: 
+      #     name: "oanda-stream: Export to tar file (arm64)"
+      #     working_directory: services/oanda_stream
+      #     command: make save-arm64
+      # - persist_to_workspace:
+      #     root: /tmp
+      #     paths:
+      #       - docker_save_path/
   
+
   push-multi-arch:
     docker:
       - image: cimg/base:2021.04
@@ -78,7 +90,7 @@ jobs:
     resource_class: small
     steps:
       - attach_workspace:
-          at: /tmp/docker_save_path
+          at: /tmp/
       - run:
           name: "list cache files"
           working_directory: /tmp/docker_save_path
@@ -91,7 +103,7 @@ workflows:
     jobs:
       - oanda-stream_build_amd64
       - oanda-stream_build_arm64
-      - push-multi-arch:
-          requires:
-            - oanda-stream_build_amd64
-            - oanda-stream_build_arm64
+      # - push-multi-arch:
+      #     requires:
+      #       - oanda-stream_build_amd64
+      #       - oanda-stream_build_arm64
