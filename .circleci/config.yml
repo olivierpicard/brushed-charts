@@ -74,8 +74,6 @@ jobs:
       GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
-      - gcp-gcr/gcr-auth:
-          registry-url: "europe-docker.pkg.dev/brushed-charts/services" 
       - run: export DOCKER_BUILDKIT=0
       - run:
           name: "oanda-stream: create multi-arch manifest"
