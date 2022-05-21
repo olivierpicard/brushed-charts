@@ -40,6 +40,7 @@ jobs:
       image: ubuntu-2004:current
     resource_class: arm.medium
     steps:
+      - checkout
       - run:
           name: "oanda-stream: Build (arm64)"
           working_directory: services/oanda_stream
