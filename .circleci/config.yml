@@ -11,7 +11,7 @@ jobs:
       GOOGLE_PROJECT_ID: brushed-charts
       GOOGLE_COMPUTE_REGION: europe-west1
     resource_class: medium+
-    working_directory: services/oanda_stream
+    working_directory: ~/services/oanda_stream
     steps:
       - checkout
       - setup_remote_docker
@@ -108,6 +108,7 @@ workflows:
       - oanda-stream_build-push_arm64:
           context: brushed-charts
       - push-multi-arch:
+          context: brushed-charts
           requires:
             - oanda-stream_build-push_amd64
             - oanda-stream_build-push_arm64
