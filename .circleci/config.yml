@@ -31,6 +31,10 @@ jobs:
           name: "oanda-stream: Export to tar file (amd64)"
           working_directory: services/oanda_stream
           command: make save-amd64
+      - run: 
+          name: "oanda-stream: list cache (amd64)"
+          working_directory: /tmp/docker_save_path
+          command: ls -l
       
 
 
@@ -60,6 +64,10 @@ jobs:
           name: "oanda-stream: Export to tar file (arm64)"
           working_directory: services/oanda_stream
           command: make save-arm64
+      - run: 
+          name: "oanda-stream: list cache (arm64)"
+          working_directory: /tmp/docker_save_path
+          command: ls -l
   
   push-multi-arch:
     docker:
