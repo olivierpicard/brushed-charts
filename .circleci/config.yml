@@ -137,5 +137,4 @@ workflows:
           service_path: "services/oanda_stream"
           image_name: oanda-stream
           requires:
-            - oanda-stream_build-push_amd64
-            - oanda-stream_build-push_arm64
+            - build-push
