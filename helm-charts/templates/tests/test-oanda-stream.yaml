@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-oanda-stream
+  labels:
+    app: oanda-stream
+  annotations:
+    "helm.sh/hook": test
+spec:
+  imagePullSecrets:
+    - name: gcr-json-key
+  restartPolicy: Never
+  containers:
+  - name: test-oanda-stream
+    image: "{{ .Values.images.registryURL }}test-oanda-stream:1.0"
+    volumeMounts:
+    - name: etc-volume
+      mountPath: /etc/brushed-charts/
+      readOnly: true
+    envFrom:
+      - configMapRef:
+          name: general-services
+      - configMapRef:
+          name: "{{ .Values.profil }}-services"
+      - secretRef:
+          name: env-secret
+    resources:
+        limits:
+          cpu: 300m
+          memory: 80Mi
+  volumes:
+  - name: etc-volume
+    configMap:
+      name: watchlist
+      items:
+      - key: oanda
+        path: oanda_watchlist.json
+          

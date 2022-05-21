@@ -1,38 +1,24 @@
 version: 2.1
 jobs:
-  test-oanda-stream:
-    machine:
-      image: ubuntu-2004:202104-01
+  oanda-stream-build-amd64:
+    docker:
+      - image: cimg/base
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
-          name: "oanda-stream: Linting"
+          name: "oanda-stream: Build (amd64)"
           working_directory: services/oanda_stream
-          command: make linting
-      - run:
-          name: "oanda-stream: Unit testing"
-          working_directory: services/oanda_stream
-          command: make unit-test
-      - run:
-          name: "oanda-stream: Modules integration testing"
-          working_directory: services/oanda_stream
-          command: make modules-integration-test
-            
-  cross-build-oanda-stream:
-    machine:
-      image: ubuntu-2004:202104-01
-    steps:
-      - checkout
-      - run:
-          name: build and tag image for arm and amd
-          command: |
-            cd services/oanda_stream
-            docker buildx install
-            docker run --rm --privileged tonistiigi/binfmt:latest --install linux/arm64
-            docker buildx create --use 
-            docker buildx build --platform linux/amd64,linux/arm64 .
-            
+          command: make build
+          
+
+      
+  
 workflows:
   test_workflow:
     jobs:
-      - test-oanda-stream
+      - oanda-stream-build-amd64
