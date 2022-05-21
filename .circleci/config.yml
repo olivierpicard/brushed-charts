@@ -83,7 +83,7 @@ workflows:
     jobs:
       - oanda-stream_build_amd64
       - oanda-stream_build_arm64
-      - push-multi-arch
+      - push-multi-arch:
           requires:
             - oanda-stream_build_amd64
             - oanda-stream_build_arm64
