@@ -101,8 +101,10 @@ jobs:
 workflows:
   test_workflow:
     jobs:
-      - oanda-stream_build_amd64
-      - oanda-stream_build_arm64
+      - oanda-stream_build_amd64:
+          context: brushed-charts
+      - oanda-stream_build_arm64:
+          context: brushed-charts
       # - push-multi-arch:
       #     requires:
       #       - oanda-stream_build_amd64
