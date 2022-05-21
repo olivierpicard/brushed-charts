@@ -52,7 +52,7 @@ workflows:
   test_workflow:
     jobs:
       - oanda-stream-build-amd64
-      - oanda_stream-unit-test:
+      - oanda-stream-unit-test:
           requires:
             - oanda-stream-build-amd64
       - oanda-stream-build-arm64
