@@ -1,46 +1,53 @@
 version: 2.1
 
 jobs:
-  oanda-stream_build-push_amd64:
-    docker:
-      - image: google/cloud-sdk
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-    resource_class: medium+
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: "oanda-stream: init gcloud"
-          command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet auth configure-docker europe-docker.pkg.dev
-      - run:
-          name: "oanda-stream: Build (amd64)"
-          working_directory: services/oanda_stream
-          command: make build
-      - run:
-          name: "oanda-stream: Linting (amd64)"
-          working_directory: services/oanda_stream
-          command: make linting
-      - run:
-          name: "oanda-stream: Unit Test (amd64)"
-          working_directory: services/oanda_stream
-          command: make unit-test
-      - run: 
-          name: "oanda-stream: Push to registry (amd64)"
-          working_directory: services/oanda_stream
-          command: make push-amd64
+  # oanda-stream_build-push_amd64:
+  #   docker:
+  #     - image: google/cloud-sdk
+  #       auth:
+  #           username: $DOCKER_USERNAME
+  #           password: $DOCKER_PASSWORD
+  #   environment:
+  #     GOOGLE_PROJECT_ID: brushed-charts
+  #   resource_class: medium+
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: "oanda-stream: init gcloud"
+  #         command: |
+  #           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+  #           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+  #           gcloud --quiet auth configure-docker europe-docker.pkg.dev
+  #     - run:
+  #         name: "oanda-stream: Build (amd64)"
+  #         working_directory: services/oanda_stream
+  #         command: make build
+  #     - run:
+  #         name: "oanda-stream: Linting (amd64)"
+  #         working_directory: services/oanda_stream
+  #         command: make linting
+  #     - run:
+  #         name: "oanda-stream: Unit Test (amd64)"
+  #         working_directory: services/oanda_stream
+  #         command: make unit-test
+  #     - run: 
+  #         name: "oanda-stream: Push to registry (amd64)"
+  #         working_directory: services/oanda_stream
+  #         command: make push-amd64
 
 
-  oanda-stream_build-push_arm64:
+  oanda-stream_build-push:
+    parameters:
+      ressource:
+        type: string
+      architecture:
+        type: string
+      service_path:
+        type: string
     machine:
       image: ubuntu-2004:current
-    resource_class: arm.medium
+    resource_class: << parameters.ressource >>
     environment:
       GOOGLE_PROJECT_ID: brushed-charts
       GOOGLE_COMPUTE_REGION: europe-west1
@@ -56,61 +63,64 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet auth configure-docker europe-docker.pkg.dev
       - run:
-          name: "oanda-stream: Build (arm64)"
-          working_directory: services/oanda_stream
+          name: "oanda-stream: Build (<< parameters.architecture >> )"
+          working_directory: << parameters.service_path >>
           command: make build
       - run:
-          name: "oanda-stream: Linting (arm64)"
-          working_directory: services/oanda_stream
+          name: "oanda-stream: Linting (<< parameters.architecture >> )"
+          working_directory: << parameters.service_path >>
           command: make linting
       - run:
-          name: "oanda-stream: Unit Test (arm64)"
-          working_directory: services/oanda_stream
+          name: "oanda-stream: Unit Test (<< parameters.architecture >> )"
+          working_directory: << parameters.service_path >>
           command: make unit-test
       - run: 
-          name: "oanda-stream: push to registry (arm64)"
-          working_directory: services/oanda_stream
-          command: make push-arm64
+          name: "oanda-stream: push to registry (<< parameters.architecture >> )"
+          working_directory: << parameters.service_path >>
+          command: make push-<< parameters.architecture >>
   
 
-  push-multi-arch:
-    docker:
-      - image: google/cloud-sdk
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-    resource_class: small
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west1
-    steps:
-      - checkout
-      - run:
-          name: "Init gcloud"
-          command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet auth configure-docker europe-docker.pkg.dev
-      - run:
-          name: "oanda-stream: create multi-arch manifest"
-          working_directory: services/oanda_stream
-          command: make arch-fusion
-      - run:
-          name: "oanda-stream: push manifest"
-          working_directory: services/oanda_stream
-          command: make push-manifest
+  # push-multi-arch:
+  #   docker:
+  #     - image: google/cloud-sdk
+  #       auth:
+  #           username: $DOCKER_USERNAME
+  #           password: $DOCKER_PASSWORD
+  #   resource_class: small
+  #   environment:
+  #     GOOGLE_PROJECT_ID: brushed-charts
+  #     GOOGLE_COMPUTE_REGION: europe-west1
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Init gcloud"
+  #         command: |
+  #           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+  #           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+  #           gcloud --quiet auth configure-docker europe-docker.pkg.dev
+  #     - run:
+  #         name: "oanda-stream: create multi-arch manifest"
+  #         working_directory: services/oanda_stream
+  #         command: make arch-fusion
+  #     - run:
+  #         name: "oanda-stream: push manifest"
+  #         working_directory: services/oanda_stream
+  #         command: make push-manifest
   
 
 
 workflows:
-  test_workflow:
+  build-and-push:
     jobs:
-      - oanda-stream_build-push_amd64:
+      # - oanda-stream_build-push_amd64:
+      #     context: brushed-charts
+      - oanda-stream_build-push:
           context: brushed-charts
-      - oanda-stream_build-push_arm64:
-          context: brushed-charts
-      - push-multi-arch:
-          context: brushed-charts
-          requires:
-            - oanda-stream_build-push_amd64
-            - oanda-stream_build-push_arm64
+          ressource: "arm.medium"
+          architecture: "arm64"
+          service_path: "services/oanda_stream"
+      # - push-multi-arch:
+      #     context: brushed-charts
+      #     requires:
+      #       - oanda-stream_build-push_amd64
+      #       - oanda-stream_build-push_arm64

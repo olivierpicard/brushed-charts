@@ -17,16 +17,6 @@ unit-test:
 build:
 	@docker build --tag ${image}:${version} --target service .
 
-save-amd64:
-	@mkdir -p ${save-dir}
-	@docker tag ${image}:${version} ${image}:${version}-amd64
-	@docker save ${image}:${version}-amd64 > ${save-dir}/${image-only}.${version}-amd64.tar
-
-save-arm64:
-	@mkdir -p ${save-dir}
-	@docker tag ${image}:${version} ${image}:${version}-arm64
-	@docker save ${image}:${version}-arm64 > ${save-dir}/${image-only}.${version}-arm64.tar
-
 push-arm64:
 	@docker tag ${image}:${version} ${image}:${version}-arm64
 	@docker push ${image}:${version}-arm64 
