@@ -17,15 +17,11 @@ jobs:
   
 
   oanda-stream-unit-test:
-    docker:
-      - image: cimg/base:2021.04
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: "oanda-stream: Linting"
           working_directory: services/oanda_stream
