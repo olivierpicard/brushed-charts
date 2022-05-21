@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   oanda-stream-build-amd64:
     docker:
-      - image: cimg/base
+      - image: cimg/base:2020.01
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD

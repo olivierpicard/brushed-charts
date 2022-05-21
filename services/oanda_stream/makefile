@@ -14,5 +14,3 @@ unit-test:
 build:
 	@docker build --tag oanda-stream:${version} --target service .
 
-push:
-	@docker 
