@@ -9,9 +9,7 @@ jobs:
             password: $DOCKER_PASSWORD
     environment:
       GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west1
     resource_class: medium+
-    working_directory: ~/services/oanda_stream
     steps:
       - checkout
       - setup_remote_docker
@@ -23,15 +21,19 @@ jobs:
             gcloud --quiet auth configure-docker europe-docker.pkg.dev
       - run:
           name: "oanda-stream: Build (amd64)"
+          working_directory: ~/services/oanda_stream
           command: make build
       - run:
           name: "oanda-stream: Linting (amd64)"
+          working_directory: ~/services/oanda_stream
           command: make linting
       - run:
           name: "oanda-stream: Unit Test (amd64)"
+          working_directory: ~/services/oanda_stream
           command: make unit-test
       - run: 
           name: "oanda-stream: Push to registry (amd64)"
+          working_directory: ~/services/oanda_stream
           command: make push-amd64
 
 
@@ -46,7 +48,7 @@ jobs:
       - checkout
       - run:
           name: "Install gcloud via snap"
-          command: "snap install google-cloud-cli --classic"
+          command: "sudo snap install google-cloud-cli --classic"
       - run:
           name: "Init gcloud"
           command: |
