@@ -1,6 +1,6 @@
 version=`cat version`
 save-dir=/tmp/docker_save_path
-image=eu.gcr.io/brushed-charts/oanda-stream
+image=europe-docker.pkg.dev/brushed-charts/services/oanda-stream
 image-only=oanda-stream
 
 
@@ -36,11 +36,9 @@ push-amd64:
 	@docker push ${image}:${version}-amd64 
 
 arch-fusion:
-	@docker load -i ${save-dir}/${image-only}.${version}-arm64.tar
-	@docker load -i ${save-dir}/${image-only}.${version}-amd64.tar
 	@docker manifest create ${image}:${version} \
 		--amend ${image}:${version}-amd64 \
 		--amend ${image}:${version}-arm64
 
-push:
+push-manifest:
 	@docker manifest push ${image}:${version}
