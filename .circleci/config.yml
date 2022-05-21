@@ -48,7 +48,7 @@ jobs:
       image_name:
         type: string
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-20 04:current
     resource_class: << parameters.ressource >>
     environment:
       GOOGLE_PROJECT_ID: brushed-charts
@@ -127,6 +127,7 @@ workflows:
           ressource: "arm.medium"
           architecture: "arm64"
           service_path: "services/oanda_stream"
+
       - build-push:
           name: oanda-stream_build-push_amd64
           context: brushed-charts
@@ -134,6 +135,7 @@ workflows:
           ressource: "medium"
           architecture: "amd64"
           service_path: "services/oanda_stream"
+
       - push-multi-arch:
           context: brushed-charts
           service_path: "services/oanda_stream"
