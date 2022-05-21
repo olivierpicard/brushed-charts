@@ -21,19 +21,19 @@ jobs:
             gcloud --quiet auth configure-docker europe-docker.pkg.dev
       - run:
           name: "oanda-stream: Build (amd64)"
-          working_directory: ~/services/oanda_stream
+          working_directory: services/oanda_stream
           command: make build
       - run:
           name: "oanda-stream: Linting (amd64)"
-          working_directory: ~/services/oanda_stream
+          working_directory: services/oanda_stream
           command: make linting
       - run:
           name: "oanda-stream: Unit Test (amd64)"
-          working_directory: ~/services/oanda_stream
+          working_directory: services/oanda_stream
           command: make unit-test
       - run: 
           name: "oanda-stream: Push to registry (amd64)"
-          working_directory: ~/services/oanda_stream
+          working_directory: services/oanda_stream
           command: make push-amd64
 
 
