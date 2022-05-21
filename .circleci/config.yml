@@ -15,6 +15,7 @@ jobs:
     resource_class: medium+
     steps:
       - checkout
+      - setup_remote_docker
       - gcp-gcr/gcr-auth:
           registry-url: "eu.gcr.io/brushed-charts"
       - run:
