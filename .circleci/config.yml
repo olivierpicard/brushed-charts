@@ -1,26 +1,26 @@
 version: 2.1
 
-  command:
-    gcloud-snap-install:
-      description: "Install gcloud using snap."
-      steps:
-        - run:
-            name: "Install gcloud via snap"
-            command: "sudo snap install google-cloud-cli --classic"
-    gcloud-activate:
-      steps:
-        - run:
-            name: "Init gcloud"
-            command: |
-              echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-              gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-    gcloud-configure-docker:
-      steps:
-        - run:
-            name: "Configure docker to use gcloud artifact repository in europe"
-            command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
+commands:
+  gcloud-snap-install:
+    description: "Install gcloud using snap."
+    steps:
+      - run:
+          name: "Install gcloud via snap"
+          command: "sudo snap install google-cloud-cli --classic"
+  gcloud-activate:
+    steps:
+      - run:
+          name: "Init gcloud"
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+  gcloud-configure-docker:
+    steps:
+      - run:
+          name: "Configure docker to use gcloud artifact repository in europe"
+          command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
 
-
+jobs:
   build-push:
     parameters:
       ressource:
