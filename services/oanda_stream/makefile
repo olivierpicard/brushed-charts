@@ -4,7 +4,7 @@ image=europe-docker.pkg.dev/brushed-charts/services/oanda-stream
 image-only=oanda-stream
 
 
-.PHONY: unit-test linting build save-amd64 save-arm64 arch-fusion push
+.PHONY: linting unit-test build push-amd64 push-arm64 arch-fusion push-manifest
 
 linting:
 	@docker build --tag ${image}:${version}-linting --target linting .
