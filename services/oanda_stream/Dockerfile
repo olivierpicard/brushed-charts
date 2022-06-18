@@ -9,7 +9,6 @@ WORKDIR ${WORKING_DIR}
 
 COPY requirements.txt .
 RUN apt-get update --yes 
-RUN apt-get install --yes --no-install-recommends apt-utils
 RUN apt-get install librdkafka-dev --yes
 USER container-user
 RUN pip install --no-cache-dir --user -r requirements.txt
