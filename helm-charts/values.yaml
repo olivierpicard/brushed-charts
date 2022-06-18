@@ -1,2 +1,2 @@
 images:
-  registryURL: "eu.gcr.io/brushed-charts/"
+  registryURL: "europe-docker.pkg.dev/brushed-charts/images"

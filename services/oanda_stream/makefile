@@ -1,6 +1,6 @@
 version=`cat version`
 save-dir=/tmp/docker_save_path
-image=europe-docker.pkg.dev/brushed-charts/services/oanda-stream
+image=europe-docker.pkg.dev/brushed-charts/images/oanda-stream
 image-only=oanda-stream
 
 

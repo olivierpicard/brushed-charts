@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  helm: circleci/helm
+
 commands:
   gcloud-snap-install:
     description: "Install gcloud using snap."
@@ -59,7 +62,6 @@ jobs:
           working_directory: << parameters.service_path >>
           command: make push-<< parameters.architecture >>
   
-
   push-multi-arch:
     parameters:
       service_path:
@@ -87,10 +89,30 @@ jobs:
           working_directory: << parameters.service_path >>
           command: make push-manifest
 
+  publish-helm-chart:
+    docker:
+      - image: 
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      # - checkout
+      # - run:
+      #     name: "<< parameters.image_name >>: create multi-arch manifest"
+      #     working_directory: << parameters.service_path >>
+      #     command: make arch-fusion
+      # - run:
+      #     name: "<< parameters.image_name >>: push manifest"
+      #     working_directory: << parameters.service_path >>
+      #     command: make push-manifest
 
 workflows:
   build-and-push:
     jobs:
+      # - package-helm-chart:
+      #     name: package-helm-chart
+      #     context: brushed-charts
       - build-push:
           name: oanda-stream_build-push_arm64
           context: brushed-charts
