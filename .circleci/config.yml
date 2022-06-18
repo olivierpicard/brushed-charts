@@ -89,14 +89,14 @@ jobs:
           working_directory: << parameters.service_path >>
           command: make push-manifest
 
-  publish-helm-chart:
-    docker:
-      - image: 
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-    resource_class: small
-    steps:
+  # publish-helm-chart:
+  #   docker:
+  #     - image: 
+  #       auth:
+  #           username: $DOCKER_USERNAME
+  #           password: $DOCKER_PASSWORD
+  #   resource_class: small
+  #   steps:
       # - checkout
       # - run:
       #     name: "<< parameters.image_name >>: create multi-arch manifest"
