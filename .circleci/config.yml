@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  helm: circleci/helm
+  helm: circleci/helm@2.0.1
 
 commands:
   gcloud-snap-install:
