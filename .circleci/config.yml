@@ -37,7 +37,7 @@ workflows:
       - archive-helm-chart:
           name: archive-helm-chart
           context: brushed-charts
-      <<: *build-and-push-all
+      - *build-and-push-all
 
 
 jobs:
