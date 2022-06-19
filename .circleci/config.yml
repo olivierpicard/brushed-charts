@@ -120,7 +120,7 @@ jobs:
   
   integration-test:
     docker:
-      - image: google/cloud-sdk
+      - image: hashicorp/terraform 
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
