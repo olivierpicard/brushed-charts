@@ -27,7 +27,7 @@ commands:
       - run:
           name: "Retrieve the kubeconfig file from gke-autpilot-paris"
           command: gcloud container clusters get-credentials my-cluster
-  build-and-push-command:
+  build-and-push:
     parameters:
       ressource:
         type: string
@@ -43,51 +43,61 @@ commands:
       - gcloud-activate
       - gcloud-configure-docker
       - run:
-          name: "<< parameters.image_name >>: Build ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Build (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make build
       - run:
-          name: "<< parameters.image_name >>: Linting ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Linting (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make linting
       - run:
-          name: "<< parameters.image_name >>: Unit Test ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Unit Test (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make unit-test
       - run: 
-          name: "<< parameters.image_name >>: push to registry ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: push to registry (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
-          command: make push-$BUILD_ARCHITECTURE
+          command: make push-<< parameters.architecture >>
 
 jobs:
-  build-and-push-amd64:
+  build-push:
+    parameters:
+      ressource:
+        type: string
+      architecture:
+        type: string
+      service_path:
+        type: string
+      image_name:
+        type: string
     machine:
       image: ubuntu-2004:current
-    resource_class: medium
+    resource_class: << parameters.ressource >>
     environment:
       GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west9
-      BUILD_ARCHITECTURE: "amd64"
-    parallelism: 10
+      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
-      - build-and-push-command:
-          image_name: oanda-stream 
-          service_path: "services/oanda_stream"
-
-  build-and-push-arm64:
-    machine:
-      image: ubuntu-2004:current
-    resource_class: arm.medium
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west9
-      BUILD_ARCHITECTURE: "arm64"
-    parallelism: 10
-    steps:
-      - build-and-push-command:
-          image_name: oanda-stream 
-          service_path: "services/oanda_stream"
-
+      - checkout
+      - gcloud-snap-install
+      - gcloud-activate
+      - gcloud-configure-docker
+      - run:
+          name: "<< parameters.image_name >>: Build (<< parameters.architecture >>)"
+          working_directory: << parameters.service_path >>
+          command: make build
+      - run:
+          name: "<< parameters.image_name >>: Linting (<< parameters.architecture >>)"
+          working_directory: << parameters.service_path >>
+          command: make linting
+      - run:
+          name: "<< parameters.image_name >>: Unit Test (<< parameters.architecture >>)"
+          working_directory: << parameters.service_path >>
+          command: make unit-test
+      - run: 
+          name: "<< parameters.image_name >>: push to registry (<< parameters.architecture >>)"
+          working_directory: << parameters.service_path >>
+          command: make push-<< parameters.architecture >>
+  
   push-multi-arch:
     parameters:
       service_path:
@@ -145,12 +155,23 @@ workflows:
       - archive-helm-chart:
           name: archive-helm-chart
           context: brushed-charts
-      -  build-and-push-amd64:
-          name: build-push-amd64
+
+      - build-push:
+          name: oanda-stream_build-push_arm64
           context: brushed-charts
-      -  build-and-push-arm64:
-          name: build-push-arm64
+          image_name: oanda-stream 
+          ressource: "arm.medium"
+          architecture: "arm64"
+          service_path: "services/oanda_stream"
+
+      - build-push:
+          name: oanda-stream_build-push_amd64
           context: brushed-charts
+          image_name: oanda-stream
+          ressource: "medium"
+          architecture: "amd64"
+          service_path: "services/oanda_stream"
+
       - push-multi-arch:
           context: brushed-charts
           service_path: "services/oanda_stream"
