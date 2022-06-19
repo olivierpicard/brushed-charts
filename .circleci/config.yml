@@ -119,6 +119,7 @@ jobs:
             password: $DOCKER_PASSWORD
     steps:
       - checkout
+      - gcloud-snap-install
       - gcloud-activate
       - gcloud-configure-docker
       - terraform/install:
