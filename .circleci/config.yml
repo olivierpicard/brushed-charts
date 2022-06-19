@@ -112,12 +112,10 @@ jobs:
           command: make push
   
   integration-test:
-    docker:
-      - image: google/cloud-sdk
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-    resource_class: small
+    executor: 
+      terraform/default:
+        ressource_class: small
+        tag: latest
     steps:
       - checkout
       - gcloud-activate
