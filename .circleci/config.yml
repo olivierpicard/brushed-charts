@@ -112,10 +112,9 @@ jobs:
           command: make push
   
   integration-test:
-    executor: 
-      terraform/default:
-        ressource_class: small
-        tag: latest
+    terraform/default:
+      ressource_class: small
+      tag: latest
     steps:
       - checkout
       - gcloud-activate
