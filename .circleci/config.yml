@@ -34,7 +34,7 @@ commands:
           name: "Download and install snapd"
           command: 
             sudo apt update && sudo apt install -y snapd;
-            sudo snap install snapcraft --edge --classic /snap/bin/snapcraft
+            sudo snap install core
 
 jobs:
   build-push:
