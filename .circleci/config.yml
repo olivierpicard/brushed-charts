@@ -64,11 +64,14 @@ jobs:
       GOOGLE_PROJECT_ID: brushed-charts
       GOOGLE_COMPUTE_REGION: europe-west9
       BUILD_ARCHITECTURE: "amd64"
-    parallelism: 10
+    parallelism: 2
     steps:
       - build-and-push-command:
           image_name: oanda-stream 
           service_path: "services/oanda_stream"
+      - name:
+          name: "a test"
+          command: "sleep 3 && echo success"
 
   build-and-push-arm64:
     machine:
@@ -78,7 +81,7 @@ jobs:
       GOOGLE_PROJECT_ID: brushed-charts
       GOOGLE_COMPUTE_REGION: europe-west9
       BUILD_ARCHITECTURE: "arm64"
-    parallelism: 10
+    parallelism: 2
     steps:
       - build-and-push-command:
           image_name: oanda-stream 
