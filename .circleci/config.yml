@@ -22,6 +22,11 @@ commands:
       - run:
           name: "Configure docker to use gcloud artifact repository in europe"
           command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
+  gcloud-get-kubeconfig:
+    steps:
+      - run:
+          name: "Retrieve the kubeconfig file from gke-autpilot-paris"
+          command: gcloud container clusters get-credentials my-cluster
 
 jobs:
   build-push:
@@ -89,30 +94,35 @@ jobs:
           working_directory: << parameters.service_path >>
           command: make push-manifest
 
-  # publish-helm-chart:
-  #   docker:
-  #     - image: 
-  #       auth:
-  #           username: $DOCKER_USERNAME
-  #           password: $DOCKER_PASSWORD
-  #   resource_class: small
-  #   steps:
-      # - checkout
-      # - run:
-      #     name: "<< parameters.image_name >>: create multi-arch manifest"
-      #     working_directory: << parameters.service_path >>
-      #     command: make arch-fusion
-      # - run:
-      #     name: "<< parameters.image_name >>: push manifest"
-      #     working_directory: << parameters.service_path >>
-      #     command: make push-manifest
+  push-helm-chart:
+    docker:
+      - image: 
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      - checkout
+      - gcloud-activate
+      - gcloud-configure-docker
+      - helm/install-helm-client
+      - run:
+          name: "Package brushed-charts helm chart"
+          working_directory: helm-charts
+          command: make package
+      - run:
+          name: "Push packaged charts to registry (Google Artifact Registry)"
+          working_directory: helm-charts
+          command: make push
+          
 
 workflows:
   build-and-push:
     jobs:
-      # - package-helm-chart:
-      #     name: package-helm-chart
-      #     context: brushed-charts
+      - push-helm-chart:
+          name: push-helm-chart
+          context: brushed-charts
+
       - build-push:
           name: oanda-stream_build-push_arm64
           context: brushed-charts
@@ -136,3 +146,4 @@ workflows:
           requires:
             - oanda-stream_build-push_amd64
             - oanda-stream_build-push_arm64
+            - push-helm-chart
