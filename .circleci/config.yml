@@ -96,7 +96,7 @@ jobs:
 
   push-helm-chart:
     docker:
-      - image: 
+      - image: cimg/base:2021.04
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
