@@ -96,11 +96,13 @@ jobs:
 
   push-helm-chart:
     docker:
-      - image: cimg/base:2021.04
+      - image: google/cloud-sdk
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
     resource_class: small
+    environment:
+      GOOGLE_PROJECT_ID: brushed-charts
     steps:
       - checkout
       - gcloud-activate
