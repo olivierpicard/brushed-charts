@@ -2,91 +2,83 @@ version: 2.1
 
 orbs:
   helm: circleci/helm@2.0.1
+  
 
-commands:
-  gcloud-snap-install:
-    description: "Install gcloud using snap."
-    steps:
-      - run:
-          name: "Install gcloud via snap"
-          command: "sudo snap install google-cloud-cli --classic"
-  gcloud-activate:
-    steps:
-      - run:
-          name: "Init gcloud"
-          command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-  gcloud-configure-docker:
-    steps:
-      - run:
-          name: "Configure docker to use gcloud artifact repository in europe"
-          command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
-  gcloud-get-kubeconfig:
-    steps:
-      - run:
-          name: "Retrieve the kubeconfig file from gke-autpilot-paris"
-          command: gcloud container clusters get-credentials my-cluster
-  build-and-push-command:
+workflows:
+  build-and-push:
+    jobs:
+      - archive-helm-chart:
+          name: archive-helm-chart
+          context: brushed-charts
+      - <<: *build-and-push-all
+
+
+build-and-push-all: &build-and-push-all
+  - build-push:
+      name: oanda-stream_build-push_arm64
+      context: brushed-charts
+      image_name: oanda-stream 
+      ressource: "arm.medium"
+      architecture: "arm64"
+      service_path: "services/oanda_stream"
+
+  - build-push:
+      name: oanda-stream_build-push_amd64
+      context: brushed-charts
+      image_name: oanda-stream
+      ressource: "medium"
+      architecture: "amd64"
+      service_path: "services/oanda_stream"
+
+  - push-multi-arch:
+      context: brushed-charts
+      service_path: "services/oanda_stream"
+      image_name: oanda-stream
+      requires:
+        - oanda-stream_build-push_amd64
+        - oanda-stream_build-push_arm64
+        - push-helm-chart
+
+
+jobs:
+  build-push:
     parameters:
+      ressource:
+        type: string
+      architecture:
+        type: string
       service_path:
         type: string
       image_name:
         type: string
+    machine:
+      image: ubuntu-2004:current
+    resource_class: << parameters.ressource >>
+    environment:
+      GOOGLE_PROJECT_ID: brushed-charts
+      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
       - gcloud-snap-install
       - gcloud-activate
       - gcloud-configure-docker
       - run:
-          name: "<< parameters.image_name >>: Build ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Build (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make build
       - run:
-          name: "<< parameters.image_name >>: Linting ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Linting (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make linting
       - run:
-          name: "<< parameters.image_name >>: Unit Test ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: Unit Test (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
           command: make unit-test
       - run: 
-          name: "<< parameters.image_name >>: push to registry ($BUILD_ARCHITECTURE)"
+          name: "<< parameters.image_name >>: push to registry (<< parameters.architecture >>)"
           working_directory: << parameters.service_path >>
-          command: make push-$BUILD_ARCHITECTURE
-
-jobs:
-  build-and-push-amd64:
-    machine:
-      image: ubuntu-2004:current
-    resource_class: medium
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west9
-      BUILD_ARCHITECTURE: "amd64"
-    parallelism: 2
-    steps:
-      - build-and-push-command:
-          image_name: oanda-stream 
-          service_path: "services/oanda_stream"
-      - name:
-          name: "a test"
-          command: "sleep 3 && echo success"
-
-  build-and-push-arm64:
-    machine:
-      image: ubuntu-2004:current
-    resource_class: arm.medium
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west9
-      BUILD_ARCHITECTURE: "arm64"
-    parallelism: 2
-    steps:
-      - build-and-push-command:
-          image_name: oanda-stream 
-          service_path: "services/oanda_stream"
-
+          command: make push-<< parameters.architecture >>
+  
   push-multi-arch:
     parameters:
       service_path:
@@ -136,25 +128,29 @@ jobs:
           name: "Push packaged charts to registry (Google Artifact Registry)"
           working_directory: helm-charts
           command: make push
-          
 
-workflows:
-  build-and-push:
-    jobs:
-      - archive-helm-chart:
-          name: archive-helm-chart
-          context: brushed-charts
-      -  build-and-push-amd64:
-          name: build-and-push_amd64
-          context: brushed-charts
-      -  build-and-push-arm64:
-          name: build-and-push_arm64
-          context: brushed-charts
-      - push-multi-arch:
-          context: brushed-charts
-          service_path: "services/oanda_stream"
-          image_name: oanda-stream
-          requires:
-            - build-and-push_amd64
-            - build-and-push_arm64
-            - archive-helm-chart
+
+commands:
+  gcloud-snap-install:
+    description: "Install gcloud using snap."
+    steps:
+      - run:
+          name: "Install gcloud via snap"
+          command: "sudo snap install google-cloud-cli --classic"
+  gcloud-activate:
+    steps:
+      - run:
+          name: "Init gcloud"
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+  gcloud-configure-docker:
+    steps:
+      - run:
+          name: "Configure docker to use gcloud artifact repository in europe"
+          command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
+  gcloud-get-kubeconfig:
+    steps:
+      - run:
+          name: "Retrieve the kubeconfig file from gke-autpilot-paris"
+          command: gcloud container clusters get-credentials my-cluster
