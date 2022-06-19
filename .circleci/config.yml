@@ -112,9 +112,11 @@ jobs:
           command: make push
   
   integration-test:
-    terraform/default:
-      ressource_class: small
-      tag: latest
+    docker:
+      - image: cimg/ubuntu:2004
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
     steps:
       - checkout
       - gcloud-activate
