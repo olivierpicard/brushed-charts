@@ -96,7 +96,7 @@ jobs:
 
   push-helm-chart:
     docker:
-      - image: 
+      - image: google/cloud-sdk
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
