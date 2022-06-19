@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   helm: circleci/helm@2.0.1
+  terraform: circleci/terraform@3.1.0
 
 commands:
   gcloud-snap-install:
@@ -42,9 +43,6 @@ jobs:
     machine:
       image: ubuntu-2004:current
     resource_class: << parameters.ressource >>
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
-      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - checkout
       - gcloud-snap-install
@@ -79,8 +77,6 @@ jobs:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
     resource_class: small
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
     steps:
       - checkout
       - gcloud-activate
@@ -114,7 +110,30 @@ jobs:
           name: "Push packaged charts to registry (Google Artifact Registry)"
           working_directory: helm-charts
           command: make push
-          
+  
+  integration-test:
+    docker:
+      - image: google/cloud-sdk
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      - checkout
+      - gcloud-activate
+      - gcloud-configure-docker
+      - helm/install-helm-client
+      - terraform/validate:
+          path: ./terraform/gke-autopilot-paris
+      - terraform/plan: # Get kubernetes connection info of 'gke-autopilot-paris' cluster
+          path: ./terraform/gke-autopilot-paris
+          requires:
+            - terraform/validate
+      - terraform/apply:
+          path: ./terraform/gke-autopilot-paris
+          requires:
+            - terraform/plan
+
 
 workflows:
   build-and-push:
