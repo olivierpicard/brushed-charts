@@ -32,7 +32,7 @@ commands:
     steps:
       - run:
           name: "Download and install snapd"
-          command: 
+          command: |
             sudo apt update && sudo apt install -y snapd;
             sudo snap install core
 
