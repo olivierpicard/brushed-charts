@@ -69,7 +69,7 @@ jobs:
       - build-and-push-command:
           image_name: oanda-stream 
           service_path: "services/oanda_stream"
-      - name:
+      - run:
           name: "a test"
           command: "sleep 3 && echo success"
 
