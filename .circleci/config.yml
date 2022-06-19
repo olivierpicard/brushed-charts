@@ -29,10 +29,6 @@ commands:
           command: gcloud container clusters get-credentials my-cluster
   build-and-push-command:
     parameters:
-      ressource:
-        type: string
-      architecture:
-        type: string
       service_path:
         type: string
       image_name:
@@ -146,16 +142,16 @@ workflows:
           name: archive-helm-chart
           context: brushed-charts
       -  build-and-push-amd64:
-          name: build-push-amd64
+          name: build-and-push_amd64
           context: brushed-charts
       -  build-and-push-arm64:
-          name: build-push-arm64
+          name: build-and-push_arm64
           context: brushed-charts
       - push-multi-arch:
           context: brushed-charts
           service_path: "services/oanda_stream"
           image_name: oanda-stream
           requires:
-            - oanda-stream_build-push_amd64
-            - oanda-stream_build-push_arm64
-            - push-helm-chart
+            - build-and-push_amd64
+            - build-and-push_arm64
+            - archive-helm-chart
