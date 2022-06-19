@@ -28,6 +28,13 @@ commands:
       - run:
           name: "Retrieve the kubeconfig file from gke-autpilot-paris"
           command: gcloud container clusters get-credentials my-cluster
+  install-snapd:
+    steps:
+      - run:
+          name: "Download and install snapd"
+          command: 
+            sudo apt update && sudo apt install -y snapd;
+            sudo snap install snapcraft --edge --classic /snap/bin/snapcraft
 
 jobs:
   build-push:
@@ -117,8 +124,10 @@ jobs:
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
+            
     steps:
       - checkout
+      - install-snapd
       - gcloud-snap-install
       - gcloud-activate
       - gcloud-configure-docker
