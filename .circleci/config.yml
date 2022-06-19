@@ -3,42 +3,30 @@ version: 2.1
 orbs:
   helm: circleci/helm@2.0.1
 
-
-build-and-push-all: &build-and-push-all
-  - build-push:
-      name: oanda-stream_build-push_arm64
-      context: brushed-charts
-      image_name: oanda-stream 
-      ressource: "arm.medium"
-      architecture: "arm64"
-      service_path: "services/oanda_stream"
-
-  - build-push:
-      name: oanda-stream_build-push_amd64
-      context: brushed-charts
-      image_name: oanda-stream
-      ressource: "medium"
-      architecture: "amd64"
-      service_path: "services/oanda_stream"
-
-  - push-multi-arch:
-      context: brushed-charts
-      service_path: "services/oanda_stream"
-      image_name: oanda-stream
-      requires:
-        - oanda-stream_build-push_amd64
-        - oanda-stream_build-push_arm64
-        - push-helm-chart
-  
-
-workflows:
-  build-and-push:
-    jobs:
-      - archive-helm-chart:
-          name: archive-helm-chart
-          context: brushed-charts
-      - *build-and-push-all
-
+commands:
+  gcloud-snap-install:
+    description: "Install gcloud using snap."
+    steps:
+      - run:
+          name: "Install gcloud via snap"
+          command: "sudo snap install google-cloud-cli --classic"
+  gcloud-activate:
+    steps:
+      - run:
+          name: "Init gcloud"
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+  gcloud-configure-docker:
+    steps:
+      - run:
+          name: "Configure docker to use gcloud artifact repository in europe"
+          command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
+  gcloud-get-kubeconfig:
+    steps:
+      - run:
+          name: "Retrieve the kubeconfig file from gke-autpilot-paris"
+          command: gcloud container clusters get-credentials my-cluster
 
 jobs:
   build-push:
@@ -106,15 +94,13 @@ jobs:
           working_directory: << parameters.service_path >>
           command: make push-manifest
 
-  archive-helm-chart:
+  push-helm-chart:
     docker:
-      - image: google/cloud-sdk
+      - image: 
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
     resource_class: small
-    environment:
-      GOOGLE_PROJECT_ID: brushed-charts
     steps:
       - checkout
       - gcloud-activate
@@ -128,29 +114,37 @@ jobs:
           name: "Push packaged charts to registry (Google Artifact Registry)"
           working_directory: helm-charts
           command: make push
+          
 
+workflows:
+  build-and-push:
+    jobs:
+      - push-helm-chart:
+          name: push-helm-chart
+          context: brushed-charts
 
-commands:
-  gcloud-snap-install:
-    description: "Install gcloud using snap."
-    steps:
-      - run:
-          name: "Install gcloud via snap"
-          command: "sudo snap install google-cloud-cli --classic"
-  gcloud-activate:
-    steps:
-      - run:
-          name: "Init gcloud"
-          command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-  gcloud-configure-docker:
-    steps:
-      - run:
-          name: "Configure docker to use gcloud artifact repository in europe"
-          command: gcloud --quiet auth configure-docker europe-docker.pkg.dev
-  gcloud-get-kubeconfig:
-    steps:
-      - run:
-          name: "Retrieve the kubeconfig file from gke-autpilot-paris"
-          command: gcloud container clusters get-credentials my-cluster
+      - build-push:
+          name: oanda-stream_build-push_arm64
+          context: brushed-charts
+          image_name: oanda-stream 
+          ressource: "arm.medium"
+          architecture: "arm64"
+          service_path: "services/oanda_stream"
+
+      - build-push:
+          name: oanda-stream_build-push_amd64
+          context: brushed-charts
+          image_name: oanda-stream
+          ressource: "medium"
+          architecture: "amd64"
+          service_path: "services/oanda_stream"
+
+      - push-multi-arch:
+          context: brushed-charts
+          service_path: "services/oanda_stream"
+          image_name: oanda-stream
+          requires:
+            - oanda-stream_build-push_amd64
+            - oanda-stream_build-push_arm64
+            - push-helm-chart
+
