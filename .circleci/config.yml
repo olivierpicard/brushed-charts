@@ -2,15 +2,6 @@ version: 2.1
 
 orbs:
   helm: circleci/helm@2.0.1
-  
-
-workflows:
-  build-and-push:
-    jobs:
-      - archive-helm-chart:
-          name: archive-helm-chart
-          context: brushed-charts
-      - <<: *build-and-push-all
 
 
 build-and-push-all: &build-and-push-all
@@ -38,6 +29,15 @@ build-and-push-all: &build-and-push-all
         - oanda-stream_build-push_amd64
         - oanda-stream_build-push_arm64
         - push-helm-chart
+  
+
+workflows:
+  build-and-push:
+    jobs:
+      - archive-helm-chart:
+          name: archive-helm-chart
+          context: brushed-charts
+      - <<: *build-and-push-all
 
 
 jobs:
