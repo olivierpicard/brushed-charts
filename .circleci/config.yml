@@ -127,12 +127,6 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - install-snapd
-      - gcloud-snap-install
-      - gcloud-activate
-      - gcloud-configure-docker
-      - terraform/install:
-          terraform_version: latest
       - terraform/validate:
           path: ./terraform/gke-autopilot-paris
       - terraform/init:
