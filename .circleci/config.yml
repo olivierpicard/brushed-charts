@@ -33,8 +33,8 @@ commands:
       - run:
           name: "Download and install snapd"
           command: |
-            sudo apt update && sudo apt install -y snapd;
-            sudo snap install core
+            apt update && sudo apt install -y snapd;
+            snap install core
 
 jobs:
   build-push:
@@ -126,10 +126,10 @@ jobs:
             password: $DOCKER_PASSWORD
     steps:
       - checkout
-      - install-snapd
-      - gcloud-snap-install
       - gcloud-activate
       - gcloud-configure-docker
+      - terraform/install:
+          terraform_version: latest
       - terraform/validate:
           path: ./terraform/gke-autopilot-paris
       - terraform/init:
@@ -139,6 +139,7 @@ jobs:
       - terraform/apply:
           path: ./terraform/gke-autopilot-paris
       
+
 workflows:
   build-and-push:
     jobs:
