@@ -132,15 +132,22 @@ jobs:
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
-      - terraform/validate:
-          path: ./terraform/gke-autopilot-paris
-      - terraform/init:
-          path: ./terraform/gke-autopilot-paris
-          backend: true
-      - terraform/plan: # Get kubernetes connection info of 'gke-autopilot-paris' cluster
-          path: ./terraform/gke-autopilot-paris
-      - terraform/apply:
-          path: ./terraform/gke-autopilot-paris
+      - run:
+          name: "validate"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: terraform validate
+      - run:
+          name: "init"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: terraform init
+      - run:
+          name: "plan"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: terraform plan
+      - run:
+          name: "apply"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: terraform apply
       
 
 workflows:
