@@ -113,7 +113,7 @@ jobs:
   
   integration-test:
     docker:
-      - image: cimg/ubuntu:2004
+      - image: cimg/base:2022.06
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
