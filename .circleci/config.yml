@@ -122,48 +122,48 @@ jobs:
       - checkout
       - gcloud-activate
       - gcloud-configure-docker
-      - helm/install-helm-client
       - terraform/validate:
+          path: ./terraform/gke-autopilot-paris
+      - terraform/init:
           path: ./terraform/gke-autopilot-paris
       - terraform/plan: # Get kubernetes connection info of 'gke-autopilot-paris' cluster
           path: ./terraform/gke-autopilot-paris
-          requires:
-            - terraform/validate
       - terraform/apply:
           path: ./terraform/gke-autopilot-paris
-          requires:
-            - terraform/plan
-
+      
 
 workflows:
   build-and-push:
     jobs:
-      - push-helm-chart:
-          name: push-helm-chart
-          context: brushed-charts
+      # - push-helm-chart:
+      #     name: push-helm-chart
+      #     context: brushed-charts
 
-      - build-push:
-          name: oanda-stream_build-push_arm64
-          context: brushed-charts
-          image_name: oanda-stream 
-          ressource: "arm.medium"
-          architecture: "arm64"
-          service_path: "services/oanda_stream"
+      # - build-push:
+      #     name: oanda-stream_build-push_arm64
+      #     context: brushed-charts
+      #     image_name: oanda-stream 
+      #     ressource: "arm.medium"
+      #     architecture: "arm64"
+      #     service_path: "services/oanda_stream"
 
-      - build-push:
-          name: oanda-stream_build-push_amd64
-          context: brushed-charts
-          image_name: oanda-stream
-          ressource: "medium"
-          architecture: "amd64"
-          service_path: "services/oanda_stream"
+      # - build-push:
+      #     name: oanda-stream_build-push_amd64
+      #     context: brushed-charts
+      #     image_name: oanda-stream
+      #     ressource: "medium"
+      #     architecture: "amd64"
+      #     service_path: "services/oanda_stream"
 
-      - push-multi-arch:
+      # - push-multi-arch:
+      #     context: brushed-charts
+      #     service_path: "services/oanda_stream"
+      #     image_name: oanda-stream
+      #     requires:
+      #       - oanda-stream_build-push_amd64
+      #       - oanda-stream_build-push_arm64
+      #       - push-helm-chart
+
+      - integration-test:
           context: brushed-charts
-          service_path: "services/oanda_stream"
-          image_name: oanda-stream
-          requires:
-            - oanda-stream_build-push_amd64
-            - oanda-stream_build-push_arm64
-            - push-helm-chart
 
