@@ -124,11 +124,8 @@ jobs:
         auth:
             username: $DOCKER_USERNAME
             password: $DOCKER_PASSWORD
-            
     steps:
       - checkout
-      - install-snapd
-      - gcloud-snap-install
       - gcloud-activate
       - gcloud-configure-docker
       - terraform/install:
