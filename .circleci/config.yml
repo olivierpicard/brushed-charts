@@ -127,10 +127,16 @@ jobs:
     resource_class: small
     steps:
       - checkout
+      - run:
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+          name: Create .terraformrc file locally
       - terraform/validate:
           path: ./terraform/gke-autopilot-paris
       - terraform/init:
           path: ./terraform/gke-autopilot-paris
+          backend: true
       - terraform/plan: # Get kubernetes connection info of 'gke-autopilot-paris' cluster
           path: ./terraform/gke-autopilot-paris
       - terraform/apply:
