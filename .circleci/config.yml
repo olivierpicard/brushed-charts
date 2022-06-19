@@ -133,13 +133,13 @@ jobs:
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
       - run:
-          name: "validate"
-          working_directory: ./terraform/gke-autopilot-paris
-          command: terraform validate
-      - run:
           name: "init"
           working_directory: ./terraform/gke-autopilot-paris
           command: terraform init
+      - run:
+          name: "validate"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: terraform validate
       - run:
           name: "plan"
           working_directory: ./terraform/gke-autopilot-paris
