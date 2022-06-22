@@ -1,7 +1,3 @@
-#----------------------
-# STREAM POOL
-#----------------------
-
 resource "oci_streaming_stream_pool" "test_streaming_pool" {
   compartment_id = local.oci_compartment_id
   name           = "test"
@@ -13,9 +9,6 @@ resource "oci_streaming_stream_pool" "test_streaming_pool" {
   }
 }
 
-#----------------------
-# STREAMS
-#----------------------
 
 resource "oci_streaming_stream" "test_stream" {
   name       = "oanda-raw-prices"

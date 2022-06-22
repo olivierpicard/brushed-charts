@@ -28,14 +28,15 @@ commands:
       - run:
           name: "Retrieve the kubeconfig file from gke-autpilot-paris"
           command: gcloud container clusters get-credentials my-cluster
-  install-snapd:
-    steps:
+  apt-install-gcloud:
+    steps: 
       - run:
-          name: "Download and install snapd"
+          name: "Install gcloud using apt-get"
           command: |
-            apt update && sudo apt install -y snapd;
-            snap install core
-
+          sudo apt-get install apt-transport-https ca-certificates gnupg
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
+          sudo apt-get update && sudo apt-get install google-cloud-cli
 jobs:
   build-push:
     parameters:
@@ -118,7 +119,7 @@ jobs:
           working_directory: helm-charts
           command: make push
   
-  integration-test:
+  provision-integration-test-infra:
     docker:
       - image: hashicorp/terraform 
         auth:
@@ -127,29 +128,37 @@ jobs:
     resource_class: small
     steps:
       - checkout
+      - 
       - run:
+          name: "Create .terraformrc file locally"
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally
       - run:
-          name: "init"
+          name: "Create cluster on GKE if it doesn't exist"
           working_directory: ./terraform/gke-autopilot-paris
-          command: terraform init
-      - run:
-          name: "validate"
-          working_directory: ./terraform/gke-autopilot-paris
-          command: terraform validate
-      - run:
-          name: "plan"
-          working_directory: ./terraform/gke-autopilot-paris
-          command: terraform plan
-      - run:
-          name: "apply"
-          working_directory: ./terraform/gke-autopilot-paris
-          command: terraform apply
-      
+          command: |
+            terraform init
+            terraform validate
+            terraform plan
+            terraform apply
 
+  deploy-on-cluster:
+    docker:
+      - image: google/cloud-sdk
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      - checkout
+      - gcloud-activate
+      - helm/install-helm-client
+      - run:
+          name: "Install gcloud auth plugin for kubectl"
+          command: gcloud components install gke-gcloud-auth-plugin
+      
+  
 workflows:
   build-and-push:
     jobs:
@@ -182,6 +191,10 @@ workflows:
       #       - oanda-stream_build-push_arm64
       #       - push-helm-chart
 
-      - integration-test:
+      - provision-integration-test-infra:
           context: brushed-charts
+      
+      - deploy-on-cluster:
+          context: brushed-charts
+
 
