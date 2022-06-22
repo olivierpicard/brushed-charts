@@ -155,7 +155,7 @@ jobs:
       - helm/install-helm-client
       - run:
           name: "Install gcloud auth plugin for kubectl"
-          command: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+          command: apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
       
   
 workflows:
@@ -190,8 +190,8 @@ workflows:
       #       - oanda-stream_build-push_arm64
       #       - push-helm-chart
 
-      - provision-integration-test-infra:
-          context: brushed-charts
+      # - provision-integration-test-infra:
+      #     context: brushed-charts
       
       - deploy-on-cluster:
           context: brushed-charts
