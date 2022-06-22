@@ -128,7 +128,6 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - 
       - run:
           name: "Create .terraformrc file locally"
           command: >-
