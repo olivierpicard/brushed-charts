@@ -119,7 +119,30 @@ jobs:
           working_directory: helm-charts
           command: make push
   
-  provision-integration-test-infra:
+  provision-integration-test-cluster:
+    docker:
+      - image: hashicorp/terraform 
+        auth:
+            username: $DOCKER_USERNAME
+            password: $DOCKER_PASSWORD
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Create .terraformrc file locally"
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+      - run:
+          name: "Create cluster on GKE if it doesn't exist"
+          working_directory: ./terraform/gke-autopilot-paris
+          command: |
+            terraform init
+            terraform validate
+            terraform plan
+            terraform apply
+  
+  provision-cloud-infra-for-integration:
     docker:
       - image: hashicorp/terraform 
         auth:
@@ -156,6 +179,8 @@ jobs:
       - run:
           name: "Install gcloud auth plugin for kubectl"
           command: apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+      
+  
       
   
 workflows:

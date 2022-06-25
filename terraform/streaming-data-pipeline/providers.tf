@@ -15,6 +15,9 @@ terraform {
       source  = "hashicorp/google"
       version = "4.23.0"
     }
+    local = {
+      version = "~> 2.1"
+    }
   }
 }
 
@@ -30,8 +33,3 @@ provider "google" {
   project = "brushed-charts"
   region  = "europe-west9"
 }
-
-# provider "kubernetes" {
-#   config_path    = "~/.kube/config"
-#   config_context = "my-context"
-# }

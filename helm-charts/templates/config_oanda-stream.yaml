@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: oanda-stream_configmap
+  labels:
+    app: oanda-stream
+    tier: backend
+data:
+  OCI_TENANCY: olivierpicard
+  OCI_USER: brushed-charts-app
+  
+
+
