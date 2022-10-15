@@ -146,7 +146,7 @@ services:
         source: /etc/brushed-charts/
         target: /etc/brushed-charts/
     ports:
-      - 3330:3330
+      - 3330:80
     logging:
       driver: "json-file"
       options:
